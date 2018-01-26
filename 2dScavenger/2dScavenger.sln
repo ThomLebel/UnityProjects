@@ -1,0 +1,26 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2017
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "2dScavenger", "2dScavenger.csproj", "{5DC923C6-26CE-6E58-6E88-BD825A3970A7}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "2dScavenger.Editor", "2dScavenger.Editor.csproj", "{58B5A3CC-38E6-BBB1-AFA6-9607EA65FF0B}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{5DC923C6-26CE-6E58-6E88-BD825A3970A7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5DC923C6-26CE-6E58-6E88-BD825A3970A7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5DC923C6-26CE-6E58-6E88-BD825A3970A7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5DC923C6-26CE-6E58-6E88-BD825A3970A7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{58B5A3CC-38E6-BBB1-AFA6-9607EA65FF0B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{58B5A3CC-38E6-BBB1-AFA6-9607EA65FF0B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{58B5A3CC-38E6-BBB1-AFA6-9607EA65FF0B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{58B5A3CC-38E6-BBB1-AFA6-9607EA65FF0B}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
