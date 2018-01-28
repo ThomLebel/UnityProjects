@@ -82,7 +82,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1321811289133818}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -4.8518996, y: -1.7281137, z: 5}
+  m_LocalPosition: {x: -5.8112664, y: -1.8319044, z: 5}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 4116794077933294}
@@ -115,7 +115,7 @@ Rigidbody2D:
   m_UseFullKinematicContacts: 0
   m_UseAutoMass: 0
   m_Mass: 1
-  m_LinearDrag: 0
+  m_LinearDrag: 5
   m_AngularDrag: 0.05
   m_GravityScale: 0
   m_Material: {fileID: 0}
@@ -174,7 +174,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   itemNeeded: 3
   isFull: 0
+  isCooking: 0
+  isDone: 0
+  isBurning: 0
+  cookingCoef: 0.05
+  burningDelay: 5
   itemList: []
+  _progressBar: {fileID: 0}
 --- !u!212 &212166505150025440
 SpriteRenderer:
   m_ObjectHideFlags: 1

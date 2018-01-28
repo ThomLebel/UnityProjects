@@ -159,7 +159,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f8e22b601b00c854aa98f6213a55914f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  playerNumber: 1
   isHolding: 0
   isStun: 0
   playerWidth: 0
@@ -168,8 +167,10 @@ MonoBehaviour:
   itemLayer: 0
   chaudronLayer: 0
   dispenserLayer: 0
+  fireLayer: 0
   pickUpLayer: 0
-  pickUpRange: 0.5
+  playerNumber: 1
+  pickUpRange: 1
 --- !u!212 &212452536761500248
 SpriteRenderer:
   m_ObjectHideFlags: 1

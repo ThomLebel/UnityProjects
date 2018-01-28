@@ -34,12 +34,10 @@ public class SpellProjectile : MonoBehaviour {
 		Debug.Log(other.tag);
 		if (other.tag == "Player")
 		{
-			Debug.Log("player hit !");
 			other.GetComponent<PlayerPotionAction>().SpellHit(direction);
 		}
-		else if (other.tag == "item")
+		else if (other.tag == "item" || other.tag == "fiole")
 		{
-			Debug.Log("item hit !");
 			other.GetComponent<ItemScript>().AccioItem(direction);
 		}
 		KillProjectile();

@@ -58,8 +58,12 @@ public class UseItem : MonoBehaviour {
 
 		if (itemHolded.tag == "item")
 			layerMask = _playerInfo.chaudronLayer;
+		else if (itemHolded.tag == "chaudron")
+			layerMask = _playerInfo.fireLayer | _playerInfo.itemLayer;
+		else if (itemHolded.tag == "fiole")
+			layerMask = _playerInfo.pnjLayer | _playerInfo.chaudronLayer;
 		else
-			layerMask = _playerInfo.fireLayer;
+			layerMask = 0;
 
 
 
@@ -70,11 +74,28 @@ public class UseItem : MonoBehaviour {
 
 			Debug.Log(target);
 
-			if (itemHolded.tag == "item")
-				CookItem(target, itemHolded);
-			else
-				PlaceCauldron(target, itemHolded);
-		}
+			if (target != null)
+			{
+				if (itemHolded.tag == "item")
+					CookItem(target, itemHolded);
+				else if (itemHolded.tag == "chaudron")
+				{
+					if (target.tag == "fire")
+						PlaceCauldron(target, itemHolded);
+					else
+						TransvasePotion(target, itemHolded);
+				}
+					
+				else if (itemHolded.tag == "fiole")
+				{
+					if (target.tag == "pnj")
+						ServePotion(target, itemHolded);
+					else
+						TransvasePotion(target, itemHolded);
+				}
+				
+			}
+		}	
 		else
 			DropOff();
 	}
@@ -83,24 +104,11 @@ public class UseItem : MonoBehaviour {
 	//Drop this object into our cauldron !
 	private void CookItem(Collider2D target, Transform pItem)
 	{
-		if (target != null)
+		if (!target.GetComponent<ChaudronScript>().isFull)
 		{
-			if (!target.GetComponent<ChaudronScript>().isFull)
+			if (CheckPlayerDirection(target))
 			{
-				if (_playerAction.lastDir.x > 0)
-				{
-					if (target.transform.position.x > transform.position.x)
-					{
-						AddItem(target, pItem);
-					}
-				}
-				else
-				{
-					if (target.transform.position.x < transform.position.x)
-					{
-						AddItem(target, pItem);
-					}
-				}
+				AddItem(target, pItem);
 			}
 		}
 	}
@@ -109,12 +117,63 @@ public class UseItem : MonoBehaviour {
 	//Put the cauldron over the fire !
 	private void PlaceCauldron(Collider2D target, Transform pItem)
 	{
-		Debug.Log("place cauldron !");
-		if (target != null)
+		if (CheckPlayerDirection(target))
 		{
-			target.GetComponent<FireScript>().isOccupied = true;
-			pItem.GetComponent<ChaudronScript>().isCooking = true;
 			DropOff(target.transform.GetChild(0).transform);
+		}
+	}
+
+
+	//Transvase potion from cauldron to fiole
+	private void TransvasePotion(Collider2D target, Transform pItem)
+	{
+		if (CheckPlayerDirection(target))
+		{
+			Switch(target, pItem);
+		}
+	}
+
+	private void Switch(Collider2D target, Transform item)
+	{
+		FioleScript fioleScript = target.GetComponent<FioleScript>();
+		ChaudronScript chaudronScript = item.GetComponent<ChaudronScript>();
+
+		if(fioleScript == null)
+			fioleScript = item.GetComponent<FioleScript>();
+		if(chaudronScript == null)
+			chaudronScript = target.GetComponent<ChaudronScript>();
+
+		if (chaudronScript.itemList.Count != 0 && fioleScript.itemList.Count == 0 && chaudronScript.isDone)
+		{
+			Debug.Log("Cauldron to fiole !");
+			fioleScript.itemList = chaudronScript.itemList;
+			chaudronScript.itemList = new List<string>();
+			chaudronScript.isFull = false;
+			chaudronScript.isDone = false;
+			chaudronScript.SetCookingTime(0f);
+		}
+		else if (fioleScript.itemList.Count != 0 && chaudronScript.itemList.Count == 0)
+		{
+			Debug.Log("Fiole to cauldron !");
+			for (int i=0;i<fioleScript.itemList.Count;i++)
+			{
+				chaudronScript.AddItem(fioleScript.itemList[i]);
+			}
+			chaudronScript.isDone = true;
+			chaudronScript.SetCookingTime(1f);
+			fioleScript.itemList = new List<string>();
+		}
+	}
+
+	//Serve potion !
+	private void ServePotion(Collider2D target, Transform pItem)
+	{
+		if (CheckPlayerDirection(target))
+		{
+			PotionMasterScript potionMasterScript =  target.GetComponent<PotionMasterScript>();
+			potionMasterScript.CheckPotionValidity(pItem.GetComponent<FioleScript>().itemList);
+			Destroy(pItem.gameObject);
+			_playerInfo.isHolding = false;
 		}
 	}
 
@@ -122,12 +181,16 @@ public class UseItem : MonoBehaviour {
 	public void AddItem(Collider2D target, Transform item)
 	{
 		ItemInfo itemHoldedInfo = item.GetComponent<ItemInfo>();
+		ChaudronScript chaudronScript = target.GetComponent<ChaudronScript>();
 
-		target.GetComponent<ChaudronScript>().AddItem(itemHoldedInfo.name);
+		if (!chaudronScript.isBurning && !chaudronScript.isFull)
+		{
+			chaudronScript.AddItem(itemHoldedInfo.name);
 
-		Destroy(item.gameObject);
+			Destroy(item.gameObject);
 
-		_playerInfo.isHolding = false;
+			_playerInfo.isHolding = false;
+		}	
 	}
 
 	public void PickUp(Collider2D pItem)
@@ -148,7 +211,6 @@ public class UseItem : MonoBehaviour {
 		{
 			if (transform.GetChild(0).transform.childCount > 0)
 			{
-				Debug.Log("Cette fonction !");
 				Transform item = transform.GetChild(0).transform.GetChild(0);
 
 				item.parent = null;
@@ -167,7 +229,6 @@ public class UseItem : MonoBehaviour {
 		{
 			if (transform.GetChild(0).transform.childCount > 0)
 			{
-				Debug.Log("Et celle-ci");
 				Transform item = transform.GetChild(0).transform.GetChild(0);
 
 				item.parent = target;
@@ -177,6 +238,10 @@ public class UseItem : MonoBehaviour {
 				item.GetComponent<Rigidbody2D>().bodyType = RigidbodyType2D.Kinematic;
 
 				item.GetComponent<ItemInfo>().isHold = false;
+				item.GetComponent<ChaudronScript>().isCooking = true;
+
+				target.parent.GetComponent<FireScript>().isOccupied = true;
+				item.GetComponent<ChaudronScript>().isCooking = true;
 				_playerInfo.isHolding = false;
 			}
 		}
@@ -205,4 +270,24 @@ public class UseItem : MonoBehaviour {
 
 		return target;
 	}
+
+	private bool CheckPlayerDirection(Collider2D target)
+	{
+		if (_playerAction.lastDir.x > 0)
+		{
+			if (target.transform.position.x > transform.position.x)
+			{
+				return true;
+			}
+		}
+		else
+		{
+			if (target.transform.position.x < transform.position.x)
+			{
+				return true;
+			}
+		}
+		return false;
+	}
 }
+

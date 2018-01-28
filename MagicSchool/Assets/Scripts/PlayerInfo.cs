@@ -4,15 +4,20 @@ using UnityEngine;
 
 public class PlayerInfo : MonoBehaviour {
 
+	//States
+	[HideInInspector]
+	public bool isHolding, isStun;
+
+	//Mesures
+	[HideInInspector]
+	public float playerWidth, playerHeight, originalScale;
+
+	//Layers
+	[HideInInspector]
+	public int itemLayer, chaudronLayer, dispenserLayer, fireLayer, pickUpLayer, pnjLayer;
+
 	public int playerNumber;
-	public bool isHolding;
-	public bool isStun;
 
-	public float playerWidth, playerHeight;
-	public float originalScale;
-
-	public int itemLayer, chaudronLayer, dispenserLayer, fireLayer;
-	public int pickUpLayer;
 	public float pickUpRange = 0.5f;
 
 	private void Start()
@@ -27,6 +32,7 @@ public class PlayerInfo : MonoBehaviour {
 		chaudronLayer = 1 << LayerMask.NameToLayer("chaudron");
 		dispenserLayer = 1 << LayerMask.NameToLayer("dispenser");
 		fireLayer = 1 << LayerMask.NameToLayer("fire");
+		pnjLayer = 1 << LayerMask.NameToLayer("pnj");
 		pickUpLayer = itemLayer | chaudronLayer | dispenserLayer;
 	}
 }

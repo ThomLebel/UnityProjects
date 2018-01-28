@@ -316,12 +316,16 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Assets\Scripts\ChaudronScript.cs" />
+    <Compile Include="Assets\Scripts\FioleScript.cs" />
     <Compile Include="Assets\Scripts\FireScript.cs" />
+    <Compile Include="Assets\Scripts\Follow.cs" />
     <Compile Include="Assets\Scripts\ItemDispenserScript.cs" />
     <Compile Include="Assets\Scripts\ItemInfo.cs" />
     <Compile Include="Assets\Scripts\ItemScript.cs" />
     <Compile Include="Assets\Scripts\PlayerInfo.cs" />
     <Compile Include="Assets\Scripts\PlayerPotionAction.cs" />
+    <Compile Include="Assets\Scripts\PotionMasterScript.cs" />
+    <Compile Include="Assets\Scripts\ProgressBarScript.cs" />
     <Compile Include="Assets\Scripts\SpellProjectile.cs" />
     <Compile Include="Assets\Scripts\UseItem.cs" />
   </ItemGroup>

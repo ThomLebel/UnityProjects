@@ -9,6 +9,9 @@ TagManager:
   - dispenser
   - spell
   - fire
+  - progressBar
+  - fiole
+  - pnj
   layers:
   - Default
   - TransparentFX
@@ -22,7 +25,7 @@ TagManager:
   - chaudron
   - dispenser
   - fire
-  - 
+  - pnj
   - 
   - 
   - 

@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class ItemScript : MonoBehaviour {
 
-	public float spellForce;
+	public float spellForce = 30f;
 
 	public void AccioItem(Vector3 dir)
 	{

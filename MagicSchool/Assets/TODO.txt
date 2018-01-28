@@ -2,14 +2,17 @@ Potion :
 
 -Gestion de la verticalité ? personnage + position item
 
--Action 1 : Vider chaudron dans poubelle. Verser chaudron dans une fiole ?
+-Action 1 : 	Vider chaudron/fiole dans poubelle ?
+		Verser chaudron dans une fiole - DONE !
 -Action 2 : couper/préparer les ingrédients || Mélanger la potion
 -Action 3 : Différents effets de spells ?
 	~Sur ingrédient : le rapproche de nous - DONE !
 	~Sur notre chaudron : éteint le feu
 	~Sur chaudron ennemi : accélère la cuisson
 
--Faire chauffer le chaudron. Chaudron prend feu ?
+-Faire chauffer le chaudron. - DONE !
+-Chaudron prend feu ? -> Destruction chaudron si non éteint, demande au master pour récup un nouveau
+-Afficher picto ingrédients aux dessus chaudron
 -Ajout des différents aliments
 -Gestion des recettes + contrôle des ingrédients
 -Gestion du temps
@@ -18,6 +21,7 @@ Potion :
 -Niveau de difficulté :
 	~Recette plus longue
 	~Plusieurs recettes ?
+	~Etape à respecter : Ordre des aliments, temps de cuisson ?
 	~Esprits frappeur ?
 		-Lance un spell
 		-Déplace chaudron
