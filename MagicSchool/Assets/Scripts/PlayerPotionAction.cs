@@ -48,24 +48,24 @@ public class PlayerPotionAction : MonoBehaviour {
 		vertical = 0;       //Used to store the vertical move direction.
 
 		//Get input from the input manager and store in horizontal to set x axis move direction
-		if (Input.GetAxisRaw("Horizontal_P" + _playerInfo.playerNumber) > 0.5)
+		if (Input.GetAxisRaw("Horizontal_P" + _playerInfo.playerNumber) > 0.2)
 		{
 			horizontal = 1;
 			lastDir = new Vector3(1, 0, 0);
 		}
-		if (Input.GetAxisRaw("Horizontal_P" + _playerInfo.playerNumber) < -0.5)
+		if (Input.GetAxisRaw("Horizontal_P" + _playerInfo.playerNumber) < -0.2)
 		{
 			horizontal = -1;
 			lastDir = new Vector3(-1, 0, 0);
 		}
 
 		//Get input from the input manager and store in vertical to set y axis move direction
-		if (Input.GetAxisRaw("Vertical_P" + _playerInfo.playerNumber) > 0.5)
+		if (Input.GetAxisRaw("Vertical_P" + _playerInfo.playerNumber) > 0.2)
 		{
 			vertical = 1;
 			lastDir = new Vector3(0, 1, 0);
 		}
-		if (Input.GetAxisRaw("Vertical_P" + _playerInfo.playerNumber) < -0.5)
+		if (Input.GetAxisRaw("Vertical_P" + _playerInfo.playerNumber) < -0.2)
 		{
 			vertical = -1;
 			lastDir = new Vector3(0, -1, 0);
