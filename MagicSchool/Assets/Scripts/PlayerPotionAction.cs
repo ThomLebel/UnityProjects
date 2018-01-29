@@ -90,19 +90,19 @@ public class PlayerPotionAction : MonoBehaviour {
 		}
 	}
 
-	public void SpellHit(Vector3 dir)
+	public void SpellHit(Vector3 pDir)
 	{
 		if (_playerInfo.isHolding)
 		{
 			_useItem.DropOff();
 		}
-		if (dir.x != 0)
+		if (pDir.x != 0)
 		{
-			gameObject.GetComponent<Rigidbody2D>().AddForce(transform.right * spellForce * dir.x);
+			gameObject.GetComponent<Rigidbody2D>().AddForce(transform.right * spellForce * pDir.x);
 		}
 		else
 		{
-			gameObject.GetComponent<Rigidbody2D>().AddForce(transform.up * spellForce * dir.y);
+			gameObject.GetComponent<Rigidbody2D>().AddForce(transform.up * spellForce * pDir.y);
 		}
 		
 		Debug.Log("Player "+_playerInfo.playerNumber+" is Stun !");

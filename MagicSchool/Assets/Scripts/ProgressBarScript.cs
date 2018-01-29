@@ -29,13 +29,13 @@ public class ProgressBarScript : MonoBehaviour {
 		}
 	}
 
-	private void ToggleVisibility(bool rendered)
+	private void ToggleVisibility(bool pRendered)
 	{
 		// toggles the visibility of this gameobject and all it's children
 		SpriteRenderer[] renderers = gameObject.GetComponentsInChildren<SpriteRenderer>();
 		foreach (SpriteRenderer r in renderers)
 		{
-			r.enabled = rendered;
+			r.enabled = pRendered;
 		}
 	}
 }

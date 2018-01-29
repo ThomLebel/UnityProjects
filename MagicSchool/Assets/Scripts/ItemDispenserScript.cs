@@ -33,11 +33,11 @@ public class ItemDispenserScript : MonoBehaviour {
 		}
 	}
 
-	private IEnumerator WaitAndPrint(float waitTime)
+	private IEnumerator WaitAndPrint(float pWaitTime)
 	{
 		while (true)
 		{
-			yield return new WaitForSeconds(waitTime);
+			yield return new WaitForSeconds(pWaitTime);
 			Countdown();
 		}
 	}

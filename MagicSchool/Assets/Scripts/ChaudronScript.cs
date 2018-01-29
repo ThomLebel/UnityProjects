@@ -85,9 +85,9 @@ public class ChaudronScript : MonoBehaviour {
 		Debug.Log("Cauldron is burning !!");
 	}
 
-	public void SetCookingTime(float time)
+	public void SetCookingTime(float pTime)
 	{
-		_progressBarScript.value = time;
+		_progressBarScript.value = pTime;
 	}
 	public float GetCookingTime()
 	{

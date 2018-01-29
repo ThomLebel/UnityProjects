@@ -102,46 +102,46 @@ public class UseItem : MonoBehaviour {
 
 
 	//Drop this object into our cauldron !
-	private void CookItem(Collider2D target, Transform pItem)
+	private void CookItem(Collider2D pTarget, Transform pItem)
 	{
-		if (!target.GetComponent<ChaudronScript>().isFull)
+		if (!pTarget.GetComponent<ChaudronScript>().isFull)
 		{
-			if (CheckPlayerDirection(target))
+			if (CheckPlayerDirection(pTarget))
 			{
-				AddItem(target, pItem);
+				AddItem(pTarget, pItem);
 			}
 		}
 	}
 
 
 	//Put the cauldron over the fire !
-	private void PlaceCauldron(Collider2D target, Transform pItem)
+	private void PlaceCauldron(Collider2D pTarget, Transform pItem)
 	{
-		if (CheckPlayerDirection(target))
+		if (CheckPlayerDirection(pTarget))
 		{
-			DropOff(target.transform.GetChild(0).transform);
+			DropOff(pTarget.transform.GetChild(0).transform);
 		}
 	}
 
 
 	//Transvase potion from cauldron to fiole
-	private void TransvasePotion(Collider2D target, Transform pItem)
+	private void TransvasePotion(Collider2D pTarget, Transform pItem)
 	{
-		if (CheckPlayerDirection(target))
+		if (CheckPlayerDirection(pTarget))
 		{
-			Switch(target, pItem);
+			Switch(pTarget, pItem);
 		}
 	}
 
-	private void Switch(Collider2D target, Transform item)
+	private void Switch(Collider2D pTarget, Transform pItem)
 	{
-		FioleScript fioleScript = target.GetComponent<FioleScript>();
-		ChaudronScript chaudronScript = item.GetComponent<ChaudronScript>();
+		FioleScript fioleScript = pTarget.GetComponent<FioleScript>();
+		ChaudronScript chaudronScript = pItem.GetComponent<ChaudronScript>();
 
 		if(fioleScript == null)
-			fioleScript = item.GetComponent<FioleScript>();
+			fioleScript = pItem.GetComponent<FioleScript>();
 		if(chaudronScript == null)
-			chaudronScript = target.GetComponent<ChaudronScript>();
+			chaudronScript = pTarget.GetComponent<ChaudronScript>();
 
 		if (chaudronScript.itemList.Count != 0 && fioleScript.itemList.Count == 0 && chaudronScript.isDone)
 		{
@@ -166,11 +166,11 @@ public class UseItem : MonoBehaviour {
 	}
 
 	//Serve potion !
-	private void ServePotion(Collider2D target, Transform pItem)
+	private void ServePotion(Collider2D pTarget, Transform pItem)
 	{
-		if (CheckPlayerDirection(target))
+		if (CheckPlayerDirection(pTarget))
 		{
-			PotionMasterScript potionMasterScript =  target.GetComponent<PotionMasterScript>();
+			PotionMasterScript potionMasterScript = pTarget.GetComponent<PotionMasterScript>();
 			potionMasterScript.CheckPotionValidity(pItem.GetComponent<FioleScript>().itemList);
 			Destroy(pItem.gameObject);
 			_playerInfo.isHolding = false;
@@ -178,16 +178,16 @@ public class UseItem : MonoBehaviour {
 	}
 
 
-	public void AddItem(Collider2D target, Transform item)
+	public void AddItem(Collider2D pTarget, Transform pItem)
 	{
-		ItemInfo itemHoldedInfo = item.GetComponent<ItemInfo>();
-		ChaudronScript chaudronScript = target.GetComponent<ChaudronScript>();
+		ItemInfo itemHoldedInfo = pItem.GetComponent<ItemInfo>();
+		ChaudronScript chaudronScript = pTarget.GetComponent<ChaudronScript>();
 
 		if (!chaudronScript.isBurning && !chaudronScript.isFull)
 		{
 			chaudronScript.AddItem(itemHoldedInfo.name);
 
-			Destroy(item.gameObject);
+			Destroy(pItem.gameObject);
 
 			_playerInfo.isHolding = false;
 		}	
@@ -223,7 +223,7 @@ public class UseItem : MonoBehaviour {
 		}
 	}
 
-	public void DropOff(Transform target)
+	public void DropOff(Transform pTarget)
 	{
 		if (_playerInfo.isHolding)
 		{
@@ -231,8 +231,8 @@ public class UseItem : MonoBehaviour {
 			{
 				Transform item = transform.GetChild(0).transform.GetChild(0);
 
-				item.parent = target;
-				item.position = target.position;
+				item.parent = pTarget;
+				item.position = pTarget.position;
 
 				item.GetComponent<BoxCollider2D>().enabled = true;
 				item.GetComponent<Rigidbody2D>().bodyType = RigidbodyType2D.Kinematic;
@@ -240,7 +240,7 @@ public class UseItem : MonoBehaviour {
 				item.GetComponent<ItemInfo>().isHold = false;
 				item.GetComponent<ChaudronScript>().isCooking = true;
 
-				target.parent.GetComponent<FireScript>().isOccupied = true;
+				pTarget.parent.GetComponent<FireScript>().isOccupied = true;
 				item.GetComponent<ChaudronScript>().isCooking = true;
 				_playerInfo.isHolding = false;
 			}
@@ -271,18 +271,18 @@ public class UseItem : MonoBehaviour {
 		return target;
 	}
 
-	private bool CheckPlayerDirection(Collider2D target)
+	private bool CheckPlayerDirection(Collider2D pTarget)
 	{
 		if (_playerAction.lastDir.x > 0)
 		{
-			if (target.transform.position.x > transform.position.x)
+			if (pTarget.transform.position.x > transform.position.x)
 			{
 				return true;
 			}
 		}
 		else
 		{
-			if (target.transform.position.x < transform.position.x)
+			if (pTarget.transform.position.x < transform.position.x)
 			{
 				return true;
 			}

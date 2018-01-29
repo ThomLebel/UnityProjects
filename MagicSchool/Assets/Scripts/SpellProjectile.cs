@@ -29,23 +29,23 @@ public class SpellProjectile : MonoBehaviour {
 		transform.position += direction * speed * Time.deltaTime;
 	}
 
-	void OnTriggerEnter2D(Collider2D other)
+	void OnTriggerEnter2D(Collider2D pOther)
 	{
-		Debug.Log(other.tag);
-		if (other.tag == "Player")
+		Debug.Log(pOther.tag);
+		if (pOther.tag == "Player")
 		{
-			other.GetComponent<PlayerPotionAction>().SpellHit(direction);
+			pOther.GetComponent<PlayerPotionAction>().SpellHit(direction);
 		}
-		else if (other.tag == "item" || other.tag == "fiole")
+		else if (pOther.tag == "item" || pOther.tag == "fiole")
 		{
-			other.GetComponent<ItemScript>().AccioItem(direction);
+			pOther.GetComponent<ItemScript>().AccioItem(direction);
 		}
 		KillProjectile();
 	}
 
-	private IEnumerator WaitAndDie(float lifeTime)
+	private IEnumerator WaitAndDie(float pLifeTime)
 	{
-		yield return new WaitForSeconds(lifeTime);
+		yield return new WaitForSeconds(pLifeTime);
 		KillProjectile();
 	}
 

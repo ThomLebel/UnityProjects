@@ -6,15 +6,15 @@ public class ItemScript : MonoBehaviour {
 
 	public float spellForce = 30f;
 
-	public void AccioItem(Vector3 dir)
+	public void AccioItem(Vector3 pDir)
 	{
-		if (dir.x != 0)
+		if (pDir.x != 0)
 		{
-			gameObject.GetComponent<Rigidbody2D>().AddForce(transform.right * spellForce * dir.x * -1);
+			gameObject.GetComponent<Rigidbody2D>().AddForce(transform.right * spellForce * pDir.x * -1);
 		}
 		else
 		{
-			gameObject.GetComponent<Rigidbody2D>().AddForce(transform.up * spellForce * dir.y * -1);
+			gameObject.GetComponent<Rigidbody2D>().AddForce(transform.up * spellForce * pDir.y * -1);
 		}
 	}
 }
