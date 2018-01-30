@@ -90,6 +90,21 @@ public class PlayerPotionAction : MonoBehaviour {
 		}
 	}
 
+	private void ItemAction()
+	{
+		if (Input.GetButtonDown("Fire1_P"+ _playerInfo.playerNumber))
+		{
+			if (!_playerInfo.isHolding)
+			{
+				_useItem.PickItem();
+			}
+			else
+			{
+				_useItem.DropItem();
+			}
+		}
+	}
+
 	public void SpellHit(Vector3 pDir)
 	{
 		if (_playerInfo.isHolding)
@@ -104,26 +119,11 @@ public class PlayerPotionAction : MonoBehaviour {
 		{
 			gameObject.GetComponent<Rigidbody2D>().AddForce(transform.up * spellForce * pDir.y);
 		}
-		
-		Debug.Log("Player "+_playerInfo.playerNumber+" is Stun !");
+
+		Debug.Log("Player " + _playerInfo.playerNumber + " is Stun !");
 		_playerInfo.isStun = true;
 		stunCoroutine = PlayerStun(stunTime);
 		StartCoroutine(stunCoroutine);
-	}
-
-	private void ItemAction()
-	{
-		if (Input.GetButtonDown("Fire1_P"+ _playerInfo.playerNumber))
-		{
-			if (!_playerInfo.isHolding)
-			{
-				_useItem.PickItem();
-			}
-			else
-			{
-				_useItem.DropItem();
-			}
-		}
 	}
 
 	private IEnumerator PlayerStun(float stunTime)

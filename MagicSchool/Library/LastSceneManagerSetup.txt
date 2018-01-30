@@ -1,4 +1,4 @@
 sceneSetups:
-- path: Assets/Scenes/potion.unity
+- path: Assets/Scenes/network.unity
   isLoaded: 1
   isActive: 1

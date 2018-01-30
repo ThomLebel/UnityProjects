@@ -20,29 +20,25 @@ public class UseItem : MonoBehaviour {
 	//Pick-up item !
 	public void PickItem()
 	{
-		Collider2D[] colliders = Physics2D.OverlapCircleAll(transform.position, _playerInfo.pickUpRange, _playerInfo.pickUpLayer);
-		if (colliders.Length > 0)
-		{
-			Collider2D target = GetClosestCollider(colliders);
+		Collider2D target = GetClosestCollider(_playerInfo.pickUpLayer);
 
-			if (target != null)
+		if (target != null)
+		{
+			if ((_playerAction.lastDir.x > 0 && target.transform.position.x > transform.position.x) || (_playerAction.lastDir.x < 0 && target.transform.position.x < transform.position.x))
 			{
-				if ((_playerAction.lastDir.x > 0 && target.transform.position.x > transform.position.x) || (_playerAction.lastDir.x < 0 && target.transform.position.x < transform.position.x))
+				if (target.tag != "dispenser")
 				{
-					if (target.tag != "dispenser")
+					if (target.tag == "chaudron")
 					{
-						if (target.tag == "chaudron")
-						{
-							target.GetComponent<ChaudronScript>().isCooking = false; ;
-							if (target.transform.parent != null)
-								target.transform.parent.transform.parent.GetComponent<FireScript>().isOccupied = false;
-						}
-						PickUp(target);						
+						target.GetComponent<ChaudronScript>().isCooking = false; ;
+						if (target.transform.parent != null)
+							target.transform.parent.transform.parent.GetComponent<FireScript>().isOccupied = false;
 					}
-					else
-					{
-						target.GetComponent<ItemDispenserScript>().GiveItem(gameObject);
-					}
+					PickUp(target);						
+				}
+				else
+				{
+					target.GetComponent<ItemDispenserScript>().GiveItem(gameObject);
 				}
 			}
 		}
@@ -67,35 +63,31 @@ public class UseItem : MonoBehaviour {
 
 
 
-		Collider2D[] colliders = Physics2D.OverlapCircleAll(transform.position, _playerInfo.pickUpRange, layerMask);
-		if (colliders.Length > 0)
+		Collider2D target = GetClosestCollider(layerMask);
+
+		Debug.Log(target);
+
+		if (target != null)
 		{
-			Collider2D target = GetClosestCollider(colliders);
-
-			Debug.Log(target);
-
-			if (target != null)
+			if (itemHolded.tag == "item")
+				CookItem(target, itemHolded);
+			else if (itemHolded.tag == "chaudron")
 			{
-				if (itemHolded.tag == "item")
-					CookItem(target, itemHolded);
-				else if (itemHolded.tag == "chaudron")
-				{
-					if (target.tag == "fire")
-						PlaceCauldron(target, itemHolded);
-					else
-						TransvasePotion(target, itemHolded);
-				}
-					
-				else if (itemHolded.tag == "fiole")
-				{
-					if (target.tag == "pnj")
-						ServePotion(target, itemHolded);
-					else
-						TransvasePotion(target, itemHolded);
-				}
-				
+				if (target.tag == "fire")
+					PlaceCauldron(target, itemHolded);
+				else
+					TransvasePotion(target, itemHolded);
 			}
-		}	
+					
+			else if (itemHolded.tag == "fiole")
+			{
+				if (target.tag == "pnj")
+					ServePotion(target, itemHolded);
+				else
+					TransvasePotion(target, itemHolded);
+			}
+				
+		}
 		else
 			DropOff();
 	}
@@ -248,22 +240,27 @@ public class UseItem : MonoBehaviour {
 	}
 
 
-	private Collider2D GetClosestCollider(Collider2D[] pColliders)
+	private Collider2D GetClosestCollider(int pLayerMask)
 	{
 		float dist = 1000;
 		Collider2D target = null;
 
-		for (int i = 0; i < pColliders.Length; i++)
+		Collider2D[] colliders = Physics2D.OverlapCircleAll(transform.position, _playerInfo.pickUpRange, pLayerMask);
+		if (colliders.Length > 0)
 		{
-			Collider2D item = pColliders[i];
 
-			if ((item.transform.position.y > (transform.position.y - _playerInfo.playerHeight / 2)) && (item.transform.position.y < (transform.position.y + _playerInfo.playerHeight / 2)))
+			for (int i = 0; i < colliders.Length; i++)
 			{
-				float distTemp = Math.Abs(item.transform.position.x - transform.position.x);
-				if (distTemp < dist)
+				Collider2D item = colliders[i];
+
+				if ((item.transform.position.y > (transform.position.y - _playerInfo.playerHeight / 2)) && (item.transform.position.y < (transform.position.y + _playerInfo.playerHeight / 2)))
 				{
-					dist = distTemp;
-					target = item;
+					float distTemp = Math.Abs(item.transform.position.x - transform.position.x);
+					if (distTemp < dist)
+					{
+						dist = distTemp;
+						target = item;
+					}
 				}
 			}
 		}

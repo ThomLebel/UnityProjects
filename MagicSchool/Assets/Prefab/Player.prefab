@@ -40,6 +40,7 @@ GameObject:
   - component: {fileID: 114882859796580532}
   - component: {fileID: 114503336958950830}
   - component: {fileID: 114039111849737252}
+  - component: {fileID: 114269111898546762}
   m_Layer: 0
   m_Name: Player
   m_TagString: Player
@@ -130,6 +131,38 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 92e43b4229be2b142a437389eb5adc3f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &114269111898546762
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1611396225461382}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 372142912, guid: 870353891bb340e2b2a9c8707e7419ba, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_SceneId:
+    m_Value: 0
+  m_AssetId:
+    i0: 204
+    i1: 148
+    i2: 222
+    i3: 35
+    i4: 114
+    i5: 99
+    i6: 250
+    i7: 148
+    i8: 248
+    i9: 145
+    i10: 39
+    i11: 188
+    i12: 142
+    i13: 155
+    i14: 40
+    i15: 172
+  m_ServerOnly: 0
+  m_LocalPlayerAuthority: 1
 --- !u!114 &114503336958950830
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -169,6 +202,7 @@ MonoBehaviour:
   dispenserLayer: 0
   fireLayer: 0
   pickUpLayer: 0
+  pnjLayer: 0
   playerNumber: 1
   pickUpRange: 1
 --- !u!212 &212452536761500248
