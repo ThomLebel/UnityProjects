@@ -26,6 +26,8 @@ public class PlayerNetwork : NetworkBehaviour
 	public float stunTime;
 	private float nextCast;
 
+	public Sprite sprite;
+
 
 	private void Start()
 	{
@@ -33,6 +35,11 @@ public class PlayerNetwork : NetworkBehaviour
 		_useItem = gameObject.GetComponent<UseItem>();
 
 		lastDir = new Vector3(1, 0, 0);
+	}
+
+	public override void OnStartLocalPlayer()
+	{
+		gameObject.GetComponent<SpriteRenderer>().sprite = sprite;
 	}
 
 	private void Update()

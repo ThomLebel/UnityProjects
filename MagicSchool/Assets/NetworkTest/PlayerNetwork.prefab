@@ -171,6 +171,7 @@ MonoBehaviour:
   castingRate: 0.5
   spellForce: 100
   stunTime: 2
+  sprite: {fileID: 21300456, guid: d315b93f2af89444bbd000ab6d23d8e3, type: 3}
 --- !u!114 &114773271201867746
 MonoBehaviour:
   m_ObjectHideFlags: 1
