@@ -166,7 +166,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   speed: 5
   lastDir: {x: 0, y: 0, z: 0}
-  projectilePrefab: {fileID: 1327691610361506, guid: 198becfa2d9048b44807696911141f4e,
+  projectilePrefab: {fileID: 1920565684488142, guid: 392ab1c8940c0204fb8a6d499b1b4020,
     type: 2}
   castingRate: 0.5
   spellForce: 100

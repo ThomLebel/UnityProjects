@@ -1,3 +1,6 @@
+Multiplayer : https://www.photonengine.com/en-US/Photon
+		- https://doc.photonengine.com/en-us/pun/current/demos-and-tutorials/pun-basics-tutorial/player-prefab
+
 Potion :
 
 -Gestion de la verticalité ? personnage + position item

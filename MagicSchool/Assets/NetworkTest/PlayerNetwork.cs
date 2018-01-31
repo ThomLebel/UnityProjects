@@ -52,7 +52,7 @@ public class PlayerNetwork : NetworkBehaviour
 		{
 			UpdateMovement();
 			ItemAction();
-			CastSpell();
+			CmdCastSpell();
 		}
 	}
 
@@ -92,15 +92,20 @@ public class PlayerNetwork : NetworkBehaviour
 			transform.localScale = new Vector3(_playerInfo.originalScale * lastDir.x, transform.localScale.y, transform.localScale.z);
 	}
 
-	private void CastSpell()
+	[Command]
+	void CmdCastSpell()
 	{
+		Debug.Log("cast");
 		if (Input.GetButton("Fire3_P" + _playerInfo.playerNumber) && Time.time > nextCast)
 		{
+			Debug.Log("cast spell !");
 			nextCast = Time.time + castingRate;
 			GameObject projectile = Instantiate(projectilePrefab);
 
-			projectile.GetComponent<SpellProjectile>().direction = lastDir;
+			projectile.GetComponent<SpellProjectileNetwork>().direction = lastDir;
 			projectile.transform.position = transform.position + lastDir;
+
+			NetworkServer.Spawn(projectile);
 		}
 	}
 
