@@ -7,6 +7,7 @@ public class PlayerInfo : MonoBehaviour {
 	//States
 	[HideInInspector]
 	public bool isHolding, isStun;
+	public string State;
 
 	//Mesures
 	[HideInInspector]
@@ -22,6 +23,7 @@ public class PlayerInfo : MonoBehaviour {
 
 	private void Start()
 	{
+		State = "idle";
 		isHolding = false;
 		isStun = false;
 		playerWidth = GetComponent<Renderer>().bounds.size.x;

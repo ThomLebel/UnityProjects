@@ -7,6 +7,23 @@ namespace Com.MyCompany.MyGame
 {
 	public class GameManager : Photon.PunBehaviour
 	{
+		#region Public Variables
+
+		static public GameManager Instance;
+
+		#endregion
+
+
+		#region MonoBehaviour CallBacks
+
+		private void Start()
+		{
+			Instance = this;
+		}
+
+		#endregion
+
+
 		#region Photon Messages
 
 		public override void OnPhotonPlayerConnected(PhotonPlayer newPlayer)

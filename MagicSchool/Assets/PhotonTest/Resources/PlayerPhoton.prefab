@@ -38,9 +38,10 @@ GameObject:
   - component: {fileID: 50364686278096188}
   - component: {fileID: 61174213519696772}
   - component: {fileID: 114030939717551992}
-  - component: {fileID: 114490088910175642}
+  - component: {fileID: 114858662794190148}
   - component: {fileID: 114074617050798562}
-  - component: {fileID: 114300544028570680}
+  - component: {fileID: 114785487786147080}
+  - component: {fileID: 114702356227653854}
   m_Layer: 0
   m_Name: PlayerPhoton
   m_TagString: Player
@@ -155,7 +156,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 92e43b4229be2b142a437389eb5adc3f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!114 &114300544028570680
+--- !u!114 &114702356227653854
 MonoBehaviour:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
@@ -163,31 +164,64 @@ MonoBehaviour:
   m_GameObject: {fileID: 1941742067039458}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 372142912, guid: 870353891bb340e2b2a9c8707e7419ba, type: 3}
+  m_Script: {fileID: 11500000, guid: 627855c7f81362d41938ffe0b1475957, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_SceneId:
-    m_Value: 0
-  m_AssetId:
-    i0: 157
-    i1: 213
-    i2: 26
-    i3: 212
-    i4: 150
-    i5: 155
-    i6: 5
-    i7: 164
-    i8: 89
-    i9: 65
-    i10: 215
-    i11: 216
-    i12: 225
-    i13: 16
-    i14: 244
-    i15: 252
-  m_ServerOnly: 0
-  m_LocalPlayerAuthority: 1
---- !u!114 &114490088910175642
+  m_PositionModel:
+    SynchronizeEnabled: 1
+    TeleportEnabled: 1
+    TeleportIfDistanceGreaterThan: 3
+    InterpolateOption: 4
+    InterpolateMoveTowardsSpeed: 1
+    InterpolateLerpSpeed: 10
+    InterpolateMoveTowardsAcceleration: 2
+    InterpolateMoveTowardsDeceleration: 2
+    InterpolateSpeedCurve:
+      serializedVersion: 2
+      m_Curve:
+      - serializedVersion: 2
+        time: -1
+        value: 0
+        inSlope: 0
+        outSlope: Infinity
+        tangentMode: 0
+      - serializedVersion: 2
+        time: 0
+        value: 1
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+      - serializedVersion: 2
+        time: 1
+        value: 1
+        inSlope: 0
+        outSlope: 1
+        tangentMode: 0
+      - serializedVersion: 2
+        time: 4
+        value: 4
+        inSlope: 1
+        outSlope: 0
+        tangentMode: 0
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+    ExtrapolateOption: 0
+    ExtrapolateSpeed: 1
+    ExtrapolateIncludingRoundTripTime: 1
+    ExtrapolateNumberOfStoredPositions: 1
+    DrawErrorGizmo: 1
+  m_RotationModel:
+    SynchronizeEnabled: 1
+    InterpolateOption: 0
+    InterpolateRotateTowardsSpeed: 180
+    InterpolateLerpSpeed: 5
+  m_ScaleModel:
+    SynchronizeEnabled: 1
+    InterpolateOption: 0
+    InterpolateMoveTowardsSpeed: 1
+    InterpolateLerpSpeed: 0
+--- !u!114 &114785487786147080
 MonoBehaviour:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
@@ -195,12 +229,38 @@ MonoBehaviour:
   m_GameObject: {fileID: 1941742067039458}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 80e17f0c608e0434f99884c5778ef4a7, type: 3}
+  m_Script: {fileID: 11500000, guid: aa584fbee541324448dd18d8409c7a41, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ownerId: 0
+  group: 0
+  OwnerShipWasTransfered: 0
+  prefixBackup: -1
+  synchronization: 3
+  onSerializeTransformOption: 3
+  onSerializeRigidBodyOption: 2
+  ownershipTransfer: 0
+  ObservedComponents:
+  - {fileID: 114702356227653854}
+  ObservedComponentsFoldoutOpen: 1
+  viewIdField: 0
+  instantiationId: -1
+  currentMasterID: -1
+  isRuntimeInstantiated: 0
+--- !u!114 &114858662794190148
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1941742067039458}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 93f25d482b4c7ff4385202e435a7d384, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   speed: 5
   lastDir: {x: 0, y: 0, z: 0}
-  projectilePrefab: {fileID: 1327691610361506, guid: 198becfa2d9048b44807696911141f4e,
+  projectilePrefab: {fileID: 1304568552454650, guid: 927204a58438028499164e6e3a8fc430,
     type: 2}
   castingRate: 0.5
   spellForce: 100

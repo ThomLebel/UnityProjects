@@ -577,7 +577,8 @@ Prefab:
       propertyPath: m_TagString
       value: Player
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 0}
   m_ParentPrefab: {fileID: 100100000, guid: cc94de237263fa94f89127bc8e9b28ac, type: 2}
   m_IsPrefabParent: 0
 --- !u!1001 &1604362115
@@ -666,7 +667,7 @@ Prefab:
       value: Player1
       objectReference: {fileID: 0}
     m_RemovedComponents:
-    - {fileID: 114269111898546762, guid: cc94de237263fa94f89127bc8e9b28ac, type: 2}
+    - {fileID: 0}
   m_ParentPrefab: {fileID: 100100000, guid: cc94de237263fa94f89127bc8e9b28ac, type: 2}
   m_IsPrefabParent: 0
 --- !u!1001 &1699826031
