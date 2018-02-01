@@ -2,12 +2,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class ChaudronScriptNetwork : MonoBehaviour, IPunObservable
+public class ChaudronScriptNetwork : Photon.PunBehaviour, IPunObservable
 {
-
-	//private ItemInfo _itemInfo;
-
-	public int itemNeeded = 3;
 	public bool isFull;
 	public bool isCooking;
 	public bool isDone;
@@ -17,15 +13,14 @@ public class ChaudronScriptNetwork : MonoBehaviour, IPunObservable
 	private float burningTimer = 0f;
 	public float burningDelay = 5f;
 
-	public List<string> itemList;
-
 	public GameObject _progressBar;
 	private ProgressBarScriptNetwork _progressBarScript;
+	private ItemInfoNetwork _itemInfo;
 
 	// Use this for initialization
 	void Start()
 	{
-		//_itemInfo = gameObject.GetComponent<ItemInfo>();
+		_itemInfo = gameObject.GetComponent<ItemInfoNetwork>();
 		_progressBarScript = _progressBar.GetComponent<ProgressBarScriptNetwork>();
 
 		isFull = false;
@@ -36,11 +31,11 @@ public class ChaudronScriptNetwork : MonoBehaviour, IPunObservable
 
 	private void Update()
 	{
-		if (isCooking && itemList.Count > 0)
+		if (isCooking && _itemInfo.itemList.Length > 0)
 		{
 			Cooking();
 		}
-		if (itemList.Count == 0)
+		if (_itemInfo.itemList.Length == 0)
 		{
 			_progressBarScript.value = 0f;
 		}
@@ -48,10 +43,11 @@ public class ChaudronScriptNetwork : MonoBehaviour, IPunObservable
 
 	public void AddItem(string pName)
 	{
-		if (itemList.Count < itemNeeded)
+		if (_itemInfo.itemList.Length < _itemInfo.maxItem)
 		{
-			itemList.Add(pName);
-			if (itemList.Count > 1)
+			_itemInfo.itemList[_itemInfo.itemList.Length] = pName;
+
+			if (_itemInfo.itemList.Length > 1)
 			{
 				_progressBarScript.value = (_progressBarScript.value / 3f) * 2f;
 			}
@@ -101,7 +97,6 @@ public class ChaudronScriptNetwork : MonoBehaviour, IPunObservable
 		if (stream.isWriting)
 		{
 			// We own this player: send the others our data
-			stream.SendNext(itemList);
 			stream.SendNext(isFull);
 			stream.SendNext(isCooking);
 			stream.SendNext(isDone);
@@ -110,7 +105,6 @@ public class ChaudronScriptNetwork : MonoBehaviour, IPunObservable
 		else
 		{
 			// Network player, receive data
-			this.itemList = (List<string>)stream.ReceiveNext();
 			this.isFull = (bool)stream.ReceiveNext();
 			this.isCooking = (bool)stream.ReceiveNext();
 			this.isDone = (bool)stream.ReceiveNext();

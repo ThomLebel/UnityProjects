@@ -32,7 +32,7 @@ namespace Com.MyCompany.MyGame
 				if (PlayerNetwork.LocalPlayerInstance == null)
 				{
 					Debug.Log("We are Instantiating LocalPlayer from " + SceneManager.GetActiveScene().name);
-					PhotonNetwork.Instantiate(this.playerPrefab.name, new Vector3(0f, 5f, 0f), Quaternion.identity, 0);
+					PhotonNetwork.Instantiate(this.playerPrefab.name, new Vector3(0f, 0f, 0f), Quaternion.identity, 0);
 				}
 				else
 				{

@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class ProgressBarScriptNetwork : MonoBehaviour, IPunObservable
+public class ProgressBarScriptNetwork : Photon.PunBehaviour, IPunObservable
 {
 
 	public float value = 0f; //current progress

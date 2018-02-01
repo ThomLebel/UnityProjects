@@ -30,7 +30,7 @@ public class PlayerNetwork : Photon.PunBehaviour, IPunObservable
 	#region Private Variables
 
 	private PlayerInfo _playerInfo;
-	private UseItem _useItem;
+	private UseItemNetwork _useItem;
 
 	private int horizontal;
 	private int vertical;
@@ -59,17 +59,17 @@ public class PlayerNetwork : Photon.PunBehaviour, IPunObservable
 	private void Start()
 	{
 		_playerInfo = gameObject.GetComponent<PlayerInfo>();
-		_useItem = gameObject.GetComponent<UseItem>();
+		_useItem = gameObject.GetComponent<UseItemNetwork>();
 
 		lastDir = new Vector3(1, 0, 0);
 
-		#if UNITY_MIN_5_4
-				//Unity 5.4 has a new scene management. Register a method to call CalledOnLevelWasLoaded.
-				UnityEngine.SceneManagement.SceneManager.sceneLoaded += (scene, loadingMode) =>
-				{
-					this.CalledOnLevelWasLoaded(scene.buildIndex);
-				};
-		#endif
+#if UNITY_MIN_5_4
+		//Unity 5.4 has a new scene management. Register a method to call CalledOnLevelWasLoaded.
+		UnityEngine.SceneManagement.SceneManager.sceneLoaded += (scene, loadingMode) =>
+		{
+			this.CalledOnLevelWasLoaded(scene.buildIndex);
+		};
+#endif
 	}
 
 	private void Update()
@@ -83,15 +83,16 @@ public class PlayerNetwork : Photon.PunBehaviour, IPunObservable
 			UpdateMovement();
 			ItemAction();
 			CastSpell();
+			//photonView.RPC("CastSpell", PhotonTargets.All);
 		}
 	}
 
-	#if !UNITY_MIN_5_4
+#if !UNITY_MIN_5_4
 	/// <summary>See CalledOnLevelWasLoaded. Outdated in Unity 5.4.</summary>
 	void OnLevelWasLoaded(int level){
 		this.CalledOnLevelWasLoaded(level);
 	}
-	#endif
+#endif
 
 	void CalledOnLevelWasLoaded(int level)
 	{
@@ -99,10 +100,10 @@ public class PlayerNetwork : Photon.PunBehaviour, IPunObservable
 		transform.position = new Vector3(0f, 0f, 0f);
 	}
 
-#endregion
+	#endregion
 
 
-#region Private Methods
+	#region Private Methods
 
 	private void UpdateMovement()
 	{
@@ -140,13 +141,19 @@ public class PlayerNetwork : Photon.PunBehaviour, IPunObservable
 			transform.localScale = new Vector3(_playerInfo.originalScale * lastDir.x, transform.localScale.y, transform.localScale.z);
 	}
 
-
 	void CastSpell()
 	{
 		if (Input.GetButton("Fire3_P" + _playerInfo.playerNumber) && Time.time > nextCast && !_playerInfo.isHolding)
 		{
 			nextCast = Time.time + castingRate;
-			GameObject projectile = Instantiate(projectilePrefab);
+
+			GameObject projectile;
+
+			if (PhotonNetwork.connected)
+				projectile = PhotonNetwork.Instantiate(this.projectilePrefab.name, new Vector3(0f, 0f, 0f), Quaternion.identity, 0) as GameObject;
+			else
+				projectile = Instantiate(projectilePrefab) as GameObject;
+			
 
 			projectile.GetComponent<SpellProjectileNetwork>().direction = lastDir;
 			projectile.transform.position = transform.position + lastDir;
@@ -185,7 +192,8 @@ public class PlayerNetwork : Photon.PunBehaviour, IPunObservable
 	{
 		if (_playerInfo.isHolding)
 		{
-			_useItem.DropOff();
+			photonView.RPC("DropOff", PhotonTargets.All);
+			//_useItem.DropOff();
 		}
 		if (pDir.x != 0)
 		{

@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class FireScriptNetwork : MonoBehaviour, IPunObservable
+public class FireScriptNetwork : Photon.PunBehaviour, IPunObservable
 {
 
 	public bool isOccupied;

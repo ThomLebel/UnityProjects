@@ -3,9 +3,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class UseItemNetwork : MonoBehaviour
+public class UseItemNetwork : Photon.PunBehaviour
 {
-
 	private PlayerInfo _playerInfo;
 	private PlayerNetwork _playerAction;
 	private Transform _itemLocation;
@@ -35,11 +34,13 @@ public class UseItemNetwork : MonoBehaviour
 						if (target.transform.parent != null)
 							target.transform.parent.transform.parent.GetComponent<FireScriptNetwork>().isOccupied = false;
 					}
-					PickUp(target);
+					int targetID = target.GetComponent<PhotonView>().viewID;
+					photonView.RPC("PickUp", PhotonTargets.All, targetID);
+					//PickUp(target);
 				}
 				else
 				{
-					target.GetComponent<ItemDispenserScript>().GiveItem(gameObject);
+					target.GetComponent<ItemDispenserScriptNetwork>().GiveItem(gameObject);
 				}
 			}
 		}
@@ -90,7 +91,8 @@ public class UseItemNetwork : MonoBehaviour
 
 		}
 		else
-			DropOff();
+			photonView.RPC("DropOff", PhotonTargets.All);
+			//DropOff();
 	}
 
 
@@ -112,7 +114,8 @@ public class UseItemNetwork : MonoBehaviour
 	{
 		if (CheckPlayerDirection(pTarget))
 		{
-			DropOff(pTarget.transform.GetChild(0).transform);
+			photonView.RPC("DropOff", PhotonTargets.All, pTarget.transform.GetChild(0).transform);
+			//DropOff(pTarget.transform.GetChild(0).transform);
 		}
 	}
 
@@ -128,33 +131,58 @@ public class UseItemNetwork : MonoBehaviour
 
 	private void Switch(Collider2D pTarget, Transform pItem)
 	{
-		FioleScriptNetwork fioleScript = pTarget.GetComponent<FioleScriptNetwork>();
+		ItemInfoNetwork targetInfoScript = pTarget.GetComponent<ItemInfoNetwork>();
+		ItemInfoNetwork itemInfoScript = pItem.GetComponent<ItemInfoNetwork>();
 		ChaudronScriptNetwork chaudronScript = pItem.GetComponent<ChaudronScriptNetwork>();
 
-		if (fioleScript == null)
-			fioleScript = pItem.GetComponent<FioleScriptNetwork>();
 		if (chaudronScript == null)
 			chaudronScript = pTarget.GetComponent<ChaudronScriptNetwork>();
 
-		if (chaudronScript.itemList.Count != 0 && fioleScript.itemList.Count == 0 && chaudronScript.isDone)
+		if (targetInfoScript.itemList.Length == 0 && itemInfoScript.itemList.Length != 0)
 		{
-			Debug.Log("Cauldron to fiole !");
-			fioleScript.itemList = chaudronScript.itemList;
-			chaudronScript.itemList = new List<string>();
-			chaudronScript.isFull = false;
-			chaudronScript.isDone = false;
-			chaudronScript.SetCookingTime(0f);
-		}
-		else if (fioleScript.itemList.Count != 0 && chaudronScript.itemList.Count == 0)
-		{
-			Debug.Log("Fiole to cauldron !");
-			for (int i = 0; i < fioleScript.itemList.Count; i++)
+			if(pTarget.tag == "chaudron")
 			{
-				chaudronScript.AddItem(fioleScript.itemList[i]);
+				for (int i = 0; i < itemInfoScript.itemList.Length; i++)
+				{
+					chaudronScript.AddItem(itemInfoScript.itemList[i]);
+				}
+				chaudronScript.isDone = true;
+				chaudronScript.SetCookingTime(1f);
 			}
-			chaudronScript.isDone = true;
-			chaudronScript.SetCookingTime(1f);
-			fioleScript.itemList = new List<string>();
+			else
+			{
+				if (chaudronScript.isDone)
+				{
+					targetInfoScript.itemList = itemInfoScript.itemList;
+					chaudronScript.isFull = false;
+					chaudronScript.isDone = false;
+					chaudronScript.SetCookingTime(0f);
+				}
+			}
+			itemInfoScript.itemList = new string[itemInfoScript.maxItem];
+		}
+		else if (itemInfoScript.itemList.Length == 0 && targetInfoScript.itemList.Length != 0)
+		{
+			if (pTarget.tag == "chaudron")
+			{
+				if (chaudronScript.isDone)
+				{
+					itemInfoScript.itemList = targetInfoScript.itemList;
+					chaudronScript.isFull = false;
+					chaudronScript.isDone = false;
+					chaudronScript.SetCookingTime(0f);
+				}
+			}
+			else
+			{
+				for (int i = 0; i < targetInfoScript.itemList.Length; i++)
+				{
+					chaudronScript.AddItem(targetInfoScript.itemList[i]);
+				}
+				chaudronScript.isDone = true;
+				chaudronScript.SetCookingTime(1f);
+			}
+			targetInfoScript.itemList = new string[targetInfoScript.maxItem];
 		}
 	}
 
@@ -165,7 +193,12 @@ public class UseItemNetwork : MonoBehaviour
 		{
 			PotionMasterScript potionMasterScript = pTarget.GetComponent<PotionMasterScript>();
 			potionMasterScript.CheckPotionValidity(pItem.GetComponent<FioleScriptNetwork>().itemList);
-			Destroy(pItem.gameObject);
+
+			if (PhotonNetwork.connected)
+				PhotonNetwork.Destroy(pItem.gameObject);
+			else
+				Destroy(pItem.gameObject);
+
 			_playerInfo.isHolding = false;
 		}
 	}
@@ -180,17 +213,23 @@ public class UseItemNetwork : MonoBehaviour
 		{
 			chaudronScript.AddItem(itemHoldedInfo.name);
 
-			Destroy(pItem.gameObject);
+			if (PhotonNetwork.connected)
+				PhotonNetwork.Destroy(pItem.gameObject);
+			else
+				Destroy(pItem.gameObject);
 
 			_playerInfo.isHolding = false;
 		}
 	}
 
-	public void PickUp(Collider2D pItem)
+	[PunRPC]
+	public void PickUp(int viewID)
 	{
+		GameObject pItem = PhotonView.Find(viewID).gameObject;
 		pItem.GetComponent<ItemInfoNetwork>().isHold = true;
 		pItem.GetComponent<BoxCollider2D>().enabled = false;
 		pItem.GetComponent<Rigidbody2D>().bodyType = RigidbodyType2D.Kinematic;
+		pItem.GetComponent<PhotonTransformView>().enabled = false;
 		pItem.transform.position = _itemLocation.position;
 		pItem.transform.parent = _itemLocation;
 		pItem.transform.rotation = new Quaternion(0, 0, 0, 0);
@@ -198,6 +237,7 @@ public class UseItemNetwork : MonoBehaviour
 		_playerInfo.isHolding = true;
 	}
 
+	[PunRPC]
 	public void DropOff()
 	{
 		if (_playerInfo.isHolding)
@@ -210,12 +250,14 @@ public class UseItemNetwork : MonoBehaviour
 
 				item.GetComponent<ItemInfoNetwork>().isHold = false;
 				item.GetComponent<BoxCollider2D>().enabled = true;
+				item.GetComponent<PhotonTransformView>().enabled = true;
 				item.GetComponent<Rigidbody2D>().bodyType = RigidbodyType2D.Dynamic;
 				_playerInfo.isHolding = false;
 			}
 		}
 	}
 
+	[PunRPC]
 	public void DropOff(Transform pTarget)
 	{
 		if (_playerInfo.isHolding)
@@ -223,6 +265,8 @@ public class UseItemNetwork : MonoBehaviour
 			if (transform.GetChild(0).transform.childCount > 0)
 			{
 				Transform item = transform.GetChild(0).transform.GetChild(0);
+
+				item.GetComponent<PhotonTransformView>().enabled = true;
 
 				item.parent = pTarget;
 				item.position = pTarget.position;

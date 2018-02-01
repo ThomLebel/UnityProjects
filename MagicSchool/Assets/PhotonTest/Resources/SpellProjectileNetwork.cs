@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class SpellProjectileNetwork : MonoBehaviour
+public class SpellProjectileNetwork : Photon.PunBehaviour
 {
 	public Vector3 direction;
 

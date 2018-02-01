@@ -42,4 +42,7 @@ MonoBehaviour:
   - RequestForPickupItems
   - RequestForPickupTimes
   - TaggedPlayer
+  - CastSpell
+  - DropOff
+  - PickUp
   DisableAutoOpenWizard: 1
