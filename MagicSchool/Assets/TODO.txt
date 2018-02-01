@@ -1,6 +1,10 @@
 Multiplayer : https://www.photonengine.com/en-US/Photon
 		- https://doc.photonengine.com/en-us/pun/current/demos-and-tutorials/pun-basics-tutorial/player-prefab
 
+Sprites : 	-https://tokegameart.net/item/wizard-tiny-style-character/
+		-https://tokegameart.net/item/tiny-style-character-witcher/
+		-https://tokegameart.net/item/4-directional-skeleton-knight/
+
 Potion :
 
 -Gestion de la verticalité ? personnage + position item

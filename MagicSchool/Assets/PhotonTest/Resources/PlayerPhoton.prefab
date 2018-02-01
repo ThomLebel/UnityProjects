@@ -42,6 +42,7 @@ GameObject:
   - component: {fileID: 114074617050798562}
   - component: {fileID: 114785487786147080}
   - component: {fileID: 114702356227653854}
+  - component: {fileID: 114025121613589044}
   m_Layer: 0
   m_Name: PlayerPhoton
   m_TagString: Player
@@ -121,6 +122,19 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 0.11, y: 0.16}
   m_EdgeRadius: 0
+--- !u!114 &114025121613589044
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1941742067039458}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0e7cb724808c322458aa4d15f5035fa9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_SynchronizeVelocity: 1
+  m_SynchronizeAngularVelocity: 1
 --- !u!114 &114030939717551992
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -134,6 +148,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   isHolding: 0
   isStun: 0
+  State: 
   playerWidth: 0
   playerHeight: 0
   originalScale: 0
@@ -242,6 +257,8 @@ MonoBehaviour:
   ownershipTransfer: 0
   ObservedComponents:
   - {fileID: 114702356227653854}
+  - {fileID: 114858662794190148}
+  - {fileID: 114025121613589044}
   ObservedComponentsFoldoutOpen: 1
   viewIdField: 0
   instantiationId: -1
