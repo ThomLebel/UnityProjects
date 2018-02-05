@@ -30,7 +30,7 @@ public class ItemDispenserScriptNetwork : Photon.PunBehaviour, IPunObservable
 				item = Instantiate(itemGiven) as GameObject;
 
 			int itemID = item.GetComponent<PhotonView>().viewID;
-			photonView.RPC("PickUp", PhotonTargets.All, item);
+			pPlayer.GetComponent<PhotonView>().RPC("PickUp", PhotonTargets.All, itemID);
 
 			elapsedTime = Time.time + cooldown;
 			timeBeforeNextItem = cooldown;

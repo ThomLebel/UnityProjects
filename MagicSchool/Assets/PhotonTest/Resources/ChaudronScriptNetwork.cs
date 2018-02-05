@@ -31,11 +31,11 @@ public class ChaudronScriptNetwork : Photon.PunBehaviour, IPunObservable
 
 	private void Update()
 	{
-		if (isCooking && _itemInfo.itemList.Length > 0)
+		if (isCooking && _itemInfo.itemList.Count > 0)
 		{
 			Cooking();
 		}
-		if (_itemInfo.itemList.Length == 0)
+		if (_itemInfo.itemList.Count == 0)
 		{
 			_progressBarScript.value = 0f;
 		}
@@ -43,11 +43,12 @@ public class ChaudronScriptNetwork : Photon.PunBehaviour, IPunObservable
 
 	public void AddItem(string pName)
 	{
-		if (_itemInfo.itemList.Length < _itemInfo.maxItem)
+		if (_itemInfo.itemList.Count < _itemInfo.maxItem)
 		{
-			_itemInfo.itemList[_itemInfo.itemList.Length] = pName;
+			_itemInfo.itemList.Add(pName);
+			//_itemInfo.itemList[_itemInfo.itemList.Count] = pName;
 
-			if (_itemInfo.itemList.Length > 1)
+			if (_itemInfo.itemList.Count > 1)
 			{
 				_progressBarScript.value = (_progressBarScript.value / 3f) * 2f;
 			}

@@ -8,12 +8,12 @@ public class ItemInfoNetwork : Photon.PunBehaviour, IPunObservable
 	public string itemName;
 	public bool isHold;
 	public int maxItem = 3;
-	public string[] itemList;
+	public List<string> itemList;
 
 	private void Start()
 	{
 		isHold = false;
-		itemList = new string[maxItem];
+		//itemList = new string[maxItem];
 	}
 
 	void IPunObservable.OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)

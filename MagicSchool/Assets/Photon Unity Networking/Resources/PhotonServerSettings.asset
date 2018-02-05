@@ -45,4 +45,11 @@ MonoBehaviour:
   - CastSpell
   - DropOff
   - PickUp
+  - Shoot
+  - AddItemToCauldron
+  - CookItem
+  - PlaceCauldron
+  - ServePotion
+  - Switch
+  - TransvasePotion
   DisableAutoOpenWizard: 1

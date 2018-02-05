@@ -9,6 +9,8 @@ public class UseItemNetwork : Photon.PunBehaviour
 	private PlayerNetwork _playerAction;
 	private Transform _itemLocation;
 
+	private int targetID, itemID;
+
 	private void Start()
 	{
 		_playerInfo = gameObject.GetComponent<PlayerInfo>();
@@ -32,11 +34,17 @@ public class UseItemNetwork : Photon.PunBehaviour
 					{
 						target.GetComponent<ChaudronScriptNetwork>().isCooking = false; ;
 						if (target.transform.parent != null)
-							target.transform.parent.transform.parent.GetComponent<FireScriptNetwork>().isOccupied = false;
+							target.transform.parent.GetComponent<FireScriptNetwork>().isOccupied = false;
 					}
-					int targetID = target.GetComponent<PhotonView>().viewID;
-					photonView.RPC("PickUp", PhotonTargets.All, targetID);
-					//PickUp(target);
+					if (PhotonNetwork.connected)
+					{
+						targetID = target.GetComponent<PhotonView>().viewID;
+						photonView.RPC("PickUp", PhotonTargets.All, targetID);
+					}
+					else
+					{
+						PickUp(target);
+					}
 				}
 				else
 				{
@@ -45,7 +53,6 @@ public class UseItemNetwork : Photon.PunBehaviour
 			}
 		}
 	}
-
 
 	//What to do with this object ?
 	public void DropItem()
@@ -68,59 +75,157 @@ public class UseItemNetwork : Photon.PunBehaviour
 		Collider2D target = GetClosestCollider(layerMask);
 
 		Debug.Log(target);
+		
 
 		if (target != null)
 		{
+			
+
+			if (PhotonNetwork.connected)
+			{
+				targetID = target.GetComponent<PhotonView>().viewID;
+				itemID = itemHolded.GetComponent<PhotonView>().viewID;
+			}
+
 			if (itemHolded.tag == "item")
-				CookItem(target, itemHolded);
+			{
+				if (PhotonNetwork.connected)
+				{
+					CookItem(targetID, itemID);
+					//photonView.RPC("CookItem", PhotonTargets.All, targetID, itemID);
+				}
+				else
+				{
+					CookItem(target, itemHolded);
+				}
+			}
 			else if (itemHolded.tag == "chaudron")
 			{
 				if (target.tag == "fire")
-					PlaceCauldron(target, itemHolded);
+				{
+					if (PhotonNetwork.connected)
+					{
+						PlaceCauldron(targetID);
+						//photonView.RPC("PlaceCauldron", PhotonTargets.All, targetID);
+					}
+					else
+					{
+						PlaceCauldron(target, itemHolded);
+					}
+				}
 				else
-					TransvasePotion(target, itemHolded);
+				{
+					if (PhotonNetwork.connected)
+					{
+						TransvasePotion(targetID, itemID);
+						//photonView.RPC("TransvasePotion", PhotonTargets.All, targetID, itemID);
+					}
+					else
+					{
+						TransvasePotion(target, itemHolded);
+					}
+				}
 			}
-
 			else if (itemHolded.tag == "fiole")
 			{
 				if (target.tag == "pnj")
-					ServePotion(target, itemHolded);
+				{
+					if (PhotonNetwork.connected)
+					{
+						ServePotion(targetID, itemID);
+						//photonView.RPC("ServePotion", PhotonTargets.All, targetID, itemID);
+					}
+					else
+					{
+						ServePotion(target, itemHolded);
+					}
+				}
 				else
-					TransvasePotion(target, itemHolded);
+				{
+					if (PhotonNetwork.connected)
+					{
+						TransvasePotion(targetID, itemID);
+						//photonView.RPC("TransvasePotion", PhotonTargets.All, targetID, itemID);
+					}
+					else
+					{
+						TransvasePotion(target, itemHolded);
+					}
+				}
 			}
-
 		}
 		else
-			photonView.RPC("DropOff", PhotonTargets.All);
-			//DropOff();
+		{
+			if (PhotonNetwork.connected)
+			{
+				photonView.RPC("DropOff", PhotonTargets.All);
+			}
+			else
+			{
+				DropOff();
+			}
+		}
 	}
 
 
 	//Drop this object into our cauldron !
+	[PunRPC]
+	private void CookItem(int targetID, int itemID)
+	{
+		Collider2D pItem = PhotonView.Find(itemID).GetComponent<Collider2D>();
+		Collider2D pTarget = PhotonView.Find(targetID).GetComponent<Collider2D>();
+
+		if (!pTarget.GetComponent<ChaudronScriptNetwork>().isFull)
+		{
+			if (CheckPlayerDirection(pTarget))
+			{
+				photonView.RPC("AddItemToCauldron", PhotonTargets.All, targetID, itemID);
+			}
+		}
+	}
+	//Offline Version
 	private void CookItem(Collider2D pTarget, Transform pItem)
 	{
 		if (!pTarget.GetComponent<ChaudronScriptNetwork>().isFull)
 		{
 			if (CheckPlayerDirection(pTarget))
 			{
-				AddItem(pTarget, pItem);
+				AddItemToCauldron(pTarget, pItem);
 			}
 		}
 	}
 
-
 	//Put the cauldron over the fire !
+	[PunRPC]
+	private void PlaceCauldron(int targetID)
+	{
+		Collider2D pTarget = PhotonView.Find(targetID).GetComponent<Collider2D>();
+
+		if (CheckPlayerDirection(pTarget))
+		{
+			photonView.RPC("DropOff", PhotonTargets.All, targetID);
+		}
+	}
+	//Offline Version
 	private void PlaceCauldron(Collider2D pTarget, Transform pItem)
 	{
 		if (CheckPlayerDirection(pTarget))
 		{
-			photonView.RPC("DropOff", PhotonTargets.All, pTarget.transform.GetChild(0).transform);
-			//DropOff(pTarget.transform.GetChild(0).transform);
+			DropOff(pTarget.transform.GetChild(0).transform);
 		}
 	}
 
-
 	//Transvase potion from cauldron to fiole
+	[PunRPC]
+	private void TransvasePotion(int targetID, int itemID)
+	{
+		Collider2D pTarget = PhotonView.Find(targetID).GetComponent<Collider2D>();
+		if (CheckPlayerDirection(pTarget))
+		{
+			Switch(targetID, itemID);
+		}
+	}
+	//Offline Version
 	private void TransvasePotion(Collider2D pTarget, Transform pItem)
 	{
 		if (CheckPlayerDirection(pTarget))
@@ -129,8 +234,12 @@ public class UseItemNetwork : Photon.PunBehaviour
 		}
 	}
 
-	private void Switch(Collider2D pTarget, Transform pItem)
+	[PunRPC]
+	private void Switch(int targetID, int itemID)
 	{
+		GameObject pItem = PhotonView.Find(itemID).gameObject;
+		GameObject pTarget = PhotonView.Find(targetID).gameObject;
+
 		ItemInfoNetwork targetInfoScript = pTarget.GetComponent<ItemInfoNetwork>();
 		ItemInfoNetwork itemInfoScript = pItem.GetComponent<ItemInfoNetwork>();
 		ChaudronScriptNetwork chaudronScript = pItem.GetComponent<ChaudronScriptNetwork>();
@@ -138,11 +247,11 @@ public class UseItemNetwork : Photon.PunBehaviour
 		if (chaudronScript == null)
 			chaudronScript = pTarget.GetComponent<ChaudronScriptNetwork>();
 
-		if (targetInfoScript.itemList.Length == 0 && itemInfoScript.itemList.Length != 0)
+		if (targetInfoScript.itemList.Count == 0 && itemInfoScript.itemList.Count != 0)
 		{
 			if(pTarget.tag == "chaudron")
 			{
-				for (int i = 0; i < itemInfoScript.itemList.Length; i++)
+				for (int i = 0; i < itemInfoScript.itemList.Count; i++)
 				{
 					chaudronScript.AddItem(itemInfoScript.itemList[i]);
 				}
@@ -159,9 +268,9 @@ public class UseItemNetwork : Photon.PunBehaviour
 					chaudronScript.SetCookingTime(0f);
 				}
 			}
-			itemInfoScript.itemList = new string[itemInfoScript.maxItem];
+			itemInfoScript.itemList = new List<string>();
 		}
-		else if (itemInfoScript.itemList.Length == 0 && targetInfoScript.itemList.Length != 0)
+		else if (itemInfoScript.itemList.Count == 0 && targetInfoScript.itemList.Count != 0)
 		{
 			if (pTarget.tag == "chaudron")
 			{
@@ -175,18 +284,96 @@ public class UseItemNetwork : Photon.PunBehaviour
 			}
 			else
 			{
-				for (int i = 0; i < targetInfoScript.itemList.Length; i++)
+				for (int i = 0; i < targetInfoScript.itemList.Count; i++)
 				{
 					chaudronScript.AddItem(targetInfoScript.itemList[i]);
 				}
 				chaudronScript.isDone = true;
 				chaudronScript.SetCookingTime(1f);
 			}
-			targetInfoScript.itemList = new string[targetInfoScript.maxItem];
+			targetInfoScript.itemList = new List<string>();
+		}
+	}
+	//Offline Version
+	private void Switch(Collider2D pTarget, Transform pItem)
+	{
+		ItemInfoNetwork targetInfoScript = pTarget.GetComponent<ItemInfoNetwork>();
+		ItemInfoNetwork itemInfoScript = pItem.GetComponent<ItemInfoNetwork>();
+		ChaudronScriptNetwork chaudronScript = pItem.GetComponent<ChaudronScriptNetwork>();
+
+		if (chaudronScript == null)
+			chaudronScript = pTarget.GetComponent<ChaudronScriptNetwork>();
+
+		if (targetInfoScript.itemList.Count == 0 && itemInfoScript.itemList.Count != 0)
+		{
+			if (pTarget.tag == "chaudron")
+			{
+				for (int i = 0; i < itemInfoScript.itemList.Count; i++)
+				{
+					chaudronScript.AddItem(itemInfoScript.itemList[i]);
+				}
+				chaudronScript.isDone = true;
+				chaudronScript.SetCookingTime(1f);
+			}
+			else
+			{
+				if (chaudronScript.isDone)
+				{
+					targetInfoScript.itemList = itemInfoScript.itemList;
+					chaudronScript.isFull = false;
+					chaudronScript.isDone = false;
+					chaudronScript.SetCookingTime(0f);
+				}
+			}
+			itemInfoScript.itemList = new List<string>();
+		}
+		else if (itemInfoScript.itemList.Count == 0 && targetInfoScript.itemList.Count != 0)
+		{
+			if (pTarget.tag == "chaudron")
+			{
+				if (chaudronScript.isDone)
+				{
+					itemInfoScript.itemList = targetInfoScript.itemList;
+					chaudronScript.isFull = false;
+					chaudronScript.isDone = false;
+					chaudronScript.SetCookingTime(0f);
+				}
+			}
+			else
+			{
+				for (int i = 0; i < targetInfoScript.itemList.Count; i++)
+				{
+					chaudronScript.AddItem(targetInfoScript.itemList[i]);
+				}
+				chaudronScript.isDone = true;
+				chaudronScript.SetCookingTime(1f);
+			}
+			targetInfoScript.itemList = new List<string>();
 		}
 	}
 
+
 	//Serve potion !
+	[PunRPC]
+	private void ServePotion(int targetID, int itemID)
+	{
+		GameObject pItem = PhotonView.Find(itemID).gameObject;
+		Collider2D pTarget = PhotonView.Find(targetID).GetComponent<Collider2D>();
+
+		if (CheckPlayerDirection(pTarget))
+		{
+			PotionMasterScript potionMasterScript = pTarget.GetComponent<PotionMasterScript>();
+			potionMasterScript.CheckPotionValidity(pItem.GetComponent<FioleScriptNetwork>().itemList);
+
+			if (PhotonNetwork.connected)
+				PhotonNetwork.Destroy(pItem.gameObject);
+			else
+				Destroy(pItem.gameObject);
+
+			_playerInfo.isHolding = false;
+		}
+	}
+	//Offline Version
 	private void ServePotion(Collider2D pTarget, Transform pItem)
 	{
 		if (CheckPlayerDirection(pTarget))
@@ -204,7 +391,31 @@ public class UseItemNetwork : Photon.PunBehaviour
 	}
 
 
-	public void AddItem(Collider2D pTarget, Transform pItem)
+	//Add item into cauldron
+	[PunRPC]
+	public void AddItemToCauldron(int targetID, int itemID)
+	{
+		Debug.Log("item Id : "+itemID);
+		GameObject pItem = PhotonView.Find(itemID).gameObject;
+		GameObject pTarget = PhotonView.Find(targetID).gameObject;
+
+		ItemInfoNetwork itemHoldedInfo = pItem.GetComponent<ItemInfoNetwork>();
+		ChaudronScriptNetwork chaudronScript = pTarget.GetComponent<ChaudronScriptNetwork>();
+
+		if (!chaudronScript.isBurning && !chaudronScript.isFull)
+		{
+			chaudronScript.AddItem(itemHoldedInfo.name);
+
+			if (PhotonNetwork.connected && photonView.isMine)
+				PhotonNetwork.Destroy(pItem.gameObject);
+			else
+				Destroy(pItem.gameObject);
+
+			_playerInfo.isHolding = false;
+		}
+	}
+	//Offline Version
+	public void AddItemToCauldron(Collider2D pTarget, Transform pItem)
 	{
 		ItemInfoNetwork itemHoldedInfo = pItem.GetComponent<ItemInfoNetwork>();
 		ChaudronScriptNetwork chaudronScript = pTarget.GetComponent<ChaudronScriptNetwork>();
@@ -223,9 +434,22 @@ public class UseItemNetwork : Photon.PunBehaviour
 	}
 
 	[PunRPC]
-	public void PickUp(int viewID)
+	public void PickUp(int targetID)
 	{
-		GameObject pItem = PhotonView.Find(viewID).gameObject;
+		GameObject pItem = PhotonView.Find(targetID).gameObject;
+		pItem.GetComponent<ItemInfoNetwork>().isHold = true;
+		pItem.GetComponent<BoxCollider2D>().enabled = false;
+		pItem.GetComponent<Rigidbody2D>().bodyType = RigidbodyType2D.Kinematic;
+		pItem.GetComponent<PhotonTransformView>().enabled = false;
+		pItem.transform.position = _itemLocation.position;
+		pItem.transform.parent = _itemLocation;
+		pItem.transform.rotation = new Quaternion(0, 0, 0, 0);
+
+		_playerInfo.isHolding = true;
+	}
+	//Offline Version
+	public void PickUp(Collider2D pItem)
+	{
 		pItem.GetComponent<ItemInfoNetwork>().isHold = true;
 		pItem.GetComponent<BoxCollider2D>().enabled = false;
 		pItem.GetComponent<Rigidbody2D>().bodyType = RigidbodyType2D.Kinematic;
@@ -257,7 +481,38 @@ public class UseItemNetwork : Photon.PunBehaviour
 		}
 	}
 
+	//Put cauldron on fire
 	[PunRPC]
+	public void DropOff(int viewID)
+	{
+		if (_playerInfo.isHolding)
+		{
+			if (transform.GetChild(0).transform.childCount > 0)
+			{
+
+				Transform pTarget = PhotonView.Find(viewID).transform;
+
+				Debug.Log("target name : "+pTarget.name);
+
+				Transform item = transform.GetChild(0).transform.GetChild(0);
+
+				item.GetComponent<PhotonTransformView>().enabled = true;
+
+				item.parent = pTarget;
+				item.position = pTarget.position;
+
+				item.GetComponent<ItemInfoNetwork>().isHold = false;
+				item.GetComponent<BoxCollider2D>().enabled = true;
+				item.GetComponent<Rigidbody2D>().bodyType = RigidbodyType2D.Kinematic;
+
+				item.GetComponent<ChaudronScriptNetwork>().isCooking = true;
+				pTarget.GetComponent<FireScriptNetwork>().isOccupied = true;
+
+				_playerInfo.isHolding = false;
+			}
+		}
+	}
+	//Offline Version
 	public void DropOff(Transform pTarget)
 	{
 		if (_playerInfo.isHolding)
@@ -271,10 +526,10 @@ public class UseItemNetwork : Photon.PunBehaviour
 				item.parent = pTarget;
 				item.position = pTarget.position;
 
+				item.GetComponent<ItemInfoNetwork>().isHold = false;
 				item.GetComponent<BoxCollider2D>().enabled = true;
 				item.GetComponent<Rigidbody2D>().bodyType = RigidbodyType2D.Kinematic;
 
-				item.GetComponent<ItemInfoNetwork>().isHold = false;
 				item.GetComponent<ChaudronScriptNetwork>().isCooking = true;
 				pTarget.parent.GetComponent<FireScriptNetwork>().isOccupied = true;
 

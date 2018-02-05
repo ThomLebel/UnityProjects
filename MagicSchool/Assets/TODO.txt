@@ -1,5 +1,6 @@
 Multiplayer : https://www.photonengine.com/en-US/Photon
-	Correction : 	- Spell à corriger
+		https://doc.photonengine.com/en-us/pun/current/demos-and-tutorials/pun-basics-tutorial/player-ui-prefab
+	Correction : 	- Spell à corriger - DONE !
 			- Petit bug au drop off d'item
 			- Améliorer la synchro ?
 		
@@ -28,6 +29,7 @@ Potion :
 -Gestion des recettes + contrôle des ingrédients
 -Gestion du temps
 -Integration prof donneur de recette
+-Integration des map
 
 -Niveau de difficulté :
 	~Recette plus longue

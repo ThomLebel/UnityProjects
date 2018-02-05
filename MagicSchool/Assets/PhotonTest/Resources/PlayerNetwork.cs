@@ -141,23 +141,28 @@ public class PlayerNetwork : Photon.PunBehaviour, IPunObservable
 			transform.localScale = new Vector3(_playerInfo.originalScale * lastDir.x, transform.localScale.y, transform.localScale.z);
 	}
 
-	void CastSpell()
+	private void CastSpell()
 	{
 		if (Input.GetButton("Fire3_P" + _playerInfo.playerNumber) && Time.time > nextCast && !_playerInfo.isHolding)
 		{
-			nextCast = Time.time + castingRate;
-
-			GameObject projectile;
-
-			if (PhotonNetwork.connected)
-				projectile = PhotonNetwork.Instantiate(this.projectilePrefab.name, new Vector3(0f, 0f, 0f), Quaternion.identity, 0) as GameObject;
-			else
-				projectile = Instantiate(projectilePrefab) as GameObject;
-			
-
-			projectile.GetComponent<SpellProjectileNetwork>().direction = lastDir;
-			projectile.transform.position = transform.position + lastDir;
+			photonView.RPC("Shoot", PhotonTargets.All, lastDir);
 		}
+	}
+
+	[PunRPC]
+	private void Shoot(Vector3 pDir){
+		nextCast = Time.time + castingRate;
+
+		GameObject projectile;
+
+		if (PhotonNetwork.connected)
+			projectile = PhotonNetwork.Instantiate(this.projectilePrefab.name, new Vector3(0f, 0f, 0f), Quaternion.identity, 0) as GameObject;
+		else
+			projectile = Instantiate(projectilePrefab) as GameObject;
+
+
+		projectile.GetComponent<SpellProjectileNetwork>().direction = pDir;
+		projectile.transform.position = transform.position + pDir;
 	}
 
 	private void ItemAction()
@@ -183,17 +188,23 @@ public class PlayerNetwork : Photon.PunBehaviour, IPunObservable
 		Debug.Log("Isn't stun anymore !");
 	}
 
-#endregion
+	#endregion
 
 
-#region Public Methods
+	#region Public Methods
 
 	public void SpellHit(Vector3 pDir)
 	{
 		if (_playerInfo.isHolding)
 		{
-			photonView.RPC("DropOff", PhotonTargets.All);
-			//_useItem.DropOff();
+			if (PhotonNetwork.connected)
+			{
+				photonView.RPC("DropOff", PhotonTargets.All);
+			}
+			else
+			{
+				_useItem.DropOff();
+			}
 		}
 		if (pDir.x != 0)
 		{
@@ -211,7 +222,7 @@ public class PlayerNetwork : Photon.PunBehaviour, IPunObservable
 		StartCoroutine(stunCoroutine);
 	}
 
-#endregion
+	#endregion
 
 
 
