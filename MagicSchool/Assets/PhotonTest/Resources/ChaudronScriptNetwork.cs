@@ -41,12 +41,35 @@ public class ChaudronScriptNetwork : Photon.PunBehaviour, IPunObservable
 		}
 	}
 
+	[PunRPC]
+	public void AddItem(int pItemID)
+	{
+		if (_itemInfo.itemList.Count < _itemInfo.maxItem)
+		{
+			string itemName = PhotonView.Find(pItemID).gameObject.GetComponent<ItemInfoNetwork>().itemName;
+
+			_itemInfo.itemList.Add(itemName);
+
+			if (_itemInfo.itemList.Count > 1)
+			{
+				_progressBarScript.value = (_progressBarScript.value / 3f) * 2f;
+			}
+			if (_itemInfo.itemList.Count == _itemInfo.maxItem)
+			{
+				isFull = true;
+			}
+		}
+		else
+		{
+			isFull = true;
+		}
+	}
+	//Offline Version
 	public void AddItem(string pName)
 	{
 		if (_itemInfo.itemList.Count < _itemInfo.maxItem)
 		{
 			_itemInfo.itemList.Add(pName);
-			//_itemInfo.itemList[_itemInfo.itemList.Count] = pName;
 
 			if (_itemInfo.itemList.Count > 1)
 			{

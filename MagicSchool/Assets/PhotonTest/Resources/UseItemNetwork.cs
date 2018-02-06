@@ -30,12 +30,6 @@ public class UseItemNetwork : Photon.PunBehaviour
 			{
 				if (target.tag != "dispenser")
 				{
-					if (target.tag == "chaudron")
-					{
-						target.GetComponent<ChaudronScriptNetwork>().isCooking = false; ;
-						if (target.transform.parent != null)
-							target.transform.parent.GetComponent<FireScriptNetwork>().isOccupied = false;
-					}
 					if (PhotonNetwork.connected)
 					{
 						targetID = target.GetComponent<PhotonView>().viewID;
@@ -48,7 +42,16 @@ public class UseItemNetwork : Photon.PunBehaviour
 				}
 				else
 				{
-					target.GetComponent<ItemDispenserScriptNetwork>().GiveItem(gameObject);
+					if (PhotonNetwork.connected)
+					{
+						int gameObjectID = gameObject.GetComponent<PhotonView>().viewID;
+						target.GetComponent<PhotonView>().RPC("GiveItem", PhotonTargets.All, gameObjectID);
+					}
+					else
+					{
+						target.GetComponent<ItemDispenserScriptNetwork>().GiveItem(gameObject);
+					}
+					
 				}
 			}
 		}
@@ -58,6 +61,8 @@ public class UseItemNetwork : Photon.PunBehaviour
 	public void DropItem()
 	{
 		Transform itemHolded = transform.GetChild(0).transform.GetChild(0);
+
+		Debug.Log("trying to drop : "+itemHolded.name);
 
 		int layerMask;
 
@@ -74,13 +79,11 @@ public class UseItemNetwork : Photon.PunBehaviour
 
 		Collider2D target = GetClosestCollider(layerMask);
 
-		Debug.Log(target);
+		Debug.Log("Closest target : "+target);
 		
 
 		if (target != null)
 		{
-			
-
 			if (PhotonNetwork.connected)
 			{
 				targetID = target.GetComponent<PhotonView>().viewID;
@@ -175,6 +178,8 @@ public class UseItemNetwork : Photon.PunBehaviour
 		Collider2D pItem = PhotonView.Find(itemID).GetComponent<Collider2D>();
 		Collider2D pTarget = PhotonView.Find(targetID).GetComponent<Collider2D>();
 
+		Debug.Log("Trying to cook "+pItem.name);
+
 		if (!pTarget.GetComponent<ChaudronScriptNetwork>().isFull)
 		{
 			if (CheckPlayerDirection(pTarget))
@@ -201,9 +206,15 @@ public class UseItemNetwork : Photon.PunBehaviour
 	{
 		Collider2D pTarget = PhotonView.Find(targetID).GetComponent<Collider2D>();
 
+		Debug.Log("Trying to put cauldron on " + pTarget.name);
+
 		if (CheckPlayerDirection(pTarget))
 		{
 			photonView.RPC("DropOff", PhotonTargets.All, targetID);
+		}
+		else
+		{
+			photonView.RPC("DropOff", PhotonTargets.All);
 		}
 	}
 	//Offline Version
@@ -212,6 +223,10 @@ public class UseItemNetwork : Photon.PunBehaviour
 		if (CheckPlayerDirection(pTarget))
 		{
 			DropOff(pTarget.transform.GetChild(0).transform);
+		}
+		else
+		{
+			DropOff();
 		}
 	}
 
@@ -396,20 +411,21 @@ public class UseItemNetwork : Photon.PunBehaviour
 	public void AddItemToCauldron(int targetID, int itemID)
 	{
 		Debug.Log("item Id : "+itemID);
+
 		GameObject pItem = PhotonView.Find(itemID).gameObject;
 		GameObject pTarget = PhotonView.Find(targetID).gameObject;
 
-		ItemInfoNetwork itemHoldedInfo = pItem.GetComponent<ItemInfoNetwork>();
+		Debug.Log("Adding to cauldron " + pItem.name);
+		
 		ChaudronScriptNetwork chaudronScript = pTarget.GetComponent<ChaudronScriptNetwork>();
 
 		if (!chaudronScript.isBurning && !chaudronScript.isFull)
 		{
-			chaudronScript.AddItem(itemHoldedInfo.name);
-
-			if (PhotonNetwork.connected && photonView.isMine)
+			if (PhotonNetwork.isMasterClient)
+			{
+				pTarget.GetComponent<PhotonView>().RPC("AddItem", PhotonTargets.All, itemID);
 				PhotonNetwork.Destroy(pItem.gameObject);
-			else
-				Destroy(pItem.gameObject);
+			}
 
 			_playerInfo.isHolding = false;
 		}
@@ -424,10 +440,7 @@ public class UseItemNetwork : Photon.PunBehaviour
 		{
 			chaudronScript.AddItem(itemHoldedInfo.name);
 
-			if (PhotonNetwork.connected)
-				PhotonNetwork.Destroy(pItem.gameObject);
-			else
-				Destroy(pItem.gameObject);
+			Destroy(pItem.gameObject);
 
 			_playerInfo.isHolding = false;
 		}
@@ -437,10 +450,20 @@ public class UseItemNetwork : Photon.PunBehaviour
 	public void PickUp(int targetID)
 	{
 		GameObject pItem = PhotonView.Find(targetID).gameObject;
+
+		Debug.Log("Picking up "+pItem.name);
+		if (pItem.tag == "chaudron")
+		{
+			pItem.GetComponent<ChaudronScriptNetwork>().isCooking = false;
+			Debug.Log("Is cooking ? " + pItem.GetComponent<ChaudronScriptNetwork>().isCooking);
+			if (pItem.transform.parent != null)
+				pItem.transform.parent.GetComponent<FireScriptNetwork>().isOccupied = false;
+		}
+
 		pItem.GetComponent<ItemInfoNetwork>().isHold = true;
 		pItem.GetComponent<BoxCollider2D>().enabled = false;
 		pItem.GetComponent<Rigidbody2D>().bodyType = RigidbodyType2D.Kinematic;
-		pItem.GetComponent<PhotonTransformView>().enabled = false;
+		//pItem.GetComponent<PhotonTransformView>().enabled = false;
 		pItem.transform.position = _itemLocation.position;
 		pItem.transform.parent = _itemLocation;
 		pItem.transform.rotation = new Quaternion(0, 0, 0, 0);
@@ -453,7 +476,7 @@ public class UseItemNetwork : Photon.PunBehaviour
 		pItem.GetComponent<ItemInfoNetwork>().isHold = true;
 		pItem.GetComponent<BoxCollider2D>().enabled = false;
 		pItem.GetComponent<Rigidbody2D>().bodyType = RigidbodyType2D.Kinematic;
-		pItem.GetComponent<PhotonTransformView>().enabled = false;
+		//pItem.GetComponent<PhotonTransformView>().enabled = false;
 		pItem.transform.position = _itemLocation.position;
 		pItem.transform.parent = _itemLocation;
 		pItem.transform.rotation = new Quaternion(0, 0, 0, 0);
@@ -470,11 +493,13 @@ public class UseItemNetwork : Photon.PunBehaviour
 			{
 				Transform item = transform.GetChild(0).transform.GetChild(0);
 
+				Debug.Log("Droping on the floor " + item.name);
+
 				item.parent = null;
 
 				item.GetComponent<ItemInfoNetwork>().isHold = false;
 				item.GetComponent<BoxCollider2D>().enabled = true;
-				item.GetComponent<PhotonTransformView>().enabled = true;
+				//item.GetComponent<PhotonTransformView>().enabled = true;
 				item.GetComponent<Rigidbody2D>().bodyType = RigidbodyType2D.Dynamic;
 				_playerInfo.isHolding = false;
 			}
@@ -496,7 +521,7 @@ public class UseItemNetwork : Photon.PunBehaviour
 
 				Transform item = transform.GetChild(0).transform.GetChild(0);
 
-				item.GetComponent<PhotonTransformView>().enabled = true;
+				//item.GetComponent<PhotonTransformView>().enabled = true;
 
 				item.parent = pTarget;
 				item.position = pTarget.position;
@@ -521,7 +546,7 @@ public class UseItemNetwork : Photon.PunBehaviour
 			{
 				Transform item = transform.GetChild(0).transform.GetChild(0);
 
-				item.GetComponent<PhotonTransformView>().enabled = true;
+				//item.GetComponent<PhotonTransformView>().enabled = true;
 
 				item.parent = pTarget;
 				item.position = pTarget.position;

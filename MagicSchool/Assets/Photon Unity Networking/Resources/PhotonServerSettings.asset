@@ -52,4 +52,6 @@ MonoBehaviour:
   - ServePotion
   - Switch
   - TransvasePotion
+  - GiveItem
+  - AddItem
   DisableAutoOpenWizard: 1

@@ -18,13 +18,36 @@ public class ItemDispenserScriptNetwork : Photon.PunBehaviour, IPunObservable
 		timeBeforeNextItem = cooldown;
 	}
 
+	[PunRPC]
+	public void GiveItem(int pPlayerID)
+	{
+		if (Time.time >= elapsedTime)
+		{
+			GameObject item;
+			GameObject player = PhotonView.Find(pPlayerID).gameObject;
+
+			if (PhotonNetwork.connected && PhotonNetwork.isMasterClient)
+			{
+				item = PhotonNetwork.Instantiate(this.itemGiven.name, new Vector3(0f, 0f, 0f), Quaternion.identity, 0) as GameObject;
+				int itemID = item.GetComponent<PhotonView>().viewID;
+				player.GetComponent<PhotonView>().RPC("PickUp", PhotonTargets.All, itemID);
+			}
+
+			elapsedTime = Time.time + cooldown;
+			timeBeforeNextItem = cooldown;
+
+			coroutine = WaitAndPrint(1.0f);
+			StartCoroutine(coroutine);
+		}
+	}
+	//Offline version
 	public void GiveItem(GameObject pPlayer)
 	{
 		if (Time.time >= elapsedTime)
 		{
 			GameObject item;
 
-			if(PhotonNetwork.connected)
+			if(PhotonNetwork.connected && PhotonNetwork.isMasterClient)
 				item = PhotonNetwork.Instantiate(this.itemGiven.name, new Vector3(0f, 0f, 0f), Quaternion.identity, 0) as GameObject;
 			else
 				item = Instantiate(itemGiven) as GameObject;
