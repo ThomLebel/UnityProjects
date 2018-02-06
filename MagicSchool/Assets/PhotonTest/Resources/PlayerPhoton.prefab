@@ -41,8 +41,7 @@ GameObject:
   - component: {fileID: 114858662794190148}
   - component: {fileID: 114432932280025118}
   - component: {fileID: 114785487786147080}
-  - component: {fileID: 114702356227653854}
-  - component: {fileID: 114025121613589044}
+  - component: {fileID: 114538856847208962}
   m_Layer: 0
   m_Name: PlayerPhoton
   m_TagString: Player
@@ -122,19 +121,6 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 0.11, y: 0.16}
   m_EdgeRadius: 0
---- !u!114 &114025121613589044
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1941742067039458}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0e7cb724808c322458aa4d15f5035fa9, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_SynchronizeVelocity: 1
-  m_SynchronizeAngularVelocity: 1
 --- !u!114 &114030939717551992
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -159,7 +145,7 @@ MonoBehaviour:
   pickUpLayer: 0
   pnjLayer: 0
   playerNumber: 1
-  pickUpRange: 2
+  pickUpRange: 1
 --- !u!114 &114432932280025118
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -171,7 +157,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7d6b2414bfd279348876eabf3654a36c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!114 &114702356227653854
+--- !u!114 &114538856847208962
 MonoBehaviour:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
@@ -251,13 +237,12 @@ MonoBehaviour:
   group: 0
   OwnerShipWasTransfered: 0
   prefixBackup: -1
-  synchronization: 3
+  synchronization: 2
   onSerializeTransformOption: 3
   onSerializeRigidBodyOption: 2
   ownershipTransfer: 0
   ObservedComponents:
-  - {fileID: 114702356227653854}
-  - {fileID: 114858662794190148}
+  - {fileID: 114538856847208962}
   ObservedComponentsFoldoutOpen: 1
   viewIdField: 0
   instantiationId: -1

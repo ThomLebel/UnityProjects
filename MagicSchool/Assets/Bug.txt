@@ -5,4 +5,4 @@
 -Client : Objet bloqué en position tenu -> après avoir déposé ingrédient dans chaudron		---- DONE !
 
 
--Corriger le switch chaudron - potion
+-Corriger le switch chaudron - potion								---- DONE !

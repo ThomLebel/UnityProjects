@@ -75,8 +75,6 @@ public class UseItemNetwork : Photon.PunBehaviour
 		else
 			layerMask = 0;
 
-
-
 		Collider2D target = GetClosestCollider(layerMask);
 
 		Debug.Log("Closest target : "+target);
@@ -84,6 +82,7 @@ public class UseItemNetwork : Photon.PunBehaviour
 
 		if (target != null)
 		{
+			Debug.Log("Closest target : " + target.tag);
 			if (PhotonNetwork.connected)
 			{
 				targetID = target.GetComponent<PhotonView>().viewID;
@@ -120,6 +119,7 @@ public class UseItemNetwork : Photon.PunBehaviour
 				{
 					if (PhotonNetwork.connected)
 					{
+						Debug.Log("Trying to transvase chaudron to potion");
 						TransvasePotion(targetID, itemID);
 						//photonView.RPC("TransvasePotion", PhotonTargets.All, targetID, itemID);
 					}
@@ -147,6 +147,7 @@ public class UseItemNetwork : Photon.PunBehaviour
 				{
 					if (PhotonNetwork.connected)
 					{
+						Debug.Log("Trying to transvase potion to chaudron");
 						TransvasePotion(targetID, itemID);
 						//photonView.RPC("TransvasePotion", PhotonTargets.All, targetID, itemID);
 					}
@@ -237,7 +238,9 @@ public class UseItemNetwork : Photon.PunBehaviour
 		Collider2D pTarget = PhotonView.Find(targetID).GetComponent<Collider2D>();
 		if (CheckPlayerDirection(pTarget))
 		{
-			Switch(targetID, itemID);
+			Debug.Log("Trying to switch chaudron and potion");
+			photonView.RPC("Switch", PhotonTargets.All, targetID, itemID);
+			//Switch(targetID, itemID);
 		}
 	}
 	//Offline Version
@@ -262,51 +265,59 @@ public class UseItemNetwork : Photon.PunBehaviour
 		if (chaudronScript == null)
 			chaudronScript = pTarget.GetComponent<ChaudronScriptNetwork>();
 
+		Debug.Log("target : "+ targetInfoScript.itemName + "; item Count : "+ targetInfoScript.itemList.Count + " && item : "+ itemInfoScript.itemName + "; item Count : "+itemInfoScript.itemList.Count);
+
 		if (targetInfoScript.itemList.Count == 0 && itemInfoScript.itemList.Count != 0)
 		{
 			if(pTarget.tag == "chaudron")
 			{
+				Debug.Log("On tient une potion pleine et on la verse dans le chaudron");
 				for (int i = 0; i < itemInfoScript.itemList.Count; i++)
 				{
 					chaudronScript.AddItem(itemInfoScript.itemList[i]);
 				}
 				chaudronScript.isDone = true;
 				chaudronScript.SetCookingTime(1f);
+				itemInfoScript.itemList = new List<string>();
 			}
 			else
 			{
-				if (chaudronScript.isDone)
+				if (chaudronScript.isDone && !chaudronScript.isBurning)
 				{
+					Debug.Log("On tient un chaudron plein et on le verse dans la potion");
 					targetInfoScript.itemList = itemInfoScript.itemList;
 					chaudronScript.isFull = false;
 					chaudronScript.isDone = false;
 					chaudronScript.SetCookingTime(0f);
+					itemInfoScript.itemList = new List<string>();
 				}
 			}
-			itemInfoScript.itemList = new List<string>();
 		}
 		else if (itemInfoScript.itemList.Count == 0 && targetInfoScript.itemList.Count != 0)
 		{
 			if (pTarget.tag == "chaudron")
 			{
-				if (chaudronScript.isDone)
+				if (chaudronScript.isDone && !chaudronScript.isBurning)
 				{
+					Debug.Log("On tient une potion vide et on la remplit au chaudron");
 					itemInfoScript.itemList = targetInfoScript.itemList;
 					chaudronScript.isFull = false;
 					chaudronScript.isDone = false;
 					chaudronScript.SetCookingTime(0f);
+					targetInfoScript.itemList = new List<string>();
 				}
 			}
 			else
 			{
+				Debug.Log("On tient un chaudron vide et on le remplit à la potion");
 				for (int i = 0; i < targetInfoScript.itemList.Count; i++)
 				{
 					chaudronScript.AddItem(targetInfoScript.itemList[i]);
 				}
 				chaudronScript.isDone = true;
 				chaudronScript.SetCookingTime(1f);
+				targetInfoScript.itemList = new List<string>();
 			}
-			targetInfoScript.itemList = new List<string>();
 		}
 	}
 	//Offline Version
