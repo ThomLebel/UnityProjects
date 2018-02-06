@@ -22,15 +22,11 @@ public class ItemInfoNetwork : Photon.PunBehaviour, IPunObservable
 		{
 			// We own this player: send the others our data
 			stream.SendNext(isHold);
-			//stream.SendNext(transform.parent);
-			//stream.SendNext(itemList);
 		}
 		else
 		{
 			// Network player, receive data
 			this.isHold = (bool)stream.ReceiveNext();
-			//this.transform.parent = (Transform)stream.ReceiveNext();
-			//this.itemList = (string[])stream.ReceiveNext();
 		}
 	}
 }
