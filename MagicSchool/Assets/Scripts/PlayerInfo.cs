@@ -17,7 +17,9 @@ public class PlayerInfo : MonoBehaviour {
 	[HideInInspector]
 	public int itemLayer, chaudronLayer, dispenserLayer, fireLayer, pickUpLayer, pnjLayer;
 
+	[Tooltip("Numero du contrôleur du joueur")]
 	public int playerNumber;
+	[Tooltip("Numero du joueur")]
 	public int playerID;
 	public Sprite playerSprite;
 

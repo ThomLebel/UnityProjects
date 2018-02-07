@@ -1,8 +1,10 @@
+
+[07/02/2018]
+-Corriger le multijouer + player Selection
+
+[Old]
 -Client : glitch quand pose object -> passe en 0;0;0 avant de retourner au pied du joueur	---- DONE !
 -Déposer un bloc lorsqu'on est dos au feu							---- DONE !
 -Client : Problème de synchronisation en cas de colision avec objets				---- DONE !?
-
 -Client : Objet bloqué en position tenu -> après avoir déposé ingrédient dans chaudron		---- DONE !
-
-
 -Corriger le switch chaudron - potion								---- DONE !

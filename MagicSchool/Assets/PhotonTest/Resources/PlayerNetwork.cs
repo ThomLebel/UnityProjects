@@ -145,7 +145,15 @@ public class PlayerNetwork : Photon.PunBehaviour, IPunObservable
 	{
 		if (Input.GetButton("Fire3_P" + _playerInfo.playerNumber) && Time.time > nextCast && !_playerInfo.isHolding)
 		{
-			photonView.RPC("Shoot", PhotonTargets.All, lastDir);
+			if (PhotonNetwork.connected)
+			{
+				photonView.RPC("Shoot", PhotonTargets.All, lastDir);
+			}
+			else
+			{
+				Shoot(lastDir);
+			}
+			
 		}
 	}
 

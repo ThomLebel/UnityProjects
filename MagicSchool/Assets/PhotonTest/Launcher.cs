@@ -147,11 +147,11 @@ namespace Com.MyCompany.MyGame
 			//#Critical: We only load if we are the first player, else we rely on PhotonNetwork.automaticallySyncScene to sync our instance scene.
 			if (PhotonNetwork.isMasterClient)
 			{
-				Debug.Log("We load the 'Room for 1'");
+				Debug.Log("We load the 'lobby'");
 
 				//#Critical
 				//Load the Room Level
-				PhotonNetwork.LoadLevel("Room for 1");
+				PhotonNetwork.LoadLevel("PlayerSelection");
 			}
 		}
 

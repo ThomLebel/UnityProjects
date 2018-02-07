@@ -56,4 +56,7 @@ MonoBehaviour:
   - AddItem
   - ControlFire
   - CharacterSelectionOnline
+  - SelectSpriteOnline
+  - ConfigurePlayer
+  - Slide
   DisableAutoOpenWizard: 1
