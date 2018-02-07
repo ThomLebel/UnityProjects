@@ -4,18 +4,25 @@ using UnityEngine;
 
 public class ChaudronScriptNetwork : Photon.PunBehaviour, IPunObservable
 {
+	public int playerOwner;
+
 	public bool isFull;
 	public bool isCooking;
 	public bool isDone;
 	public bool isBurning;
 
 	public float cookingCoef = 0.05f;
+	private float initialCookingCoef;
 	private float burningTimer = 0f;
 	public float burningDelay = 5f;
+	private float initialBurningDelay;
 
 	public GameObject _progressBar;
 	private ProgressBarScriptNetwork _progressBarScript;
 	private ItemInfoNetwork _itemInfo;
+
+	private Color _barColor;
+	private float _burningCoef = 0f;
 
 	// Use this for initialization
 	void Start()
@@ -23,10 +30,15 @@ public class ChaudronScriptNetwork : Photon.PunBehaviour, IPunObservable
 		_itemInfo = gameObject.GetComponent<ItemInfoNetwork>();
 		_progressBarScript = _progressBar.GetComponent<ProgressBarScriptNetwork>();
 
+		_barColor = _progressBar.GetComponentInChildren<SpriteRenderer>().color;
+
 		isFull = false;
 		isCooking = false;
 		isDone = false;
 		isBurning = false;
+
+		initialCookingCoef = cookingCoef;
+		initialBurningDelay = burningDelay;
 	}
 
 	private void Update()
@@ -82,6 +94,29 @@ public class ChaudronScriptNetwork : Photon.PunBehaviour, IPunObservable
 		}
 	}
 
+	[PunRPC]
+	public void ControlFire(int pPlayerOwner)
+	{
+		if (pPlayerOwner == playerOwner)
+		{
+			if (isBurning)
+			{
+				Debug.Log("on éteint son chaudron");
+				isBurning = false;
+				_progressBar.GetComponentInChildren<SpriteRenderer>().color = _barColor;
+				_burningCoef = 0f;
+				burningDelay = initialBurningDelay;
+			}
+			cookingCoef = initialCookingCoef;
+		}
+		else
+		{
+			Debug.Log("On accélère la cuisson du chaudron du joueur "+playerOwner);
+			cookingCoef = 0.1f;
+			burningDelay = 3f;
+		}
+	}
+
 	private void Cooking()
 	{
 		if (_progressBarScript.value < 1)
@@ -89,15 +124,21 @@ public class ChaudronScriptNetwork : Photon.PunBehaviour, IPunObservable
 		else
 		{
 			_progressBarScript.value = 1;
-			if (isDone == false)
+			if (!isDone)
 			{
 				burningTimer = Time.time + burningDelay;
 				isDone = true;
+			}
+			if (isDone && !isBurning)
+			{
+				_progressBar.GetComponentInChildren<SpriteRenderer>().color = Color.Lerp(_barColor, Color.red, _burningCoef);
+				_burningCoef += Time.deltaTime / burningDelay;
 			}
 			if (Time.time > burningTimer && !isBurning)
 			{
 				isBurning = true;
 				Burning();
+				_progressBar.GetComponentInChildren<SpriteRenderer>().color = Color.red;
 			}
 		}
 	}

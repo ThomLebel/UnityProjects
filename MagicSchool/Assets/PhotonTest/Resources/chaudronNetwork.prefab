@@ -191,7 +191,7 @@ MonoBehaviour:
   isCooking: 0
   isDone: 0
   isBurning: 0
-  cookingCoef: 0.05
+  cookingCoef: 0.5
   burningDelay: 5
   _progressBar: {fileID: 0}
 --- !u!114 &114872527009981006

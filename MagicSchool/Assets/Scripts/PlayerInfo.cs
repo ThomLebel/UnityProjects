@@ -18,6 +18,8 @@ public class PlayerInfo : MonoBehaviour {
 	public int itemLayer, chaudronLayer, dispenserLayer, fireLayer, pickUpLayer, pnjLayer;
 
 	public int playerNumber;
+	public int playerID;
+	public Sprite playerSprite;
 
 	public float pickUpRange = 0.5f;
 

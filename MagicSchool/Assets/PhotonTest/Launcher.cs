@@ -80,6 +80,11 @@ namespace Com.MyCompany.MyGame
 
 		#region Public Methods
 
+		public void CharacterSelection()
+		{
+
+		}
+
 		/// <summary>
 		/// Start the connection process.
 		/// - If already connected, we attempt joining a random room

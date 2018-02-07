@@ -162,6 +162,7 @@ public class PlayerNetwork : Photon.PunBehaviour, IPunObservable
 
 
 		projectile.GetComponent<SpellProjectileNetwork>().direction = pDir;
+		projectile.GetComponent<SpellProjectileNetwork>().playerOwner = _playerInfo.playerNumber;
 		projectile.transform.position = transform.position + pDir;
 	}
 

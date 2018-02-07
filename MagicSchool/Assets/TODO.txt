@@ -3,8 +3,9 @@ Multiplayer : https://www.photonengine.com/en-US/Photon
 	Correction : 	- Spell à corriger - DONE !
 			- Petit bug au drop off d'item - DONE !
 			- Améliorer la synchro ? - DONE !
-		
 
+	Selection du joueur et attribution d'un playerNumber !
+		
 
 Sprites : 	-https://tokegameart.net/item/wizard-tiny-style-character/
 		-https://tokegameart.net/item/tiny-style-character-witcher/
@@ -19,8 +20,8 @@ Potion :
 -Action 2 : couper/préparer les ingrédients || Mélanger la potion
 -Action 3 : Différents effets de spells ?
 	~Sur ingrédient : le rapproche de nous - DONE !
-	~Sur notre chaudron : éteint le feu
-	~Sur chaudron ennemi : accélère la cuisson
+	~Sur notre chaudron : éteint le feu - EN COURS
+	~Sur chaudron ennemi : accélère la cuisson - EN COURS
 
 -Faire chauffer le chaudron. - DONE !
 -Chaudron prend feu ? -> Destruction chaudron si non éteint, demande au master pour récup un nouveau

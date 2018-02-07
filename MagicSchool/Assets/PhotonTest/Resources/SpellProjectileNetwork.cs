@@ -8,6 +8,7 @@ public class SpellProjectileNetwork : Photon.PunBehaviour
 
 	public int speed;
 	public float lifeSpan;
+	public int playerOwner;
 
 	private IEnumerator coroutine;
 
@@ -41,6 +42,21 @@ public class SpellProjectileNetwork : Photon.PunBehaviour
 		else if (pOther.tag == "item" || pOther.tag == "fiole")
 		{
 			pOther.GetComponent<ItemScript>().AccioItem(direction);
+		}
+		else if (pOther.tag == "chaudron")
+		{
+			ChaudronScriptNetwork chaudronScript = pOther.GetComponent<ChaudronScriptNetwork>();
+			if (chaudronScript.isCooking)
+			{
+				if (PhotonNetwork.connected)
+				{
+					pOther.GetComponent<PhotonView>().RPC("ControlFire", PhotonTargets.All, playerOwner);
+				}
+				else
+				{
+					chaudronScript.ControlFire(playerOwner);
+				}
+			}
 		}
 		KillProjectile();
 	}

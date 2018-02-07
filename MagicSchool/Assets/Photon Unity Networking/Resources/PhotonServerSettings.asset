@@ -54,4 +54,6 @@ MonoBehaviour:
   - TransvasePotion
   - GiveItem
   - AddItem
+  - ControlFire
+  - CharacterSelectionOnline
   DisableAutoOpenWizard: 1
