@@ -35,7 +35,7 @@ namespace Com.MyCompany.MyGame
 		// Update is called once per frame
 		void Update()
 		{
-			if (PhotonNetwork.connected)
+			if (PhotonNetwork.connected && photonView.isMine)
 			{
 				CharacterSelectionOnline();
 				//SelectSpriteOnline();
@@ -58,7 +58,8 @@ namespace Com.MyCompany.MyGame
 					{
 						p1Joined = true;
 
-						InstantiateCarroussel(1);
+						//InstantiateCarroussel(1);
+						photonView.RPC("InstantiateCarroussel", PhotonTargets.All, 1);
 					}
 				}
 
@@ -68,7 +69,8 @@ namespace Com.MyCompany.MyGame
 					{
 						p2Joined = true;
 
-						InstantiateCarroussel(2);
+						//InstantiateCarroussel(2);
+						photonView.RPC("InstantiateCarroussel", PhotonTargets.All, 2);
 					}
 				}
 
@@ -78,7 +80,8 @@ namespace Com.MyCompany.MyGame
 					{
 						p3Joined = true;
 
-						InstantiateCarroussel(3);
+						//InstantiateCarroussel(3);
+						photonView.RPC("InstantiateCarroussel", PhotonTargets.All, 3);
 					}
 				}
 
@@ -88,7 +91,8 @@ namespace Com.MyCompany.MyGame
 					{
 						p4Joined = true;
 
-						InstantiateCarroussel(4);
+						//InstantiateCarroussel(4);
+						photonView.RPC("InstantiateCarroussel", PhotonTargets.All, 4);
 					}
 				}
 			}
@@ -142,7 +146,7 @@ namespace Com.MyCompany.MyGame
 		{
 			GameObject player;
 
-			if (PhotonNetwork.connected)
+			if (PhotonNetwork.connected && PhotonNetwork.isMasterClient)
 			{
 				player = PhotonNetwork.Instantiate(playerPrefab.name, new Vector3(0f, 0f, 0f), Quaternion.identity, 0) as GameObject;
 			}
@@ -165,20 +169,23 @@ namespace Com.MyCompany.MyGame
 
 			GameObject carroussel;
 
+			Debug.Log("Instantiating carroussel id : "+playerID+"; controller : "+pControllerNumber);
+
 			if (PhotonNetwork.connected)
 			{
 				carroussel = PhotonNetwork.Instantiate(carrousselPrefab.name, new Vector3(0f, 0f, 0f), Quaternion.identity, 0) as GameObject;
+				carroussel.GetComponent<PhotonView>().RPC("SetIDs", PhotonTargets.All, playerID, pControllerNumber);
 			}
 			else
 			{
 				carroussel = Instantiate(carrousselPrefab) as GameObject;
+				carroussel.GetComponent<CharacterCarroussel>().playerID = playerID;
+				carroussel.GetComponent<CharacterCarroussel>().playerNumber = pControllerNumber;
 			}
 
 			carrousselList[playerID - 1].enabled = true;
 
-
-			carroussel.GetComponent<CharacterCarroussel>().playerID = playerID;
-			carroussel.GetComponent<CharacterCarroussel>().playerNumber = pControllerNumber;
+			
 
 			playerID++;
 		}

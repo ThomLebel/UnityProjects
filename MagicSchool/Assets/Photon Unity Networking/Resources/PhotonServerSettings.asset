@@ -59,4 +59,5 @@ MonoBehaviour:
   - SelectSpriteOnline
   - ConfigurePlayer
   - Slide
+  - SetIDs
   DisableAutoOpenWizard: 1

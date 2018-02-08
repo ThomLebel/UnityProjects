@@ -1,6 +1,8 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 namespace Com.MyCompany.MyGame
 {
@@ -23,6 +25,17 @@ namespace Com.MyCompany.MyGame
 		public GameObject controlPanel;
 		[Tooltip("The UI Label to inform the user that the connection is in progress")]
 		public GameObject progressLabel;
+		[Tooltip("The UI Label to create or join a room")]
+		public GameObject connectPanel;
+		[Tooltip("The UI Label to create a room")]
+		public GameObject createPanel;
+		[Tooltip("The UI Label to join a room")]
+		public GameObject joinPanel;
+
+		public InputField createInputField;
+		public InputField joinInputField;
+
+		public string roomName = "";
 
 		#endregion
 
@@ -72,6 +85,9 @@ namespace Com.MyCompany.MyGame
 		{
 			//Connect();
 			progressLabel.SetActive(false);
+			connectPanel.SetActive(false);
+			createPanel.SetActive(false);
+			joinPanel.SetActive(false);
 			controlPanel.SetActive(true);
 		}
 
@@ -82,8 +98,103 @@ namespace Com.MyCompany.MyGame
 
 		public void CharacterSelection()
 		{
-
+			Debug.Log("Loading player selection scene");
+			SceneManager.LoadScene("PlayerSelection");
 		}
+
+		public void DisplayConnectUI()
+		{
+			progressLabel.SetActive(false);
+			connectPanel.SetActive(true);
+			controlPanel.SetActive(false);
+		}
+
+		public void DisplayCreateRoomUI()
+		{
+			connectPanel.SetActive(false);
+			createPanel.SetActive(true);
+		}
+
+		public void DisplayJoinRoomUI()
+		{
+			connectPanel.SetActive(false);
+			joinPanel.SetActive(true);
+		}
+
+		public void BackPanel()
+		{
+			if (joinPanel.activeSelf)
+			{
+				connectPanel.SetActive(true);
+				joinPanel.SetActive(false);
+			}
+			else if (createPanel.activeSelf)
+			{
+				connectPanel.SetActive(true);
+				createPanel.SetActive(false);
+			}
+			else if (connectPanel.activeSelf)
+			{
+				connectPanel.SetActive(false);
+				controlPanel.SetActive(true);
+			}
+		}
+
+		public void SetRoomName(string value)
+		{
+			roomName = value;
+		}
+
+		public void CreateRoom()
+		{
+			isConnecting = true;
+
+			progressLabel.SetActive(true);
+			connectPanel.SetActive(false);
+			createPanel.SetActive(false);
+			joinPanel.SetActive(false);
+			controlPanel.SetActive(false);
+
+			//we check if we are connected or not, we join if we are, else we initiate the connection to the server.
+			if (PhotonNetwork.connected)
+			{
+				//#Critical we need at this point to attempt joining a random room. If it fails, we'll get notified in OnPhotonRandomJoinFailed() and we'll create one.
+				Debug.Log("Creating and joining room : " + roomName);
+				PhotonNetwork.CreateRoom(roomName, new RoomOptions() { MaxPlayers = MaxPlayersPerRoom }, null);
+			}
+			else
+			{
+				//#Critical, we must first and foremost connect to Photon Online Server.
+				PhotonNetwork.ConnectUsingSettings(_gameVersion);
+			}
+		}
+
+		public void JoinRoom()
+		{
+			isConnecting = true;
+
+			progressLabel.SetActive(true);
+			connectPanel.SetActive(false);
+			createPanel.SetActive(false);
+			joinPanel.SetActive(false);
+			controlPanel.SetActive(false);
+
+			//we check if we are connected or not, we join if we are, else we initiate the connection to the server.
+			if (PhotonNetwork.connected)
+			{
+				//#Critical we need at this point to attempt joining a random room. If it fails, we'll get notified in OnPhotonRandomJoinFailed() and we'll create one.
+				Debug.Log("Trying to join room : "+roomName);
+				PhotonNetwork.JoinRoom(roomName);
+			}
+			else
+			{
+				//#Critical, we must first and foremost connect to Photon Online Server.
+				PhotonNetwork.ConnectUsingSettings(_gameVersion);
+			}
+		}
+
+
+
 
 		/// <summary>
 		/// Start the connection process.
@@ -96,6 +207,9 @@ namespace Com.MyCompany.MyGame
 			isConnecting = true;
 
 			progressLabel.SetActive(true);
+			connectPanel.SetActive(false);
+			createPanel.SetActive(false);
+			joinPanel.SetActive(false);
 			controlPanel.SetActive(false);
 			//we check if we are connected or not, we join if we are, else we initiate the connection to the server.
 			if (PhotonNetwork.connected)
@@ -121,23 +235,27 @@ namespace Com.MyCompany.MyGame
 			//this case where isConnecting is false is typically when you lost or quit the game, when this level is loaded, OnConnectedToMaster will be called,
 			//in that case we don't whnt to do anything
 			if (isConnecting) {
-				//#Critical: The first we try to do is to join a potential existing room. If there is, good, else, we'll ba called back with OnPhotonRandomJoinFailed();
-				PhotonNetwork.JoinRandomRoom();
+				//#Critical: The first we try to do is to join a potential existing room. If there is, good, else, we'll be called back with OnPhotonRandomJoinFailed();
+				PhotonNetwork.JoinOrCreateRoom(roomName, new RoomOptions() { MaxPlayers = MaxPlayersPerRoom }, null);
 			}
 		}
 
 		public override void OnDisconnectedFromPhoton()
 		{
 			progressLabel.SetActive(false);
+			connectPanel.SetActive(false);
+			createPanel.SetActive(false);
+			joinPanel.SetActive(false);
 			controlPanel.SetActive(true);
+
 			Debug.LogWarning("PhotonTest/Launcher: OnDisconnectedFromPhoton() was called by PUN");
 		}
 
-		public override void OnPhotonRandomJoinFailed(object[] codeAndMsg)
+		public override void OnPhotonJoinRoomFailed(object[] codeAndMsg)
 		{
-			Debug.Log("PhotonTest/Launcher: OnPhotonRandomJoinFailed() was called by PUN. No random room available, so we create one. \nCalling: PhotonNetwork.CreateRoom(null, new RoomOptions() {MaxPlayers = 4}, null)");
+			Debug.Log("PhotonTest/Launcher: OnPhotonJoinRoomFailed() was called by PUN.");
 			//#Critical: we failed to join a random room, maybe none exists or they are all full. No worries, we create a new room.
-			PhotonNetwork.CreateRoom(null, new RoomOptions() { MaxPlayers = MaxPlayersPerRoom }, null);
+			PhotonNetwork.CreateRoom(roomName, new RoomOptions() { MaxPlayers = MaxPlayersPerRoom }, null);
 		}
 
 		public override void OnJoinedRoom()

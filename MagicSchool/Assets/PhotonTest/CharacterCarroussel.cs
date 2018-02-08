@@ -21,7 +21,7 @@ namespace Com.MyCompany.MyGame
 		// Use this for initialization
 		void Start()
 		{
-
+			Debug.Log("ID : "+playerID+"; Controller : "+playerNumber);
 		}
 
 		// Update is called once per frame
@@ -86,6 +86,13 @@ namespace Com.MyCompany.MyGame
 					nextSlide = Time.time + slideRate;
 				}
 			}
+		}
+
+		[PunRPC]
+		public void SetIDs(int pID, int pController)
+		{
+			playerID = pID;
+			playerNumber = pController;
 		}
 
 		void IPunObservable.OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
