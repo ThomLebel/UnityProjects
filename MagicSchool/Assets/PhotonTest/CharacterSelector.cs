@@ -18,10 +18,12 @@ namespace Com.MyCompany.MyGame
 
 		public int playerID = 1;
 
-		public bool p1Joined;
-		public bool p2Joined;
-		public bool p3Joined;
-		public bool p4Joined;
+		//public bool p1Joined;
+		//public bool p2Joined;
+		//public bool p3Joined;
+		//public bool p4Joined;
+		
+		public List<int> joinedPlayersID;
 
 
 		static public CharacterSelector Instance;
@@ -35,161 +37,142 @@ namespace Com.MyCompany.MyGame
 		// Update is called once per frame
 		void Update()
 		{
-			if (PhotonNetwork.connected && photonView.isMine)
-			{
-				CharacterSelectionOnline();
-				//SelectSpriteOnline();
-			}
-			else
-			{
-				CharacterSelection();
-				//SelectSpriteOffline();
-			}
+			CharacterSelection();
+			//SelectSpriteOffline();
 		}
 
 		[PunRPC]
-		private void CharacterSelectionOnline()
-		{
-			if (photonView.isMine)
-			{
-				if (Input.GetButtonUp("Fire1_P1"))
-				{
-					if (!p1Joined)
-					{
-						p1Joined = true;
-
-						//InstantiateCarroussel(1);
-						photonView.RPC("InstantiateCarroussel", PhotonTargets.All, 1);
-					}
-				}
-
-				if (Input.GetButtonUp("Fire1_P2"))
-				{
-					if (!p2Joined)
-					{
-						p2Joined = true;
-
-						//InstantiateCarroussel(2);
-						photonView.RPC("InstantiateCarroussel", PhotonTargets.All, 2);
-					}
-				}
-
-				if (Input.GetButtonUp("Fire1_P3"))
-				{
-					if (!p3Joined)
-					{
-						p3Joined = true;
-
-						//InstantiateCarroussel(3);
-						photonView.RPC("InstantiateCarroussel", PhotonTargets.All, 3);
-					}
-				}
-
-				if (Input.GetButtonUp("Fire1_P4"))
-				{
-					if (!p4Joined)
-					{
-						p4Joined = true;
-
-						//InstantiateCarroussel(4);
-						photonView.RPC("InstantiateCarroussel", PhotonTargets.All, 4);
-					}
-				}
-			}
-		}
-
 		private void CharacterSelection()
 		{
 			if (Input.GetButtonUp("Fire1_P1"))
 			{
-				if (!p1Joined)
+				if (CheckJoinedPlayers(1))
 				{
-					p1Joined = true;
-
-					InstantiateCarroussel(1);
+					if (PhotonNetwork.connected)
+						photonView.RPC("InstantiateCarroussel", PhotonTargets.All, 1, PhotonNetwork.player.ID);
+					else
+						InstantiateCarroussel(1, PhotonNetwork.player.ID);
 				}
 			}
 
 			if (Input.GetButtonUp("Fire1_P2"))
 			{
-				if (!p2Joined)
+				if (CheckJoinedPlayers(2))
 				{
-					p2Joined = true;
-
-					InstantiateCarroussel(2);
+					if (PhotonNetwork.connected)
+						photonView.RPC("InstantiateCarroussel", PhotonTargets.All, 2, PhotonNetwork.player.ID);
+					else
+						InstantiateCarroussel(2, PhotonNetwork.player.ID);
 				}
 			}
 
 			if (Input.GetButtonUp("Fire1_P3"))
 			{
-				if (!p3Joined)
+				if (CheckJoinedPlayers(3))
 				{
-					p3Joined = true;
-
-					InstantiateCarroussel(3);
+					if (PhotonNetwork.connected)
+						photonView.RPC("InstantiateCarroussel", PhotonTargets.All, 3, PhotonNetwork.player.ID);
+					else
+						InstantiateCarroussel(3, PhotonNetwork.player.ID);
 				}
 			}
 
 			if (Input.GetButtonUp("Fire1_P4"))
 			{
-				if (!p4Joined)
+				if (CheckJoinedPlayers(4))
 				{
-					p4Joined = true;
-
-					InstantiateCarroussel(4);
+					if (PhotonNetwork.connected)
+						photonView.RPC("InstantiateCarroussel", PhotonTargets.All, 4, PhotonNetwork.player.ID);
+					else
+						InstantiateCarroussel(4, PhotonNetwork.player.ID);
 				}
 			}
 		}
 
+		private bool CheckJoinedPlayers(int pID)
+		{
+			bool isAlreadyOn = false;
+
+			int id = pID;
+			if(PhotonNetwork.connected && photonView.isMine)
+				id += (PhotonNetwork.player.ID*10);
+
+			for (int i=0; i< joinedPlayersID.Count; i++)
+			{
+				if(joinedPlayersID[i] == id)
+				{
+					isAlreadyOn = true;
+				}
+			}
+			if (!isAlreadyOn)
+			{
+				Debug.Log("Ce joueur n'a pas encore rejoint la party, on l'ajoute");
+
+				if (PhotonNetwork.connected)
+					photonView.RPC("SetJoinedPlayersID", PhotonTargets.All, id);
+				else
+					SetJoinedPlayersID(id);
+
+				return true;
+			}
+
+			return false;
+		}
+
 		[PunRPC]
-		public void ConfigurePlayer(int pID, int pController, int pSpriteID)
+		public void ConfigurePlayer(int pID, int pController, int pNetworkID, int pSpriteID)
 		{
 			GameObject player;
 
-			if (PhotonNetwork.connected && PhotonNetwork.isMasterClient)
+			if (PhotonNetwork.connected)
 			{
-				player = PhotonNetwork.Instantiate(playerPrefab.name, new Vector3(0f, 0f, 0f), Quaternion.identity, 0) as GameObject;
+				if (PhotonNetwork.isMasterClient)
+				{
+					Debug.Log("on fabrique un joueur online a partir de " + PhotonNetwork.player.ID);
+					player = PhotonNetwork.Instantiate(playerPrefab.name, new Vector3(0f, 0f, 0f), Quaternion.identity, 0) as GameObject;
+					player.GetComponent<PhotonView>().RPC("ConfigurePlayer", PhotonTargets.All, pID, pController, pNetworkID, pSpriteID);
+				}
 			}
 			else
 			{
+				Debug.Log("on fabrique un joueur offline");
 				player = Instantiate(playerPrefab) as GameObject;
+				player.GetComponent<PlayerInfo>().ConfigurePlayer(pID, pController, pNetworkID, pSpriteID);
 			}
-
-			player.GetComponent<SpriteRenderer>().enabled = false;
-			player.GetComponent<PlayerNetwork>().enabled = false;
-			player.GetComponent<PlayerInfo>().playerID = pID;
-			player.GetComponent<PlayerInfo>().playerNumber = pController;
-			player.GetComponent<PlayerInfo>().playerSprite = spriteList[pSpriteID];
+			Debug.Log("Instantiation et configuration du player");
 		}
 
-
-		private void InstantiateCarroussel(int pControllerNumber)
+		[PunRPC]
+		private void InstantiateCarroussel(int pControllerNumber, int pNetworkID)
 		{
 			callToActionList[playerID - 1].text = confirmCharacterPhrase;
 
 			GameObject carroussel;
 
-			Debug.Log("Instantiating carroussel id : "+playerID+"; controller : "+pControllerNumber);
+			Debug.Log("Instantiating carroussel id : "+playerID+"; controller : "+pControllerNumber+"; network ID : "+pNetworkID);
 
 			if (PhotonNetwork.connected)
 			{
 				carroussel = PhotonNetwork.Instantiate(carrousselPrefab.name, new Vector3(0f, 0f, 0f), Quaternion.identity, 0) as GameObject;
-				carroussel.GetComponent<PhotonView>().RPC("SetIDs", PhotonTargets.All, playerID, pControllerNumber);
+				carroussel.GetComponent<PhotonView>().RPC("SetIDs", PhotonTargets.All, playerID, pControllerNumber, pNetworkID);
 			}
 			else
 			{
 				carroussel = Instantiate(carrousselPrefab) as GameObject;
-				carroussel.GetComponent<CharacterCarroussel>().playerID = playerID;
-				carroussel.GetComponent<CharacterCarroussel>().playerNumber = pControllerNumber;
+				carroussel.GetComponent<CharacterCarroussel>().SetIDs(playerID, pControllerNumber, pNetworkID);
 			}
 
 			carrousselList[playerID - 1].enabled = true;
 
-			
-
 			playerID++;
 		}
 
+		[PunRPC]
+		private void SetJoinedPlayersID(int pID)
+		{
+			Debug.Log("on ajoute l'id du joueur à la liste");
+			joinedPlayersID.Add(pID);
+		}
 
 
 		void IPunObservable.OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
@@ -198,19 +181,19 @@ namespace Com.MyCompany.MyGame
 			{
 				// We own this player: send the others our data
 				stream.SendNext(playerID);
-				stream.SendNext(p1Joined);
-				stream.SendNext(p2Joined);
-				stream.SendNext(p3Joined);
-				stream.SendNext(p4Joined);
+				//stream.SendNext(p1Joined);
+				//stream.SendNext(p2Joined);
+				//stream.SendNext(p3Joined);
+				//stream.SendNext(p4Joined);
 			}
 			else
 			{
 				// Network player, receive data
 				this.playerID = (int)stream.ReceiveNext();
-				this.p1Joined = (bool)stream.ReceiveNext();
-				this.p2Joined = (bool)stream.ReceiveNext();
-				this.p3Joined = (bool)stream.ReceiveNext();
-				this.p4Joined = (bool)stream.ReceiveNext();
+				//this.p1Joined = (bool)stream.ReceiveNext();
+				//this.p2Joined = (bool)stream.ReceiveNext();
+				//this.p3Joined = (bool)stream.ReceiveNext();
+				//this.p4Joined = (bool)stream.ReceiveNext();
 			}
 		}
 	}

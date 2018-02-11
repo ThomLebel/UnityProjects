@@ -1,8 +1,10 @@
-﻿using System.Collections;
+﻿using Com.MyCompany.MyGame;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PlayerInfo : MonoBehaviour {
+public class PlayerInfo : Photon.PunBehaviour
+{
 
 	//States
 	[HideInInspector]
@@ -18,9 +20,11 @@ public class PlayerInfo : MonoBehaviour {
 	public int itemLayer, chaudronLayer, dispenserLayer, fireLayer, pickUpLayer, pnjLayer;
 
 	[Tooltip("Numero du contrôleur du joueur")]
-	public int playerNumber;
+	public int playerController;
 	[Tooltip("Numero du joueur")]
 	public int playerID;
+	[Tooltip("ID du pc sur le network")]
+	public int networkID;
 	public Sprite playerSprite;
 
 	public float pickUpRange = 0.5f;
@@ -40,5 +44,16 @@ public class PlayerInfo : MonoBehaviour {
 		fireLayer = 1 << LayerMask.NameToLayer("fire");
 		pnjLayer = 1 << LayerMask.NameToLayer("pnj");
 		pickUpLayer = itemLayer | chaudronLayer | dispenserLayer;
+	}
+
+	[PunRPC]
+	public void ConfigurePlayer(int pID, int pController, int pNetworkID, int pSpriteID)
+	{
+		playerID = pID;
+		playerController = pController;
+		networkID = pNetworkID;
+		playerSprite = CharacterSelector.Instance.spriteList[pSpriteID];
+		gameObject.GetComponent<SpriteRenderer>().enabled = false;
+		gameObject.GetComponent<PlayerNetwork>().enabled = false;
 	}
 }

@@ -60,4 +60,7 @@ MonoBehaviour:
   - ConfigurePlayer
   - Slide
   - SetIDs
+  - InstantiateCarroussel
+  - CharacterSelection
+  - SetJoinedPlayersID
   DisableAutoOpenWizard: 1

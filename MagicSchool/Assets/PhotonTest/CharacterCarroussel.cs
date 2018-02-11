@@ -7,9 +7,11 @@ namespace Com.MyCompany.MyGame
 	public class CharacterCarroussel : Photon.PunBehaviour, IPunObservable
 	{
 		[Tooltip("Numero du contrôleur du joueur")]
-		public int playerNumber;
+		public int playerController;
 		[Tooltip("Numero du joueur")]
 		public int playerID;
+		[Tooltip("ID du pc sur le network")]
+		public int networkID;
 
 		public float slideRate = 0.5f;
 		private float nextSlide;
@@ -21,78 +23,94 @@ namespace Com.MyCompany.MyGame
 		// Use this for initialization
 		void Start()
 		{
-			Debug.Log("ID : "+playerID+"; Controller : "+playerNumber);
+			Debug.Log("Character Carroussel : ID : "+playerID+"; Controller : "+ playerController);
 		}
 
 		// Update is called once per frame
 		void Update()
 		{
-			if (PhotonNetwork.connected && photonView.isMine)
+			if (PhotonNetwork.connected && PhotonNetwork.player.ID != networkID)
 			{
-				if (Input.GetButtonUp("Fire1_P"+ playerNumber) && !validate)
+				return;
+			}
+
+
+			if (Input.GetButtonUp("Fire1_P" + playerController) && !validate)
+			{
+				if (PhotonNetwork.connected)
 				{
-					Debug.Log("On valide notre choix de skin online !");
 					validate = true;
-					CharacterSelector.Instance.photonView.RPC("ConfigurePlayer", PhotonTargets.All, playerID, playerNumber, currentSprite);
+					Debug.Log("On valide notre choix de skin online !");
+					CharacterSelector.Instance.photonView.RPC("ConfigurePlayer", PhotonTargets.All, playerID, playerController, networkID, currentSprite);
 				}
-				if (!validate)
+				else
 				{
-					Slide();
+					validate = true;
+					Debug.Log("On valide notre choix de skin !");
+					CharacterSelector.Instance.ConfigurePlayer(playerID, playerController, networkID, currentSprite);
 				}
 			}
-			else
+			if (!validate)
 			{
-				if (Input.GetButtonUp("Fire1_P" + playerNumber) && !validate)
-				{
-					Debug.Log("On valide notre choix de skin !");
-					validate = true;
-					CharacterSelector.Instance.ConfigurePlayer( playerID, playerNumber, currentSprite);
-				}
-				if (!validate)
-				{
-					Slide();
-				}
+				CheckSlide();
 			}
 		}
 
-		private void Slide()
+		private void CheckSlide()
 		{
 			if (Time.time > nextSlide)
 			{
-				if (Input.GetAxisRaw("Horizontal_P" + playerNumber) > 0.2)
+				if (Input.GetAxisRaw("Horizontal_P" + playerController) > 0.2)
 				{
 					Debug.Log("Slide right for player " + playerID);
-					currentSprite++;
-					if (currentSprite >= CharacterSelector.Instance.spriteList.Count)
+					if (PhotonNetwork.connected && photonView.isOwnerActive)
 					{
-						currentSprite = 0;
+						photonView.RPC("Slide", PhotonTargets.All, 1);
 					}
-
-					CharacterSelector.Instance.carrousselList[playerID-1].sprite = CharacterSelector.Instance.spriteList[currentSprite];
-
-					nextSlide = Time.time + slideRate;
+					else
+					{
+						Slide(1);
+					}
 				}
-				if (Input.GetAxisRaw("Horizontal_P" + playerNumber) < -0.2)
+				if (Input.GetAxisRaw("Horizontal_P" + playerController) < -0.2)
 				{
 					Debug.Log("Slide left for player " + playerID);
-					currentSprite--;
-					if (currentSprite < 0)
+					if (PhotonNetwork.connected && photonView.isOwnerActive)
 					{
-						currentSprite = CharacterSelector.Instance.spriteList.Count - 1;
+						photonView.RPC("Slide", PhotonTargets.All, -1);
 					}
-
-					CharacterSelector.Instance.carrousselList[playerID-1].sprite = CharacterSelector.Instance.spriteList[currentSprite];
-
-					nextSlide = Time.time + slideRate;
+					else
+					{
+						Slide(-1);
+					}
 				}
 			}
 		}
 
 		[PunRPC]
-		public void SetIDs(int pID, int pController)
+		private void Slide(int pDir)
+		{
+			currentSprite += pDir;
+			if (currentSprite >= CharacterSelector.Instance.spriteList.Count)
+			{
+				currentSprite = 0;
+			}
+			if (currentSprite < 0)
+			{
+				currentSprite = CharacterSelector.Instance.spriteList.Count - 1;
+			}
+
+			CharacterSelector.Instance.carrousselList[playerID - 1].sprite = CharacterSelector.Instance.spriteList[currentSprite];
+
+			nextSlide = Time.time + slideRate;
+		}
+
+		[PunRPC]
+		public void SetIDs(int pID, int pController, int pNetworkID)
 		{
 			playerID = pID;
-			playerNumber = pController;
+			playerController = pController;
+			networkID = pNetworkID;
 		}
 
 		void IPunObservable.OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)

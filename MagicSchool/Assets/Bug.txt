@@ -1,6 +1,9 @@
 
-[07/02/2018]
--Corriger le multijouer + player Selection
+[11/02/2018]
+-Rejoindre partie en cours de sélection
+
+[07/02/2018] - [11/02/2018]
+-Corriger le multijouer + player Selection	-- Change network owner
 
 [Old]
 -Client : glitch quand pose object -> passe en 0;0;0 avant de retourner au pied du joueur	---- DONE !

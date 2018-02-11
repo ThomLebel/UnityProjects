@@ -111,24 +111,24 @@ public class PlayerNetwork : Photon.PunBehaviour, IPunObservable
 		vertical = 0;       //Used to store the vertical move direction.
 
 		//Get input from the input manager and store in horizontal to set x axis move direction
-		if (Input.GetAxisRaw("Horizontal_P" + _playerInfo.playerNumber) > 0.2)
+		if (Input.GetAxisRaw("Horizontal_P" + _playerInfo.playerController) > 0.2)
 		{
 			horizontal = 1;
 			lastDir = new Vector3(1, 0, 0);
 		}
-		if (Input.GetAxisRaw("Horizontal_P" + _playerInfo.playerNumber) < -0.2)
+		if (Input.GetAxisRaw("Horizontal_P" + _playerInfo.playerController) < -0.2)
 		{
 			horizontal = -1;
 			lastDir = new Vector3(-1, 0, 0);
 		}
 
 		//Get input from the input manager and store in vertical to set y axis move direction
-		if (Input.GetAxisRaw("Vertical_P" + _playerInfo.playerNumber) > 0.2)
+		if (Input.GetAxisRaw("Vertical_P" + _playerInfo.playerController) > 0.2)
 		{
 			vertical = 1;
 			lastDir = new Vector3(0, 1, 0);
 		}
-		if (Input.GetAxisRaw("Vertical_P" + _playerInfo.playerNumber) < -0.2)
+		if (Input.GetAxisRaw("Vertical_P" + _playerInfo.playerController) < -0.2)
 		{
 			vertical = -1;
 			lastDir = new Vector3(0, -1, 0);
@@ -143,7 +143,7 @@ public class PlayerNetwork : Photon.PunBehaviour, IPunObservable
 
 	private void CastSpell()
 	{
-		if (Input.GetButton("Fire3_P" + _playerInfo.playerNumber) && Time.time > nextCast && !_playerInfo.isHolding)
+		if (Input.GetButton("Fire3_P" + _playerInfo.playerController) && Time.time > nextCast && !_playerInfo.isHolding)
 		{
 			if (PhotonNetwork.connected)
 			{
@@ -170,13 +170,13 @@ public class PlayerNetwork : Photon.PunBehaviour, IPunObservable
 
 
 		projectile.GetComponent<SpellProjectileNetwork>().direction = pDir;
-		projectile.GetComponent<SpellProjectileNetwork>().playerOwner = _playerInfo.playerNumber;
+		projectile.GetComponent<SpellProjectileNetwork>().playerOwner = _playerInfo.playerController;
 		projectile.transform.position = transform.position + pDir;
 	}
 
 	private void ItemAction()
 	{
-		if (Input.GetButtonDown("Fire1_P" + _playerInfo.playerNumber))
+		if (Input.GetButtonDown("Fire1_P" + _playerInfo.playerController))
 		{
 			if (!_playerInfo.isHolding)
 			{
@@ -224,7 +224,7 @@ public class PlayerNetwork : Photon.PunBehaviour, IPunObservable
 			gameObject.GetComponent<Rigidbody2D>().AddForce(transform.up * spellForce * pDir.y);
 		}
 
-		Debug.Log("Player " + _playerInfo.playerNumber + " is Stun !");
+		Debug.Log("Player " + _playerInfo.playerController + " is Stun !");
 		_playerInfo.isStun = true;
 		_playerInfo.State = "stun";
 		stunCoroutine = PlayerStun(stunTime);
