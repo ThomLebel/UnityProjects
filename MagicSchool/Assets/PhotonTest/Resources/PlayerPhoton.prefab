@@ -144,7 +144,10 @@ MonoBehaviour:
   fireLayer: 0
   pickUpLayer: 0
   pnjLayer: 0
-  playerNumber: 1
+  playerController: 0
+  playerID: 0
+  networkID: 0
+  playerSprite: {fileID: 0}
   pickUpRange: 1
 --- !u!114 &114432932280025118
 MonoBehaviour:
@@ -240,7 +243,7 @@ MonoBehaviour:
   synchronization: 2
   onSerializeTransformOption: 3
   onSerializeRigidBodyOption: 2
-  ownershipTransfer: 0
+  ownershipTransfer: 1
   ObservedComponents:
   - {fileID: 114538856847208962}
   ObservedComponentsFoldoutOpen: 1

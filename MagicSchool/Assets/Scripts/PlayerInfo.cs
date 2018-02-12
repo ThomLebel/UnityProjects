@@ -55,5 +55,10 @@ public class PlayerInfo : Photon.PunBehaviour
 		playerSprite = CharacterSelector.Instance.spriteList[pSpriteID];
 		gameObject.GetComponent<SpriteRenderer>().enabled = false;
 		gameObject.GetComponent<PlayerNetwork>().enabled = false;
+
+		if (PhotonNetwork.connected && PhotonNetwork.player.ID != pNetworkID)
+		{
+			photonView.TransferOwnership(pNetworkID);
+		}
 	}
 }

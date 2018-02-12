@@ -1,9 +1,13 @@
 
+[12/002/2018]
+-Gérer l'annulation de la sélection.
+
 [11/02/2018]
--Rejoindre partie en cours de sélection
+-Rejoindre partie en cours de sélection -- Impossible ou trop complexe ?
 
 [07/02/2018] - [11/02/2018]
--Corriger le multijouer + player Selection	-- Change network owner
+-Corriger le multijouer + player Selection							---- DONE !
+-- Change network owner										---- DONE !
 
 [Old]
 -Client : glitch quand pose object -> passe en 0;0;0 avant de retourner au pied du joueur	---- DONE !

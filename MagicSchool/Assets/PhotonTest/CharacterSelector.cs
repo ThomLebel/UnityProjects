@@ -17,14 +17,11 @@ namespace Com.MyCompany.MyGame
 		public string confirmCharacterPhrase = "Press Action to Validate";
 
 		public int playerID = 1;
-
-		//public bool p1Joined;
-		//public bool p2Joined;
-		//public bool p3Joined;
-		//public bool p4Joined;
 		
 		public List<int> joinedPlayersID;
 
+		private List<GameObject> playerPrefabList;
+		private List<GameObject> carrousselPrefabList;
 
 		static public CharacterSelector Instance;
 
@@ -131,6 +128,7 @@ namespace Com.MyCompany.MyGame
 					Debug.Log("on fabrique un joueur online a partir de " + PhotonNetwork.player.ID);
 					player = PhotonNetwork.Instantiate(playerPrefab.name, new Vector3(0f, 0f, 0f), Quaternion.identity, 0) as GameObject;
 					player.GetComponent<PhotonView>().RPC("ConfigurePlayer", PhotonTargets.All, pID, pController, pNetworkID, pSpriteID);
+					playerPrefabList.Add(player);
 				}
 			}
 			else
@@ -138,8 +136,8 @@ namespace Com.MyCompany.MyGame
 				Debug.Log("on fabrique un joueur offline");
 				player = Instantiate(playerPrefab) as GameObject;
 				player.GetComponent<PlayerInfo>().ConfigurePlayer(pID, pController, pNetworkID, pSpriteID);
+				playerPrefabList.Add(player);
 			}
-			Debug.Log("Instantiation et configuration du player");
 		}
 
 		[PunRPC]
@@ -153,13 +151,18 @@ namespace Com.MyCompany.MyGame
 
 			if (PhotonNetwork.connected)
 			{
-				carroussel = PhotonNetwork.Instantiate(carrousselPrefab.name, new Vector3(0f, 0f, 0f), Quaternion.identity, 0) as GameObject;
-				carroussel.GetComponent<PhotonView>().RPC("SetIDs", PhotonTargets.All, playerID, pControllerNumber, pNetworkID);
+				if (PhotonNetwork.isMasterClient)
+				{
+					carroussel = PhotonNetwork.Instantiate(carrousselPrefab.name, new Vector3(0f, 0f, 0f), Quaternion.identity, 0) as GameObject;
+					carroussel.GetComponent<PhotonView>().RPC("SetIDs", PhotonTargets.All, playerID, pControllerNumber, pNetworkID);
+					carrousselPrefabList.Add(carroussel);
+				}
 			}
 			else
 			{
 				carroussel = Instantiate(carrousselPrefab) as GameObject;
 				carroussel.GetComponent<CharacterCarroussel>().SetIDs(playerID, pControllerNumber, pNetworkID);
+				carrousselPrefabList.Add(carroussel);
 			}
 
 			carrousselList[playerID - 1].enabled = true;
@@ -181,19 +184,11 @@ namespace Com.MyCompany.MyGame
 			{
 				// We own this player: send the others our data
 				stream.SendNext(playerID);
-				//stream.SendNext(p1Joined);
-				//stream.SendNext(p2Joined);
-				//stream.SendNext(p3Joined);
-				//stream.SendNext(p4Joined);
 			}
 			else
 			{
 				// Network player, receive data
 				this.playerID = (int)stream.ReceiveNext();
-				//this.p1Joined = (bool)stream.ReceiveNext();
-				//this.p2Joined = (bool)stream.ReceiveNext();
-				//this.p3Joined = (bool)stream.ReceiveNext();
-				//this.p4Joined = (bool)stream.ReceiveNext();
 			}
 		}
 	}

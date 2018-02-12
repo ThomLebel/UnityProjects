@@ -237,6 +237,7 @@ namespace Com.MyCompany.MyGame
 			if (isConnecting) {
 				//#Critical: The first we try to do is to join a potential existing room. If there is, good, else, we'll be called back with OnPhotonRandomJoinFailed();
 				PhotonNetwork.JoinOrCreateRoom(roomName, new RoomOptions() { MaxPlayers = MaxPlayersPerRoom }, null);
+				//PhotonNetwork.JoinRandomRoom();
 			}
 		}
 
@@ -258,6 +259,13 @@ namespace Com.MyCompany.MyGame
 			PhotonNetwork.CreateRoom(roomName, new RoomOptions() { MaxPlayers = MaxPlayersPerRoom }, null);
 		}
 
+		public override void OnPhotonRandomJoinFailed(object[] codeAndMsg)
+		{
+			Debug.Log("PhotonTest/Launcher: OnPhotonJoinRoomFailed() was called by PUN.");
+			//#Critical: we failed to join a random room, maybe none exists or they are all full. No worries, we create a new room.
+			PhotonNetwork.CreateRoom(roomName, new RoomOptions() { MaxPlayers = MaxPlayersPerRoom }, null);
+		}
+
 		public override void OnJoinedRoom()
 		{
 			Debug.Log("PhotonTest/Launcher: OnJoinedRoom() called by PUN. Now this client is in a room.");
@@ -270,6 +278,7 @@ namespace Com.MyCompany.MyGame
 				//#Critical
 				//Load the Room Level
 				PhotonNetwork.LoadLevel("PlayerSelection");
+				//PhotonNetwork.LoadLevel("Room for 1");
 			}
 		}
 

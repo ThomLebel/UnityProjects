@@ -1,8 +1,5 @@
 Multiplayer : https://www.photonengine.com/en-US/Photon
 		https://doc.photonengine.com/en-us/pun/current/demos-and-tutorials/pun-basics-tutorial/player-ui-prefab
-	Correction : 	- Spell à corriger - DONE !
-			- Petit bug au drop off d'item - DONE !
-			- Améliorer la synchro ? - DONE !
 
 	Selection du joueur et attribution d'un playerNumber !
 		
