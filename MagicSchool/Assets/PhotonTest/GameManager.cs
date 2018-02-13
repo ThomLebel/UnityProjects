@@ -54,7 +54,7 @@ namespace Com.MyCompany.MyGame
 			{
 				Debug.Log("OnPhotonPlayerConnected isMasterClient " + PhotonNetwork.isMasterClient); // called before OnPhotonPlayerDisconnected
 
-				//LoadArena();
+				LoadArena("PlayerSelection");
 			}
 		}
 
@@ -66,7 +66,7 @@ namespace Com.MyCompany.MyGame
 			{
 				Debug.Log("OnPhotonPlayerDisconnected isMasterClient" + PhotonNetwork.isMasterClient); // called before OnPhotonPlayerDisconnected
 
-				LoadArena();
+				LoadArena("Launcher");
 			}
 		}
 
@@ -88,21 +88,24 @@ namespace Com.MyCompany.MyGame
 			PhotonNetwork.LeaveRoom();
 		}
 
-		#endregion
-
-
-		#region Private Methods
-
-		void LoadArena()
+		[PunRPC]
+		public void LoadArena(string pLevelName)
 		{
 			if (!PhotonNetwork.isMasterClient)
 			{
 				Debug.LogError("PhotonNetwork : Trying to Load a level but we are not the master Client");
 			}
-			Debug.Log("PhotonNetwork: Loading Level : "+ PhotonNetwork.room.PlayerCount);
+			Debug.Log("PhotonNetwork: Loading Level : " + PhotonNetwork.room.PlayerCount);
 			//PhotonNetwork.LoadLevel("Room for "+ PhotonNetwork.room.PlayerCount);
-			PhotonNetwork.LoadLevel(0);
+			PhotonNetwork.LoadLevel(pLevelName);
 		}
+
+		#endregion
+
+
+		#region Private Methods
+
+
 
 		#endregion
 	}

@@ -63,4 +63,8 @@ MonoBehaviour:
   - InstantiateCarroussel
   - CharacterSelection
   - SetJoinedPlayersID
+  - DestroyCarroussel
+  - DestroyPlayerPrefab
+  - LoadArena
+  - Init
   DisableAutoOpenWizard: 1

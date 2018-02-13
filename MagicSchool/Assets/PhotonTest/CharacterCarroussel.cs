@@ -29,9 +29,12 @@ namespace Com.MyCompany.MyGame
 		// Update is called once per frame
 		void Update()
 		{
-			if (PhotonNetwork.connected && PhotonNetwork.player.ID != networkID)
+			if (PhotonNetwork.connected)
 			{
-				return;
+				if (PhotonNetwork.player.ID != networkID)
+				{
+					return;
+				}
 			}
 
 
@@ -53,6 +56,32 @@ namespace Com.MyCompany.MyGame
 			if (!validate)
 			{
 				CheckSlide();
+				if (Input.GetButtonUp("Fire2_P" + playerController))
+				{
+					if (PhotonNetwork.connected)
+					{
+						CharacterSelector.Instance.photonView.RPC("DestroyCarroussel", PhotonTargets.All, playerID);
+					}
+					else
+					{
+						CharacterSelector.Instance.DestroyCarroussel(playerID);
+					}
+				}
+			}
+			else
+			{
+				if (Input.GetButtonUp("Fire2_P" + playerController))
+				{
+					validate = false;
+					if (PhotonNetwork.connected)
+					{
+						CharacterSelector.Instance.photonView.RPC("DestroyPlayerPrefab", PhotonTargets.All, playerID);
+					}
+					else
+					{
+						CharacterSelector.Instance.DestroyPlayerPrefab(playerID);
+					}
+				}
 			}
 		}
 

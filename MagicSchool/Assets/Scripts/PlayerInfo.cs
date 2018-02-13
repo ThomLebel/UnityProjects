@@ -53,6 +53,7 @@ public class PlayerInfo : Photon.PunBehaviour
 		playerController = pController;
 		networkID = pNetworkID;
 		playerSprite = CharacterSelector.Instance.spriteList[pSpriteID];
+		gameObject.GetComponent<SpriteRenderer>().sprite = playerSprite;
 		gameObject.GetComponent<SpriteRenderer>().enabled = false;
 		gameObject.GetComponent<PlayerNetwork>().enabled = false;
 
@@ -60,5 +61,12 @@ public class PlayerInfo : Photon.PunBehaviour
 		{
 			photonView.TransferOwnership(pNetworkID);
 		}
+	}
+
+	[PunRPC]
+	public void Init()
+	{
+		gameObject.GetComponent<SpriteRenderer>().enabled = true;
+		gameObject.GetComponent<PlayerNetwork>().enabled = true;
 	}
 }

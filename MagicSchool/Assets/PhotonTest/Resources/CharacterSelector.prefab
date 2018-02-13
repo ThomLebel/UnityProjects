@@ -99,16 +99,10 @@ MonoBehaviour:
   - {fileID: 21300462, guid: d315b93f2af89444bbd000ab6d23d8e3, type: 3}
   - {fileID: 21300472, guid: d315b93f2af89444bbd000ab6d23d8e3, type: 3}
   - {fileID: 21300474, guid: d315b93f2af89444bbd000ab6d23d8e3, type: 3}
-  playerList: []
+  startText: {fileID: 0}
   activateCharacterPhrase: Press Action to Join
   confirmCharacterPhrase: Press Action to Validate
   playerID: 1
-  slideRate: 0.5
-  p1Joined: 0
-  p2Joined: 0
-  p3Joined: 0
-  p4Joined: 0
-  p1Validate: 0
-  p2Validate: 0
-  p3Validate: 0
-  p4Validate: 0
+  joinedPlayersID: 
+  playerPrefabList: []
+  carrousselPrefabList: []
