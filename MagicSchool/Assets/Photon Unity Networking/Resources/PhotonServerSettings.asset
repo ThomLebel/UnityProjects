@@ -67,4 +67,5 @@ MonoBehaviour:
   - DestroyPlayerPrefab
   - LoadArena
   - Init
+  - Empty
   DisableAutoOpenWizard: 1

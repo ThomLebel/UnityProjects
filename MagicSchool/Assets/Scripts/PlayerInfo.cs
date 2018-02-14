@@ -1,4 +1,4 @@
-﻿using Com.MyCompany.MyGame;
+﻿using Com.OniriqueStudio.MagicSchool;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -64,9 +64,10 @@ public class PlayerInfo : Photon.PunBehaviour
 	}
 
 	[PunRPC]
-	public void Init()
+	public void Init(Vector3 pPos)
 	{
 		gameObject.GetComponent<SpriteRenderer>().enabled = true;
 		gameObject.GetComponent<PlayerNetwork>().enabled = true;
+		transform.position = pPos;
 	}
 }

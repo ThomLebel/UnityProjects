@@ -37,25 +37,25 @@ public class SpellProjectileNetwork : Photon.PunBehaviour
 		Debug.Log(pOther.tag);
 		if (pOther.tag == "Player")
 		{
+			Debug.Log("On touche un joueur !");
 			pOther.GetComponent<PlayerNetwork>().SpellHit(direction);
 		}
 		else if (pOther.tag == "item" || pOther.tag == "fiole")
 		{
+			Debug.Log("On touche un item !");
 			pOther.GetComponent<ItemScript>().AccioItem(direction);
 		}
 		else if (pOther.tag == "chaudron")
 		{
+			Debug.Log("On touche un chaudron !");
 			ChaudronScriptNetwork chaudronScript = pOther.GetComponent<ChaudronScriptNetwork>();
-			if (chaudronScript.isCooking)
+			if (PhotonNetwork.connected)
 			{
-				if (PhotonNetwork.connected)
-				{
-					pOther.GetComponent<PhotonView>().RPC("ControlFire", PhotonTargets.All, playerOwner);
-				}
-				else
-				{
-					chaudronScript.ControlFire(playerOwner);
-				}
+				pOther.GetComponent<PhotonView>().RPC("ControlFire", PhotonTargets.All, playerOwner);
+			}
+			else
+			{
+				chaudronScript.ControlFire(playerOwner);
 			}
 		}
 		KillProjectile();

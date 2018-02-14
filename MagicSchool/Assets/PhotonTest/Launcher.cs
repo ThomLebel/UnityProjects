@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
-namespace Com.MyCompany.MyGame
+namespace Com.OniriqueStudio.MagicSchool
 {
 	public class Launcher : Photon.PunBehaviour
 	{

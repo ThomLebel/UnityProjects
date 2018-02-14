@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace Com.MyCompany.MyGame
+namespace Com.OniriqueStudio.MagicSchool
 {
 	public class CharacterCarroussel : Photon.PunBehaviour, IPunObservable
 	{

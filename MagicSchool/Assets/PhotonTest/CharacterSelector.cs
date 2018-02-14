@@ -3,10 +3,13 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace Com.MyCompany.MyGame
+namespace Com.OniriqueStudio.MagicSchool
 {
 	public class CharacterSelector : Photon.PunBehaviour, IPunObservable
 	{
+		#region Public Variables
+		static public CharacterSelector Instance;
+
 		public GameObject playerPrefab;
 		public GameObject carrousselPrefab;
 		public List<Text> callToActionList;
@@ -19,9 +22,12 @@ namespace Com.MyCompany.MyGame
 
 		public int playerID = 1;
 		public int playersReady = 0;
-		
+
 		public List<int> joinedPlayersID;
 
+		#endregion
+
+		#region Private Variables
 		[SerializeField]
 		private List<GameObject> playerPrefabList;
 		[SerializeField]
@@ -30,7 +36,11 @@ namespace Com.MyCompany.MyGame
 		private int maxPlayer = 4;
 		private bool gameReady = false;
 
-		static public CharacterSelector Instance;
+		private bool isLeaving = false;
+		private float quitTime = 0f;
+		private float quitTimer = 2f;
+		#endregion
+
 
 		// Use this for initialization
 		void Start()
@@ -55,7 +65,6 @@ namespace Com.MyCompany.MyGame
 		void Update()
 		{
 			CharacterSelection();
-			//SelectSpriteOffline();
 
 			if (playersReady == playerID)
 			{
@@ -66,6 +75,42 @@ namespace Com.MyCompany.MyGame
 			{
 				gameReady = false;
 				startText.enabled = false;
+			}
+
+			if (Input.GetButton("Fire2_P1") && Time.time >= quitTime && isLeaving)
+			{
+				GameManager.Instance.LoadArena("Launcher");
+			}
+
+			if (Input.GetButtonDown("Fire2_P1"))
+			{
+				if (PhotonNetwork.connected)
+				{
+					if (PhotonNetwork.isMasterClient)
+					{
+						quitTime = Time.time + quitTimer;
+						isLeaving = true;
+					}
+				}
+				else
+				{
+					quitTime = Time.time + quitTimer;
+					isLeaving = true;
+				}
+			}
+			if (Input.GetButtonUp("Fire2_P1"))
+			{
+				if (PhotonNetwork.connected)
+				{
+					if (PhotonNetwork.isMasterClient)
+					{
+						isLeaving = false;
+					}
+				}
+				else
+				{
+					isLeaving = false;
+				}
 			}
 		}
 
@@ -86,7 +131,6 @@ namespace Com.MyCompany.MyGame
 					if (gameReady)
 					{
 						string levelName = "Room for "+playersReady;
-						//GameManager.Instance.GetComponent<PhotonView>().RPC("LoadArena", PhotonTargets.All, levelName);
 						GameManager.Instance.LoadArena(levelName);
 					}
 				}

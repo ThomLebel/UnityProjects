@@ -52,9 +52,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3c9cf8a2b777b5d4c873fa368b9b31a5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  playerNumber: 0
+  playerController: 0
   playerID: 0
-  slideRate: 0.5
+  networkID: 0
+  slideRate: 0.3
 --- !u!114 &114873317268835210
 MonoBehaviour:
   m_ObjectHideFlags: 1

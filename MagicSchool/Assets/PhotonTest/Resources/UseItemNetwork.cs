@@ -484,6 +484,15 @@ public class UseItemNetwork : Photon.PunBehaviour
 	//Offline Version
 	public void PickUp(Collider2D pItem)
 	{
+		Debug.Log("Picking up " + pItem.name);
+		if (pItem.tag == "chaudron")
+		{
+			pItem.GetComponent<ChaudronScriptNetwork>().isCooking = false;
+			Debug.Log("Is cooking ? " + pItem.GetComponent<ChaudronScriptNetwork>().isCooking);
+			if (pItem.transform.parent != null)
+				pItem.transform.parent.parent.GetComponent<FireScriptNetwork>().isOccupied = false;
+		}
+
 		pItem.GetComponent<ItemInfoNetwork>().isHold = true;
 		pItem.GetComponent<BoxCollider2D>().enabled = false;
 		pItem.GetComponent<Rigidbody2D>().bodyType = RigidbodyType2D.Kinematic;

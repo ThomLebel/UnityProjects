@@ -97,8 +97,10 @@ public class ChaudronScriptNetwork : Photon.PunBehaviour, IPunObservable
 	[PunRPC]
 	public void ControlFire(int pPlayerOwner)
 	{
+		Debug.Log("On joue avec le feu");
 		if (pPlayerOwner == playerOwner)
 		{
+			Debug.Log("Est-ce que le chaudron brule ?");
 			if (isBurning)
 			{
 				Debug.Log("on éteint son chaudron");
@@ -106,14 +108,25 @@ public class ChaudronScriptNetwork : Photon.PunBehaviour, IPunObservable
 				_progressBar.GetComponentInChildren<SpriteRenderer>().color = _barColor;
 				_burningCoef = 0f;
 				burningDelay = initialBurningDelay;
+				if (PhotonNetwork.connected)
+				{
+					photonView.RPC("Empty", PhotonTargets.All);
+				}
+				else
+				{
+					Empty();
+				}
 			}
 			cookingCoef = initialCookingCoef;
 		}
 		else
 		{
-			Debug.Log("On accélère la cuisson du chaudron du joueur "+playerOwner);
-			cookingCoef = 0.1f;
-			burningDelay = 3f;
+			if (isCooking)
+			{
+				Debug.Log("On accélère la cuisson du chaudron du joueur " + playerOwner);
+				cookingCoef = 0.1f;
+				burningDelay = 3f;
+			}
 		}
 	}
 
@@ -134,7 +147,7 @@ public class ChaudronScriptNetwork : Photon.PunBehaviour, IPunObservable
 				_progressBar.GetComponentInChildren<SpriteRenderer>().color = Color.Lerp(_barColor, Color.red, _burningCoef);
 				_burningCoef += Time.deltaTime / burningDelay;
 			}
-			if (Time.time > burningTimer && !isBurning)
+			if (Time.time > burningTimer && !isBurning && isCooking)
 			{
 				isBurning = true;
 				Burning();
@@ -146,6 +159,17 @@ public class ChaudronScriptNetwork : Photon.PunBehaviour, IPunObservable
 	private void Burning()
 	{
 		Debug.Log("Cauldron is burning !!");
+	}
+
+	[PunRPC]
+	private void Empty()
+	{
+		_progressBarScript.value = 0f;
+		_itemInfo.itemList = new List<string>();
+		isDone = false;
+		isFull = false;
+		isCooking = false;
+		isBurning = false;
 	}
 
 	public void SetCookingTime(float pTime)

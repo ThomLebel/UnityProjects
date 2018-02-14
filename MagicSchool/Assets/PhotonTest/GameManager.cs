@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-namespace Com.MyCompany.MyGame
+namespace Com.OniriqueStudio.MagicSchool
 {
 	public class GameManager : Photon.PunBehaviour
 	{
@@ -91,13 +91,20 @@ namespace Com.MyCompany.MyGame
 		[PunRPC]
 		public void LoadArena(string pLevelName)
 		{
-			if (!PhotonNetwork.isMasterClient)
-			{
-				Debug.LogError("PhotonNetwork : Trying to Load a level but we are not the master Client");
-			}
-			Debug.Log("PhotonNetwork: Loading Level : " + PhotonNetwork.room.PlayerCount);
+			
 			//PhotonNetwork.LoadLevel("Room for "+ PhotonNetwork.room.PlayerCount);
-			PhotonNetwork.LoadLevel(pLevelName);
+			if (PhotonNetwork.connected)
+			{
+				if (!PhotonNetwork.isMasterClient)
+				{
+					Debug.LogError("PhotonNetwork : Trying to Load a level but we are not the master Client");
+				}
+				Debug.Log("PhotonNetwork: Loading Level : " + PhotonNetwork.room.PlayerCount);
+
+				PhotonNetwork.LoadLevel(pLevelName);
+			}
+			else
+				SceneManager.LoadScene(pLevelName);
 		}
 
 		#endregion

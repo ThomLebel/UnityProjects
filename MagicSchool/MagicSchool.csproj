@@ -472,6 +472,7 @@
     <Compile Include="Assets\PhotonTest\Resources\ItemDispenserScriptNetwork.cs" />
     <Compile Include="Assets\PhotonTest\Resources\ItemInfoNetwork.cs" />
     <Compile Include="Assets\PhotonTest\Resources\PlayerNetwork.cs" />
+    <Compile Include="Assets\PhotonTest\Resources\PotionManager.cs" />
     <Compile Include="Assets\PhotonTest\Resources\ProgressBarScriptNetwork.cs" />
     <Compile Include="Assets\PhotonTest\Resources\SpellProjectileNetwork.cs" />
     <Compile Include="Assets\PhotonTest\Resources\UseItemNetwork.cs" />
