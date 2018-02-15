@@ -467,6 +467,7 @@
     <Compile Include="Assets\PhotonTest\Launcher.cs" />
     <Compile Include="Assets\PhotonTest\PlayerNamerInputField.cs" />
     <Compile Include="Assets\PhotonTest\Resources\ChaudronScriptNetwork.cs" />
+    <Compile Include="Assets\PhotonTest\Resources\CraftingTableScript.cs" />
     <Compile Include="Assets\PhotonTest\Resources\FioleScriptNetwork.cs" />
     <Compile Include="Assets\PhotonTest\Resources\FireScriptNetwork.cs" />
     <Compile Include="Assets\PhotonTest\Resources\ItemDispenserScriptNetwork.cs" />

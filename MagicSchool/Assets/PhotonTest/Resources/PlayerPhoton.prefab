@@ -134,6 +134,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   isHolding: 0
   isStun: 0
+  isPreparing: 0
   State: 
   playerWidth: 0
   playerHeight: 0
@@ -144,6 +145,7 @@ MonoBehaviour:
   fireLayer: 0
   pickUpLayer: 0
   pnjLayer: 0
+  craftTableLayer: 0
   playerController: 0
   playerID: 0
   networkID: 0
@@ -246,6 +248,7 @@ MonoBehaviour:
   ownershipTransfer: 1
   ObservedComponents:
   - {fileID: 114538856847208962}
+  - {fileID: 114030939717551992}
   ObservedComponentsFoldoutOpen: 1
   viewIdField: 0
   instantiationId: -1

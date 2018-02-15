@@ -26,7 +26,7 @@ public class UseItemNetwork : Photon.PunBehaviour
 
 		if (target != null)
 		{
-			if ((_playerAction.lastDir.x > 0 && target.transform.position.x > transform.position.x) || (_playerAction.lastDir.x < 0 && target.transform.position.x < transform.position.x))
+			if (CheckPlayerDirection(target))
 			{
 				if (target.tag != "dispenser")
 				{
@@ -171,6 +171,19 @@ public class UseItemNetwork : Photon.PunBehaviour
 		}
 	}
 
+	//Prepare ingredient
+	public void PrepareItem()
+	{
+		Collider2D target = GetClosestCollider(_playerInfo.craftTableLayer);
+
+		if (target != null)
+		{
+			if (CheckPlayerDirection(target))
+			{
+
+			}
+		}
+	}
 
 	//Drop this object into our cauldron !
 	[PunRPC]

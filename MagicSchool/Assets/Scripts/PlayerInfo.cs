@@ -3,12 +3,12 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PlayerInfo : Photon.PunBehaviour
+public class PlayerInfo : Photon.PunBehaviour, IPunObservable
 {
 
 	//States
 	[HideInInspector]
-	public bool isHolding, isStun;
+	public bool isHolding, isStun, isPreparing;
 	public string State;
 
 	//Mesures
@@ -17,7 +17,7 @@ public class PlayerInfo : Photon.PunBehaviour
 
 	//Layers
 	[HideInInspector]
-	public int itemLayer, chaudronLayer, dispenserLayer, fireLayer, pickUpLayer, pnjLayer;
+	public int itemLayer, chaudronLayer, dispenserLayer, fireLayer, pickUpLayer, pnjLayer, craftTableLayer;
 
 	[Tooltip("Numero du contrôleur du joueur")]
 	public int playerController;
@@ -34,6 +34,7 @@ public class PlayerInfo : Photon.PunBehaviour
 		State = "idle";
 		isHolding = false;
 		isStun = false;
+		isPreparing = false;
 		playerWidth = GetComponent<Renderer>().bounds.size.x;
 		playerHeight = GetComponent<Renderer>().bounds.size.y;
 		originalScale = transform.localScale.x;
@@ -43,6 +44,7 @@ public class PlayerInfo : Photon.PunBehaviour
 		dispenserLayer = 1 << LayerMask.NameToLayer("dispenser");
 		fireLayer = 1 << LayerMask.NameToLayer("fire");
 		pnjLayer = 1 << LayerMask.NameToLayer("pnj");
+		craftTableLayer = 1 << LayerMask.NameToLayer("craftTable");
 		pickUpLayer = itemLayer | chaudronLayer | dispenserLayer;
 	}
 
@@ -69,5 +71,23 @@ public class PlayerInfo : Photon.PunBehaviour
 		gameObject.GetComponent<SpriteRenderer>().enabled = true;
 		gameObject.GetComponent<PlayerNetwork>().enabled = true;
 		transform.position = pPos;
+	}
+
+	void IPunObservable.OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
+	{
+		if (stream.isWriting)
+		{
+			// We own this player: send the others our data
+			stream.SendNext(isHolding);
+			stream.SendNext(isStun);
+			stream.SendNext(isPreparing);
+		}
+		else
+		{
+			// Network player, receive data
+			this.isHolding = (bool)stream.ReceiveNext();
+			this.isStun = (bool)stream.ReceiveNext();
+			this.isPreparing = (bool)stream.ReceiveNext();
+		}
 	}
 }

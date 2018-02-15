@@ -25,7 +25,6 @@ GameObject:
   - component: {fileID: 61902581706047758}
   - component: {fileID: 114549809719923348}
   - component: {fileID: 114977256156889702}
-  - component: {fileID: 114654507595898764}
   m_Layer: 11
   m_Name: fireNetwork
   m_TagString: fire
@@ -149,19 +148,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   isOccupied: 0
---- !u!114 &114654507595898764
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1542057958760328}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0e7cb724808c322458aa4d15f5035fa9, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_SynchronizeVelocity: 0
-  m_SynchronizeAngularVelocity: 0
 --- !u!114 &114977256156889702
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -183,7 +169,6 @@ MonoBehaviour:
   ownershipTransfer: 0
   ObservedComponents:
   - {fileID: 114549809719923348}
-  - {fileID: 114654507595898764}
   ObservedComponentsFoldoutOpen: 1
   viewIdField: 0
   instantiationId: -1

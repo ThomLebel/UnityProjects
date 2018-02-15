@@ -12,6 +12,7 @@ TagManager:
   - progressBar
   - fiole
   - pnj
+  - craftTable
   layers:
   - Default
   - TransparentFX
@@ -26,7 +27,7 @@ TagManager:
   - dispenser
   - fire
   - pnj
-  - 
+  - craftTable
   - 
   - 
   - 

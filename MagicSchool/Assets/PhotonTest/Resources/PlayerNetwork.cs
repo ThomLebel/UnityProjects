@@ -37,6 +37,9 @@ public class PlayerNetwork : Photon.PunBehaviour, IPunObservable
 	private IEnumerator stunCoroutine;
 
 	private float nextCast;
+	
+	//private float preparingTime = 0f;
+	//private float preparingDelay = 2f;
 
 	#endregion
 
@@ -81,9 +84,12 @@ public class PlayerNetwork : Photon.PunBehaviour, IPunObservable
 		if (!_playerInfo.isStun)
 		{
 			UpdateMovement();
+			//Action 1
 			ItemAction();
+			//Action 2
+			PrepareItem();
+			//Action 3
 			CastSpell();
-			//photonView.RPC("CastSpell", PhotonTargets.All);
 		}
 	}
 
@@ -141,39 +147,6 @@ public class PlayerNetwork : Photon.PunBehaviour, IPunObservable
 			transform.localScale = new Vector3(_playerInfo.originalScale * lastDir.x, transform.localScale.y, transform.localScale.z);
 	}
 
-	private void CastSpell()
-	{
-		if (Input.GetButton("Fire3_P" + _playerInfo.playerController) && Time.time > nextCast && !_playerInfo.isHolding)
-		{
-			if (PhotonNetwork.connected)
-			{
-				photonView.RPC("Shoot", PhotonTargets.All, lastDir);
-			}
-			else
-			{
-				Shoot(lastDir);
-			}
-			
-		}
-	}
-
-	[PunRPC]
-	private void Shoot(Vector3 pDir){
-		nextCast = Time.time + castingRate;
-
-		GameObject projectile;
-
-		if (PhotonNetwork.connected)
-			projectile = PhotonNetwork.Instantiate(this.projectilePrefab.name, new Vector3(0f, 0f, 0f), Quaternion.identity, 0) as GameObject;
-		else
-			projectile = Instantiate(projectilePrefab) as GameObject;
-
-
-		projectile.GetComponent<SpellProjectileNetwork>().direction = pDir;
-		projectile.GetComponent<SpellProjectileNetwork>().playerOwner = _playerInfo.playerID;
-		projectile.transform.position = transform.position + pDir;
-	}
-
 	private void ItemAction()
 	{
 		if (Input.GetButtonDown("Fire1_P" + _playerInfo.playerController))
@@ -187,6 +160,56 @@ public class PlayerNetwork : Photon.PunBehaviour, IPunObservable
 				_useItem.DropItem();
 			}
 		}
+	}
+
+	private void PrepareItem()
+	{
+		if (_playerInfo.isPreparing)
+		{
+			_useItem.PrepareItem();
+		}
+		if (Input.GetButtonDown("Fire2_P" + _playerInfo.playerController))
+		{
+			_playerInfo.isPreparing = true;
+		}
+		if (Input.GetButtonUp("Fire2_P" + _playerInfo.playerController))
+		{
+			_playerInfo.isPreparing = false;
+		}
+	}
+
+	private void CastSpell()
+	{
+		if (Input.GetButton("Fire3_P" + _playerInfo.playerController) && Time.time > nextCast && !_playerInfo.isHolding)
+		{
+			if (PhotonNetwork.connected)
+			{
+				photonView.RPC("Shoot", PhotonTargets.All, lastDir);
+			}
+			else
+			{
+				Shoot(lastDir);
+			}
+
+		}
+	}
+
+	[PunRPC]
+	private void Shoot(Vector3 pDir)
+	{
+		nextCast = Time.time + castingRate;
+
+		GameObject projectile;
+
+		if (PhotonNetwork.connected)
+			projectile = PhotonNetwork.Instantiate(this.projectilePrefab.name, new Vector3(0f, 0f, 0f), Quaternion.identity, 0) as GameObject;
+		else
+			projectile = Instantiate(projectilePrefab) as GameObject;
+
+
+		projectile.GetComponent<SpellProjectileNetwork>().direction = pDir;
+		projectile.GetComponent<SpellProjectileNetwork>().playerOwner = _playerInfo.playerID;
+		projectile.transform.position = transform.position + pDir;
 	}
 
 	private IEnumerator PlayerStun(float stunTime)
