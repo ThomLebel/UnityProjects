@@ -164,6 +164,11 @@ public class PlayerNetwork : Photon.PunBehaviour, IPunObservable
 
 	private void PrepareItem()
 	{
+		if (_playerInfo.isStun)
+		{
+			_playerInfo.isPreparing = false;
+			return;
+		}
 		if (_playerInfo.isPreparing)
 		{
 			_useItem.PrepareItem();

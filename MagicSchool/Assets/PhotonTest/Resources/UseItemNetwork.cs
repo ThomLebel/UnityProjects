@@ -178,9 +178,17 @@ public class UseItemNetwork : Photon.PunBehaviour
 
 		if (target != null)
 		{
-			if (CheckPlayerDirection(target))
+			ItemScript _itemScript = target.GetComponent<ItemScript>();
+			if (!_itemScript.isDone)
 			{
-
+				if (CheckPlayerDirection(target))
+				{
+					_itemScript.isPrepared = true;
+				}
+				else
+				{
+					_itemScript.isPrepared = false;
+				}
 			}
 		}
 	}
