@@ -16,6 +16,11 @@ public class ItemInfoNetwork : Photon.PunBehaviour, IPunObservable
 		//itemList = new string[maxItem];
 	}
 
+	private void Update()
+	{
+		transform.position = new Vector3(transform.position.x, transform.position.y, transform.position.y);
+	}
+
 	void IPunObservable.OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
 	{
 		if (stream.isWriting)

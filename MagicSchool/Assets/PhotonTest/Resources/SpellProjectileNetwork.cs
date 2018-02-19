@@ -29,7 +29,8 @@ public class SpellProjectileNetwork : Photon.PunBehaviour
 	// Update is called once per frame
 	void Update()
 	{
-		transform.position += direction * speed * Time.deltaTime;
+		//transform.position += direction * speed * Time.deltaTime;
+		transform.position += new Vector3(direction.x*speed* Time.deltaTime, direction.y * speed * Time.deltaTime, direction.y*-1);
 	}
 
 	void OnTriggerEnter2D(Collider2D pOther)
