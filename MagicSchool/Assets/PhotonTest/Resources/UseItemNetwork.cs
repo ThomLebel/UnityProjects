@@ -7,7 +7,6 @@ public class UseItemNetwork : Photon.PunBehaviour
 {
 	private PlayerInfo _playerInfo;
 	private PlayerNetwork _playerAction;
-	private Transform _itemLocation;
 
 	private int targetID, itemID;
 
@@ -15,8 +14,6 @@ public class UseItemNetwork : Photon.PunBehaviour
 	{
 		_playerInfo = gameObject.GetComponent<PlayerInfo>();
 		_playerAction = gameObject.GetComponent<PlayerNetwork>();
-
-		_itemLocation = gameObject.transform.GetChild(0);
 	}
 
 	//Pick-up item !
@@ -28,6 +25,7 @@ public class UseItemNetwork : Photon.PunBehaviour
 		{
 			if (CheckPlayerDirection(target))
 			{
+				Debug.Log("On regarde dans la bonne direction !");
 				if (target.tag != "dispenser")
 				{
 					if (PhotonNetwork.connected)
@@ -67,7 +65,7 @@ public class UseItemNetwork : Photon.PunBehaviour
 		int layerMask;
 
 		if (itemHolded.tag == "item")
-			layerMask = _playerInfo.chaudronLayer;
+			layerMask = _playerInfo.chaudronLayer | _playerInfo.craftTableLayer;
 		else if (itemHolded.tag == "chaudron")
 			layerMask = _playerInfo.fireLayer | _playerInfo.itemLayer;
 		else if (itemHolded.tag == "fiole")
@@ -91,14 +89,29 @@ public class UseItemNetwork : Photon.PunBehaviour
 
 			if (itemHolded.tag == "item")
 			{
-				if (PhotonNetwork.connected)
+				if (target.tag == "craftTable")
 				{
-					CookItem(targetID, itemID);
-					//photonView.RPC("CookItem", PhotonTargets.All, targetID, itemID);
+					if (PhotonNetwork.connected)
+					{
+						PlaceObject(targetID);
+						//photonView.RPC("PlaceObject", PhotonTargets.All, targetID);
+					}
+					else
+					{
+						PlaceObject(target, itemHolded);
+					}
 				}
 				else
 				{
-					CookItem(target, itemHolded);
+					if (PhotonNetwork.connected)
+					{
+						CookItem(targetID, itemID);
+						//photonView.RPC("CookItem", PhotonTargets.All, targetID, itemID);
+					}
+					else
+					{
+						CookItem(target, itemHolded);
+					}
 				}
 			}
 			else if (itemHolded.tag == "chaudron")
@@ -107,12 +120,12 @@ public class UseItemNetwork : Photon.PunBehaviour
 				{
 					if (PhotonNetwork.connected)
 					{
-						PlaceCauldron(targetID);
-						//photonView.RPC("PlaceCauldron", PhotonTargets.All, targetID);
+						PlaceObject(targetID);
+						//photonView.RPC("PlaceObject", PhotonTargets.All, targetID);
 					}
 					else
 					{
-						PlaceCauldron(target, itemHolded);
+						PlaceObject(target, itemHolded);
 					}
 				}
 				else
@@ -178,16 +191,15 @@ public class UseItemNetwork : Photon.PunBehaviour
 
 		if (target != null)
 		{
-			ItemScript _itemScript = target.GetComponent<ItemScript>();
-			if (!_itemScript.isDone)
+			ItemScript _itemScript = target.GetComponentInChildren<ItemScript>();
+			if (!_itemScript.isDone && _itemScript.onCraftingTable)
 			{
 				if (CheckPlayerDirection(target))
 				{
-					_itemScript.isPrepared = true;
-				}
-				else
-				{
-					_itemScript.isPrepared = false;
+					if (_playerInfo.isPreparing)
+					{
+						_itemScript.PrepareIngredient();
+					}
 				}
 			}
 		}
@@ -224,13 +236,14 @@ public class UseItemNetwork : Photon.PunBehaviour
 
 	//Put the cauldron over the fire !
 	[PunRPC]
-	private void PlaceCauldron(int targetID)
+	private void PlaceObject(int targetID)
 	{
 		Collider2D pTarget = PhotonView.Find(targetID).GetComponent<Collider2D>();
+		ItemInfoNetwork targetScript = pTarget.GetComponent<ItemInfoNetwork>();
 
-		Debug.Log("Trying to put cauldron on " + pTarget.name);
+		Debug.Log("Trying to put object on " + pTarget.name);
 
-		if (CheckPlayerDirection(pTarget))
+		if (CheckPlayerDirection(pTarget) && !targetScript.isOccupied)
 		{
 			photonView.RPC("DropOff", PhotonTargets.All, targetID);
 		}
@@ -240,7 +253,7 @@ public class UseItemNetwork : Photon.PunBehaviour
 		}
 	}
 	//Offline Version
-	private void PlaceCauldron(Collider2D pTarget, Transform pItem)
+	private void PlaceObject(Collider2D pTarget, Transform pItem)
 	{
 		if (CheckPlayerDirection(pTarget))
 		{
@@ -450,8 +463,9 @@ public class UseItemNetwork : Photon.PunBehaviour
 		Debug.Log("Adding to cauldron " + pItem.name);
 		
 		ChaudronScriptNetwork chaudronScript = pTarget.GetComponent<ChaudronScriptNetwork>();
+		ItemScript itemScript = pItem.GetComponent<ItemScript>();
 
-		if (!chaudronScript.isBurning && !chaudronScript.isFull)
+		if (!chaudronScript.isBurning && !chaudronScript.isFull && itemScript.isDone)
 		{
 			if (PhotonNetwork.isMasterClient)
 			{
@@ -466,9 +480,10 @@ public class UseItemNetwork : Photon.PunBehaviour
 	public void AddItemToCauldron(Collider2D pTarget, Transform pItem)
 	{
 		ItemInfoNetwork itemHoldedInfo = pItem.GetComponent<ItemInfoNetwork>();
+		ItemScript itemScript = pItem.GetComponent<ItemScript>();
 		ChaudronScriptNetwork chaudronScript = pTarget.GetComponent<ChaudronScriptNetwork>();
 
-		if (!chaudronScript.isBurning && !chaudronScript.isFull)
+		if (!chaudronScript.isBurning && !chaudronScript.isFull && itemScript.isDone)
 		{
 			chaudronScript.AddItem(itemHoldedInfo.name);
 
@@ -487,17 +502,20 @@ public class UseItemNetwork : Photon.PunBehaviour
 		if (pItem.tag == "chaudron")
 		{
 			pItem.GetComponent<ChaudronScriptNetwork>().isCooking = false;
-			Debug.Log("Is cooking ? " + pItem.GetComponent<ChaudronScriptNetwork>().isCooking);
-			if (pItem.transform.parent != null)
-				pItem.transform.parent.GetComponent<FireScriptNetwork>().isOccupied = false;
 		}
+		if (pItem.tag == "item")
+		{
+			pItem.GetComponent<ItemScript>().isPrepared = false;
+		}
+		if (pItem.transform.parent != null)
+			pItem.transform.parent.parent.GetComponent<ItemInfoNetwork>().isOccupied = false;
 
 		pItem.GetComponent<ItemInfoNetwork>().isHold = true;
 		pItem.GetComponent<BoxCollider2D>().enabled = false;
 		pItem.GetComponent<Rigidbody2D>().bodyType = RigidbodyType2D.Kinematic;
 		//pItem.GetComponent<PhotonTransformView>().enabled = false;
-		pItem.transform.position = _itemLocation.position;
-		pItem.transform.parent = _itemLocation;
+		pItem.transform.position = _playerInfo.itemLocation.position;
+		pItem.transform.parent = _playerInfo.itemLocation;
 		pItem.transform.rotation = new Quaternion(0, 0, 0, 0);
 
 		_playerInfo.isHolding = true;
@@ -509,21 +527,25 @@ public class UseItemNetwork : Photon.PunBehaviour
 		if (pItem.tag == "chaudron")
 		{
 			pItem.GetComponent<ChaudronScriptNetwork>().isCooking = false;
-			Debug.Log("Is cooking ? " + pItem.GetComponent<ChaudronScriptNetwork>().isCooking);
-			if (pItem.transform.parent != null)
-				pItem.transform.parent.parent.GetComponent<FireScriptNetwork>().isOccupied = false;
 		}
+		if (pItem.tag == "item")
+		{
+			pItem.GetComponent<ItemScript>().isPrepared = false;
+		}
+		if (pItem.transform.parent != null)
+			pItem.transform.parent.parent.GetComponent<ItemInfoNetwork>().isOccupied = false;
 
 		pItem.GetComponent<ItemInfoNetwork>().isHold = true;
 		pItem.GetComponent<BoxCollider2D>().enabled = false;
 		pItem.GetComponent<Rigidbody2D>().bodyType = RigidbodyType2D.Kinematic;
 		//pItem.GetComponent<PhotonTransformView>().enabled = false;
-		pItem.transform.position = _itemLocation.position;
-		pItem.transform.parent = _itemLocation;
+		pItem.transform.position = _playerInfo.itemLocation.position;
+		pItem.transform.parent = _playerInfo.itemLocation;
 		pItem.transform.rotation = new Quaternion(0, 0, 0, 0);
 
 		_playerInfo.isHolding = true;
 	}
+
 
 	[PunRPC]
 	public void DropOff()
@@ -547,7 +569,7 @@ public class UseItemNetwork : Photon.PunBehaviour
 		}
 	}
 
-	//Put cauldron on fire
+	//Place object on support
 	[PunRPC]
 	public void DropOff(int viewID)
 	{
@@ -555,7 +577,6 @@ public class UseItemNetwork : Photon.PunBehaviour
 		{
 			if (transform.GetChild(0).transform.childCount > 0)
 			{
-
 				Transform pTarget = PhotonView.Find(viewID).transform;
 
 				Debug.Log("target name : "+pTarget.name);
@@ -564,15 +585,23 @@ public class UseItemNetwork : Photon.PunBehaviour
 
 				//item.GetComponent<PhotonTransformView>().enabled = true;
 
-				item.parent = pTarget;
-				item.position = pTarget.position;
+				item.parent = pTarget.GetChild(0);
+				item.position = pTarget.GetChild(0).position;
 
 				item.GetComponent<ItemInfoNetwork>().isHold = false;
 				item.GetComponent<BoxCollider2D>().enabled = true;
 				item.GetComponent<Rigidbody2D>().bodyType = RigidbodyType2D.Kinematic;
 
-				item.GetComponent<ChaudronScriptNetwork>().isCooking = true;
-				pTarget.GetComponent<FireScriptNetwork>().isOccupied = true;
+				if (item.tag == "chaudron")
+				{
+					item.GetComponent<ChaudronScriptNetwork>().isCooking = true;
+					pTarget.GetComponent<ItemInfoNetwork>().isOccupied = true;
+				}
+				else
+				{
+					item.GetComponent<ItemScript>().onCraftingTable = true;
+					pTarget.GetComponent<ItemInfoNetwork>().isOccupied = true;
+				}
 
 				_playerInfo.isHolding = false;
 			}
@@ -596,8 +625,16 @@ public class UseItemNetwork : Photon.PunBehaviour
 				item.GetComponent<BoxCollider2D>().enabled = true;
 				item.GetComponent<Rigidbody2D>().bodyType = RigidbodyType2D.Kinematic;
 
-				item.GetComponent<ChaudronScriptNetwork>().isCooking = true;
-				pTarget.parent.GetComponent<FireScriptNetwork>().isOccupied = true;
+				if (item.tag == "chaudron")
+				{
+					item.GetComponent<ChaudronScriptNetwork>().isCooking = true;
+					pTarget.parent.GetComponent<ItemInfoNetwork>().isOccupied = true;
+				}
+				else
+				{
+					item.GetComponent<ItemScript>().onCraftingTable = true;
+					pTarget.parent.GetComponent<ItemInfoNetwork>().isOccupied = true;
+				}
 
 				_playerInfo.isHolding = false;
 			}
@@ -618,15 +655,15 @@ public class UseItemNetwork : Photon.PunBehaviour
 			{
 				Collider2D item = colliders[i];
 
-				if ((item.transform.position.y > (transform.position.y - _playerInfo.playerHeight / 2)) && (item.transform.position.y < (transform.position.y + _playerInfo.playerHeight / 2)))
-				{
+				//if ((item.transform.position.y > (transform.position.y - _playerInfo.playerHeight / 2)) && (item.transform.position.y < (transform.position.y + _playerInfo.playerHeight / 2)))
+				//{
 					float distTemp = Math.Abs(item.transform.position.x - transform.position.x);
 					if (distTemp < dist)
 					{
 						dist = distTemp;
 						target = item;
 					}
-				}
+				//}
 			}
 		}
 
@@ -635,6 +672,7 @@ public class UseItemNetwork : Photon.PunBehaviour
 
 	private bool CheckPlayerDirection(Collider2D pTarget)
 	{
+		//Horizontal
 		if (_playerAction.lastDir.x > 0)
 		{
 			if (pTarget.transform.position.x > transform.position.x)
@@ -642,13 +680,29 @@ public class UseItemNetwork : Photon.PunBehaviour
 				return true;
 			}
 		}
-		else
+		else if(_playerAction.lastDir.x < 0)
 		{
 			if (pTarget.transform.position.x < transform.position.x)
 			{
 				return true;
 			}
 		}
+		//Vertical
+		else if (_playerAction.lastDir.y > 0)
+		{
+			if (pTarget.transform.position.y > transform.position.y)
+			{
+				return true;
+			}
+		}
+		else if (_playerAction.lastDir.y < 0)
+		{
+			if (pTarget.transform.position.y < transform.position.y)
+			{
+				return true;
+			}
+		}
+
 		return false;
 	}
 }

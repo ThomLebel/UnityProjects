@@ -68,4 +68,5 @@ MonoBehaviour:
   - LoadArena
   - Init
   - Empty
+  - PlaceObject
   DisableAutoOpenWizard: 1

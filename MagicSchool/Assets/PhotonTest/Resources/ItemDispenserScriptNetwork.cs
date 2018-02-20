@@ -47,13 +47,9 @@ public class ItemDispenserScriptNetwork : Photon.PunBehaviour, IPunObservable
 		{
 			GameObject item;
 
-			if(PhotonNetwork.connected && PhotonNetwork.isMasterClient)
-				item = PhotonNetwork.Instantiate(this.itemGiven.name, new Vector3(0f, 0f, 0f), Quaternion.identity, 0) as GameObject;
-			else
-				item = Instantiate(itemGiven) as GameObject;
+			item = Instantiate(itemGiven) as GameObject;
 
-			int itemID = item.GetComponent<PhotonView>().viewID;
-			pPlayer.GetComponent<PhotonView>().RPC("PickUp", PhotonTargets.All, itemID);
+			pPlayer.GetComponent<UseItemNetwork>().PickUp(item.GetComponent<Collider2D>());
 
 			elapsedTime = Time.time + cooldown;
 			timeBeforeNextItem = cooldown;

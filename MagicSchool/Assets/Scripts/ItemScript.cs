@@ -9,17 +9,23 @@ public class ItemScript : MonoBehaviour {
 
 	public bool isPrepared = false;
 	public bool isDone = false;
+	public bool onCraftingTable = false;
 
-	public GameObject _progressBar;
+	//public GameObject _progressBar;
 	private ProgressBarScriptNetwork _progressBarScript;
 	private ItemInfoNetwork _itemInfo;
 
+	private void Awake()
+	{
+		_progressBarScript = gameObject.GetComponentInChildren<ProgressBarScriptNetwork>();
+	}
+
 	private void Update()
 	{
-		if (isPrepared && !isDone)
-		{
-			PrepareIngredient();
-		}
+		//if (isPrepared && !isDone)
+		//{
+		//	PrepareIngredient();
+		//}
 	}
 
 	public void AccioItem(Vector3 pDir)
@@ -36,6 +42,10 @@ public class ItemScript : MonoBehaviour {
 
 	public void PrepareIngredient()
 	{
+		if (isDone)
+		{
+			return;
+		}
 		if (_progressBarScript.value < 1)
 			_progressBarScript.value += Time.deltaTime * preparingCoef;
 		else

@@ -74,7 +74,7 @@ public class UseItem : MonoBehaviour {
 			else if (itemHolded.tag == "chaudron")
 			{
 				if (target.tag == "fire")
-					PlaceCauldron(target, itemHolded);
+					PlaceObject(target, itemHolded);
 				else
 					TransvasePotion(target, itemHolded);
 			}
@@ -107,7 +107,7 @@ public class UseItem : MonoBehaviour {
 
 
 	//Put the cauldron over the fire !
-	private void PlaceCauldron(Collider2D pTarget, Transform pItem)
+	private void PlaceObject(Collider2D pTarget, Transform pItem)
 	{
 		if (CheckPlayerDirection(pTarget))
 		{

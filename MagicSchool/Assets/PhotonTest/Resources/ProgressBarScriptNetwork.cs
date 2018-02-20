@@ -20,6 +20,7 @@ public class ProgressBarScriptNetwork : Photon.PunBehaviour, IPunObservable
 	{
 		// Set the scale of the health bar to be proportional to the player's health.
 		progressBar.transform.localScale = new Vector3(progressScale.x + value, 1, 1);
+		transform.localScale = transform.parent.localScale;
 
 		if (value == 0f)
 		{

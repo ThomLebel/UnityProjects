@@ -37,9 +37,8 @@ public class PlayerNetwork : Photon.PunBehaviour, IPunObservable
 	private IEnumerator stunCoroutine;
 
 	private float nextCast;
-	
-	//private float preparingTime = 0f;
-	//private float preparingDelay = 2f;
+
+	private SpriteRenderer spriteRenderer;
 
 	#endregion
 
@@ -57,6 +56,8 @@ public class PlayerNetwork : Photon.PunBehaviour, IPunObservable
 		//#Critical
 		//we flag as don't destroy on load so that instance survives level synchronization, thus giving a seamless experience when levels load.
 		DontDestroyOnLoad(this.gameObject);
+
+		spriteRenderer = gameObject.GetComponentInChildren<SpriteRenderer>();
 	}
 
 	private void Start()
@@ -132,19 +133,25 @@ public class PlayerNetwork : Photon.PunBehaviour, IPunObservable
 		if (Input.GetAxisRaw("Vertical_P" + _playerInfo.playerController) > 0.2)
 		{
 			vertical = 1;
-			lastDir = new Vector3(0, 1, 0);
+			lastDir = new Vector3(0, 1, 1);
 		}
 		if (Input.GetAxisRaw("Vertical_P" + _playerInfo.playerController) < -0.2)
 		{
 			vertical = -1;
-			lastDir = new Vector3(0, -1, 0);
+			lastDir = new Vector3(0, -1, -1);
 		}
-
-		transform.position += new Vector3(horizontal, vertical, vertical) * speed * Time.deltaTime;
+		//Vector3 newPos = new Vector3(0,0,0);
+		//newPos += new Vector3(horizontal, vertical, 0) * speed * Time.deltaTime;
+		transform.position += new Vector3(horizontal, vertical, 0) * speed * Time.deltaTime;
+		transform.position = new Vector3(transform.position.x, transform.position.y, transform.position.y);
 
 		//Change player orientation
 		if (lastDir.x != 0)
-			transform.localScale = new Vector3(_playerInfo.originalScale * lastDir.x, transform.localScale.y, transform.localScale.z);
+		{
+			spriteRenderer.transform.localScale = new Vector3(_playerInfo.originalScale * lastDir.x, spriteRenderer.transform.localScale.y, spriteRenderer.transform.localScale.z);
+			
+		}
+		_playerInfo.itemLocation.localPosition = lastDir * _playerInfo.itemOffset;
 	}
 
 	private void ItemAction()
@@ -169,10 +176,6 @@ public class PlayerNetwork : Photon.PunBehaviour, IPunObservable
 			_playerInfo.isPreparing = false;
 			return;
 		}
-		if (_playerInfo.isPreparing)
-		{
-			_useItem.PrepareItem();
-		}
 		if (Input.GetButtonDown("Fire2_P" + _playerInfo.playerController))
 		{
 			_playerInfo.isPreparing = true;
@@ -181,11 +184,19 @@ public class PlayerNetwork : Photon.PunBehaviour, IPunObservable
 		{
 			_playerInfo.isPreparing = false;
 		}
+		if (Input.GetButton("Fire2_P" + _playerInfo.playerController))
+		{
+			_useItem.PrepareItem();
+		}
 	}
 
 	private void CastSpell()
 	{
-		if (Input.GetButton("Fire3_P" + _playerInfo.playerController) && Time.time > nextCast && !_playerInfo.isHolding)
+		if (_playerInfo.isHolding || _playerInfo.isPreparing)
+		{
+			return;
+		}
+		if (Input.GetButton("Fire3_P" + _playerInfo.playerController) && Time.time > nextCast)
 		{
 			if (PhotonNetwork.connected)
 			{

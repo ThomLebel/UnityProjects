@@ -7,13 +7,14 @@ public class PlayerInfo : Photon.PunBehaviour, IPunObservable
 {
 
 	//States
-	[HideInInspector]
+	//[HideInInspector]
 	public bool isHolding, isStun, isPreparing;
 	public string State;
 
 	//Mesures
 	[HideInInspector]
 	public float playerWidth, playerHeight, originalScale;
+	public float itemOffset = 0.4f;
 
 	//Layers
 	[HideInInspector]
@@ -29,15 +30,26 @@ public class PlayerInfo : Photon.PunBehaviour, IPunObservable
 
 	public float pickUpRange = 0.5f;
 
+	public Transform itemLocation;
+	private SpriteRenderer spriteRenderer;
+
+	private void Awake()
+	{
+		spriteRenderer = gameObject.GetComponentInChildren<SpriteRenderer>();
+		//itemLocation = gameObject.transform.GetChild(0);
+	}
+
 	private void Start()
 	{
 		State = "idle";
 		isHolding = false;
 		isStun = false;
 		isPreparing = false;
-		playerWidth = GetComponent<Renderer>().bounds.size.x;
-		playerHeight = GetComponent<Renderer>().bounds.size.y;
-		originalScale = transform.localScale.x;
+		playerWidth = GetComponentInChildren<Renderer>().bounds.size.x;
+		playerHeight = GetComponentInChildren<Renderer>().bounds.size.y;
+		originalScale = spriteRenderer.transform.localScale.x;
+
+		Debug.Log("PLAYERINFO // Original scale = "+originalScale);
 
 		itemLayer = 1 << LayerMask.NameToLayer("item");
 		chaudronLayer = 1 << LayerMask.NameToLayer("chaudron");
@@ -55,8 +67,8 @@ public class PlayerInfo : Photon.PunBehaviour, IPunObservable
 		playerController = pController;
 		networkID = pNetworkID;
 		playerSprite = CharacterSelector.Instance.spriteList[pSpriteID];
-		gameObject.GetComponent<SpriteRenderer>().sprite = playerSprite;
-		gameObject.GetComponent<SpriteRenderer>().enabled = false;
+		spriteRenderer.sprite = playerSprite;
+		spriteRenderer.enabled = false;
 		gameObject.GetComponent<PlayerNetwork>().enabled = false;
 
 		if (PhotonNetwork.connected && PhotonNetwork.player.ID != pNetworkID)
@@ -68,7 +80,7 @@ public class PlayerInfo : Photon.PunBehaviour, IPunObservable
 	[PunRPC]
 	public void Init(Vector3 pPos)
 	{
-		gameObject.GetComponent<SpriteRenderer>().enabled = true;
+		spriteRenderer.enabled = true;
 		gameObject.GetComponent<PlayerNetwork>().enabled = true;
 		transform.position = pPos;
 	}
