@@ -12,6 +12,8 @@ public class PotionManager : MonoBehaviour {
 		int i = 0;
 		foreach (GameObject player in _players)
 		{
+			Debug.Log("Init a player : "+player);
+			Debug.Log("Init a player : ",player);
 			if (PhotonNetwork.connected)
 			{
 				player.GetComponent<PhotonView>().RPC("Init", PhotonTargets.All, SpawnPositionsList[i].position);

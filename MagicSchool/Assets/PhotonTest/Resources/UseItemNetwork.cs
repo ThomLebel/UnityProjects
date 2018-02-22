@@ -506,13 +506,21 @@ public class UseItemNetwork : Photon.PunBehaviour
 		if (pItem.tag == "item")
 		{
 			pItem.GetComponent<ItemScript>().isPrepared = false;
+			pItem.GetComponent<ItemScript>().onCraftingTable = false;
 		}
 		if (pItem.transform.parent != null)
 			pItem.transform.parent.parent.GetComponent<ItemInfoNetwork>().isOccupied = false;
 
 		pItem.GetComponent<ItemInfoNetwork>().isHold = true;
-		pItem.GetComponent<BoxCollider2D>().enabled = false;
+		//pItem.GetComponent<BoxCollider2D>().enabled = false;
 		pItem.GetComponent<Rigidbody2D>().bodyType = RigidbodyType2D.Kinematic;
+
+		BoxCollider2D[] _colliders = pItem.GetComponentsInChildren<BoxCollider2D>();
+		foreach (BoxCollider2D collider in _colliders)
+		{
+			collider.enabled = false;
+		}
+
 		//pItem.GetComponent<PhotonTransformView>().enabled = false;
 		pItem.transform.position = _playerInfo.itemLocation.position;
 		pItem.transform.parent = _playerInfo.itemLocation;
@@ -536,8 +544,15 @@ public class UseItemNetwork : Photon.PunBehaviour
 			pItem.transform.parent.parent.GetComponent<ItemInfoNetwork>().isOccupied = false;
 
 		pItem.GetComponent<ItemInfoNetwork>().isHold = true;
-		pItem.GetComponent<BoxCollider2D>().enabled = false;
+		//pItem.GetComponent<BoxCollider2D>().enabled = false;
 		pItem.GetComponent<Rigidbody2D>().bodyType = RigidbodyType2D.Kinematic;
+
+		BoxCollider2D[] _colliders = pItem.GetComponentsInChildren<BoxCollider2D>();
+		foreach (BoxCollider2D collider in _colliders)
+		{
+			collider.enabled = false;
+		}
+
 		//pItem.GetComponent<PhotonTransformView>().enabled = false;
 		pItem.transform.position = _playerInfo.itemLocation.position;
 		pItem.transform.parent = _playerInfo.itemLocation;
@@ -561,7 +576,14 @@ public class UseItemNetwork : Photon.PunBehaviour
 				item.parent = null;
 
 				item.GetComponent<ItemInfoNetwork>().isHold = false;
-				item.GetComponent<BoxCollider2D>().enabled = true;
+				//item.GetComponent<BoxCollider2D>().enabled = true;
+
+				BoxCollider2D[] _colliders = item.GetComponentsInChildren<BoxCollider2D>();
+				foreach (BoxCollider2D collider in _colliders)
+				{
+					collider.enabled = true;
+				}
+
 				//item.GetComponent<PhotonTransformView>().enabled = true;
 				item.GetComponent<Rigidbody2D>().bodyType = RigidbodyType2D.Dynamic;
 				_playerInfo.isHolding = false;
@@ -589,8 +611,14 @@ public class UseItemNetwork : Photon.PunBehaviour
 				item.position = pTarget.GetChild(0).position;
 
 				item.GetComponent<ItemInfoNetwork>().isHold = false;
-				item.GetComponent<BoxCollider2D>().enabled = true;
+				//item.GetComponent<BoxCollider2D>().enabled = true;
 				item.GetComponent<Rigidbody2D>().bodyType = RigidbodyType2D.Kinematic;
+
+				BoxCollider2D[] _colliders = item.GetComponentsInChildren<BoxCollider2D>();
+				foreach (BoxCollider2D collider in _colliders)
+				{
+					collider.enabled = true;
+				}
 
 				if (item.tag == "chaudron")
 				{
@@ -622,8 +650,14 @@ public class UseItemNetwork : Photon.PunBehaviour
 				item.position = pTarget.position;
 
 				item.GetComponent<ItemInfoNetwork>().isHold = false;
-				item.GetComponent<BoxCollider2D>().enabled = true;
+				//item.GetComponent<BoxCollider2D>().enabled = true;
 				item.GetComponent<Rigidbody2D>().bodyType = RigidbodyType2D.Kinematic;
+
+				BoxCollider2D[] _colliders = item.GetComponentsInChildren<BoxCollider2D>();
+				foreach (BoxCollider2D collider in _colliders)
+				{
+					collider.enabled = true;
+				}
 
 				if (item.tag == "chaudron")
 				{

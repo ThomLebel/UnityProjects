@@ -22,7 +22,7 @@ GameObject:
   - component: {fileID: 61872168558368576}
   - component: {fileID: 114655127076120214}
   - component: {fileID: 114462768386749100}
-  m_Layer: 0
+  m_Layer: 16
   m_Name: SpellPhoton
   m_TagString: spell
   m_Icon: {fileID: 0}
@@ -38,7 +38,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4137708493710326}
   - component: {fileID: 212969455966958282}
-  m_Layer: 0
+  m_Layer: 16
   m_Name: 0x72_16x16DungeonTileset.v4_232
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -137,6 +137,7 @@ MonoBehaviour:
   direction: {x: 0, y: 0, z: 0}
   speed: 8
   lifeSpan: 1
+  playerOwner: 0
 --- !u!212 &212969455966958282
 SpriteRenderer:
   m_ObjectHideFlags: 1

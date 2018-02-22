@@ -85,7 +85,14 @@ namespace Com.OniriqueStudio.MagicSchool
 
 		public void LeaveRoom()
 		{
-			PhotonNetwork.LeaveRoom();
+			if (PhotonNetwork.connected)
+			{
+				PhotonNetwork.LeaveRoom();
+			}
+			else
+			{
+				LoadArena("Launcher");
+			}
 		}
 
 		[PunRPC]

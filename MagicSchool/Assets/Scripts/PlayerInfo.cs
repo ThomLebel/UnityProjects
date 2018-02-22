@@ -63,6 +63,7 @@ public class PlayerInfo : Photon.PunBehaviour, IPunObservable
 	[PunRPC]
 	public void ConfigurePlayer(int pID, int pController, int pNetworkID, int pSpriteID)
 	{
+		Debug.Log("Configuration du joueur");
 		playerID = pID;
 		playerController = pController;
 		networkID = pNetworkID;

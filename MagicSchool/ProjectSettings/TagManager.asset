@@ -29,9 +29,9 @@ TagManager:
   - fire
   - pnj
   - craftTable
-  - 
-  - 
-  - 
+  - baseCollider
+  - bodyCollider
+  - spell
   - 
   - 
   - 
