@@ -8,6 +8,7 @@ public class ItemInfoNetwork : Photon.PunBehaviour, IPunObservable
 	public string itemName;
 	public int maxItem = 3;
 	public List<string> itemList;
+	public SpriteRenderer[] pictoList;
 
 
 	public bool isHold;

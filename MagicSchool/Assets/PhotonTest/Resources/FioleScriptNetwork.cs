@@ -5,6 +5,8 @@ using UnityEngine;
 public class FioleScriptNetwork : MonoBehaviour, IPunObservable
 {
 
+	public SpriteRenderer[] pictoList;
+
 	public List<string> itemList;
 
 	void IPunObservable.OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)

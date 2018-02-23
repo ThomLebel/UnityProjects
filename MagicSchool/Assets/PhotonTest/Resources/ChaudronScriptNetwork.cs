@@ -12,9 +12,10 @@ public class ChaudronScriptNetwork : Photon.PunBehaviour, IPunObservable
 	public bool isBurning;
 
 	public float cookingCoef = 0.05f;
+	public float burningDelay = 5f;
+
 	private float initialCookingCoef;
 	private float burningTimer = 0f;
-	public float burningDelay = 5f;
 	private float initialBurningDelay;
 
 	public GameObject _progressBar;
@@ -58,7 +59,30 @@ public class ChaudronScriptNetwork : Photon.PunBehaviour, IPunObservable
 	{
 		if (_itemInfo.itemList.Count < _itemInfo.maxItem)
 		{
-			string itemName = PhotonView.Find(pItemID).gameObject.GetComponent<ItemInfoNetwork>().itemName;
+			isDone = false;
+			isBurning = false;
+			_progressBar.GetComponentInChildren<SpriteRenderer>().color = _barColor;
+			_burningCoef = 0f;
+			burningDelay = initialBurningDelay;
+
+			GameObject item = PhotonView.Find(pItemID).gameObject;
+			string itemName = item.GetComponent<ItemInfoNetwork>().itemName;
+
+			SpriteRenderer currentPicto = null;
+
+			for (int i= _itemInfo.pictoList.Length-1; i>=0; i--)
+			{
+				if (_itemInfo.pictoList[i].sprite == null)
+				{
+					currentPicto = _itemInfo.pictoList[i];
+				}
+			}
+			if (currentPicto != null)
+			{
+				string pictoName = itemName + "Picto";
+				currentPicto.sprite = Resources.Load(pictoName, typeof(Sprite)) as Sprite;
+			}
+			
 
 			_itemInfo.itemList.Add(itemName);
 
@@ -81,11 +105,40 @@ public class ChaudronScriptNetwork : Photon.PunBehaviour, IPunObservable
 	{
 		if (_itemInfo.itemList.Count < _itemInfo.maxItem)
 		{
+			isDone = false;
+			isBurning = false;
+			_progressBar.GetComponentInChildren<SpriteRenderer>().color = _barColor;
+			_burningCoef = 0f;
+			burningDelay = initialBurningDelay;
+
 			_itemInfo.itemList.Add(pName);
+
+			Debug.Log("Adding item and picking picto");
+
+			SpriteRenderer currentPicto = null;
+
+			for (int i = _itemInfo.pictoList.Length - 1; i >= 0; i--)
+			{
+				if (_itemInfo.pictoList[i].sprite == null)
+				{
+					currentPicto = _itemInfo.pictoList[i];
+				}
+			}
+			if (currentPicto != null)
+			{
+				Debug.Log("Picto found and setting it up ",currentPicto);
+				string pictoName = pName + "Picto";
+				currentPicto.sprite = Resources.Load(pictoName, typeof(Sprite)) as Sprite;
+				Debug.Log("Picto name : "+pictoName);
+			}
 
 			if (_itemInfo.itemList.Count > 1)
 			{
 				_progressBarScript.value = (_progressBarScript.value / 3f) * 2f;
+			}
+			if (_itemInfo.itemList.Count == _itemInfo.maxItem)
+			{
+				isFull = true;
 			}
 		}
 		else
@@ -170,6 +223,11 @@ public class ChaudronScriptNetwork : Photon.PunBehaviour, IPunObservable
 		isFull = false;
 		isCooking = false;
 		isBurning = false;
+
+		for (int i = 0; i < _itemInfo.pictoList.Length; i++)
+		{
+			_itemInfo.pictoList[i].sprite = null;
+		}
 	}
 
 	public void SetCookingTime(float pTime)

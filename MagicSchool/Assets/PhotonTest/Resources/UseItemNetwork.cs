@@ -305,7 +305,7 @@ public class UseItemNetwork : Photon.PunBehaviour
 		{
 			if(pTarget.tag == "chaudron")
 			{
-				Debug.Log("On tient une potion pleine et on la verse dans le chaudron");
+				Debug.Log("On tient une potion pleine et on la verse dans le chaudron vide");
 				for (int i = 0; i < itemInfoScript.itemList.Count; i++)
 				{
 					chaudronScript.AddItem(itemInfoScript.itemList[i]);
@@ -313,17 +313,28 @@ public class UseItemNetwork : Photon.PunBehaviour
 				chaudronScript.isDone = true;
 				chaudronScript.SetCookingTime(1f);
 				itemInfoScript.itemList = new List<string>();
+
+				for (int i = 0; i<itemInfoScript.pictoList.Length; i++)
+				{
+					itemInfoScript.pictoList[i].sprite = null;
+				}
 			}
 			else
 			{
 				if (chaudronScript.isDone && !chaudronScript.isBurning)
 				{
-					Debug.Log("On tient un chaudron plein et on le verse dans la potion");
+					Debug.Log("On tient un chaudron plein et on le verse dans la potion vide");
 					targetInfoScript.itemList = itemInfoScript.itemList;
 					chaudronScript.isFull = false;
 					chaudronScript.isDone = false;
 					chaudronScript.SetCookingTime(0f);
 					itemInfoScript.itemList = new List<string>();
+
+					for (int i = 0; i < itemInfoScript.pictoList.Length; i++)
+					{
+						targetInfoScript.pictoList[i].sprite = itemInfoScript.pictoList[i].sprite;
+						itemInfoScript.pictoList[i].sprite = null;
+					}
 				}
 			}
 		}
@@ -339,6 +350,12 @@ public class UseItemNetwork : Photon.PunBehaviour
 					chaudronScript.isDone = false;
 					chaudronScript.SetCookingTime(0f);
 					targetInfoScript.itemList = new List<string>();
+
+					for (int i = 0; i < itemInfoScript.pictoList.Length; i++)
+					{
+						itemInfoScript.pictoList[i].sprite = targetInfoScript.pictoList[i].sprite;
+						targetInfoScript.pictoList[i].sprite = null;
+					}
 				}
 			}
 			else
@@ -351,6 +368,11 @@ public class UseItemNetwork : Photon.PunBehaviour
 				chaudronScript.isDone = true;
 				chaudronScript.SetCookingTime(1f);
 				targetInfoScript.itemList = new List<string>();
+
+				for (int i = 0; i < itemInfoScript.pictoList.Length; i++)
+				{
+					targetInfoScript.pictoList[i].sprite = null;
+				}
 			}
 		}
 	}
@@ -485,7 +507,7 @@ public class UseItemNetwork : Photon.PunBehaviour
 
 		if (!chaudronScript.isBurning && !chaudronScript.isFull && itemScript.isDone)
 		{
-			chaudronScript.AddItem(itemHoldedInfo.name);
+			chaudronScript.AddItem(itemHoldedInfo.itemName);
 
 			Destroy(pItem.gameObject);
 
