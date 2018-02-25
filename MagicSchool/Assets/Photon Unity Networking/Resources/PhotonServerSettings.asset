@@ -69,4 +69,5 @@ MonoBehaviour:
   - Init
   - Empty
   - PlaceObject
+  - GetObjects
   DisableAutoOpenWizard: 1

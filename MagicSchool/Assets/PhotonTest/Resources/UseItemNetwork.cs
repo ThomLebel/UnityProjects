@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Reflection;
 using UnityEngine;
 
 public class UseItemNetwork : Photon.PunBehaviour
@@ -697,6 +698,48 @@ public class UseItemNetwork : Photon.PunBehaviour
 		}
 	}
 
+
+	[PunRPC]
+	public void GetObjects(string pCallback, int pTargetID=-1, int pItemID=-1)
+	{
+		GameObject item = null;
+		GameObject target = null;
+		if (pItemID != -1)
+			item = PhotonView.Find(pItemID).gameObject;
+
+		if (pTargetID != -1)
+			target = PhotonView.Find(pTargetID).gameObject;
+
+		//Get the method information using the method info class
+		MethodInfo mi = this.GetType().GetMethod(pCallback);
+
+		//Invoke the method
+		// (null- no parameter for the method call
+		// or you can pass the array of parameters...)
+		if (mi != null)
+		{
+			if (target != null && item != null)
+			{
+				mi.Invoke(this, new object[] { target, item });
+			}
+			else if (target != null && item == null)
+			{
+				mi.Invoke(this, new object[] { target });
+			}
+			else if (target == null && item != null)
+			{
+				mi.Invoke(this, new object[] { item });
+			}
+			else if (target == null && item == null)
+			{
+				mi.Invoke(this, null);
+			}
+		}
+		else
+		{
+			Debug.LogWarning("method with name: function" + pCallback + " doesn't exist");
+		}
+}
 
 	private Collider2D GetClosestCollider(int pLayerMask)
 	{
