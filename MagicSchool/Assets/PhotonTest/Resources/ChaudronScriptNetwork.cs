@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Reflection;
 using UnityEngine;
 
 public class ChaudronScriptNetwork : Photon.PunBehaviour, IPunObservable
@@ -54,54 +55,100 @@ public class ChaudronScriptNetwork : Photon.PunBehaviour, IPunObservable
 		}
 	}
 
-	[PunRPC]
-	public void AddItem(int pItemID)
-	{
-		if (_itemInfo.itemList.Count < _itemInfo.maxItem)
-		{
-			isDone = false;
-			isBurning = false;
-			_progressBar.GetComponentInChildren<SpriteRenderer>().color = _barColor;
-			_burningCoef = 0f;
-			burningDelay = initialBurningDelay;
+	//[PunRPC]
+	//public void AddItem(int pItemID)
+	//{
+	//	if (_itemInfo.itemList.Count < _itemInfo.maxItem)
+	//	{
+	//		isDone = false;
+	//		isBurning = false;
+	//		_progressBar.GetComponentInChildren<SpriteRenderer>().color = _barColor;
+	//		_burningCoef = 0f;
+	//		burningDelay = initialBurningDelay;
 
-			GameObject item = PhotonView.Find(pItemID).gameObject;
-			string itemName = item.GetComponent<ItemInfoNetwork>().itemName;
+	//		GameObject item = PhotonView.Find(pItemID).gameObject;
+	//		string itemName = item.GetComponent<ItemInfoNetwork>().itemName;
 
-			SpriteRenderer currentPicto = null;
+	//		SpriteRenderer currentPicto = null;
 
-			for (int i= _itemInfo.pictoList.Length-1; i>=0; i--)
-			{
-				if (_itemInfo.pictoList[i].sprite == null)
-				{
-					currentPicto = _itemInfo.pictoList[i];
-				}
-			}
-			if (currentPicto != null)
-			{
-				string pictoName = itemName + "Picto";
-				currentPicto.sprite = Resources.Load(pictoName, typeof(Sprite)) as Sprite;
-			}
+	//		for (int i= _itemInfo.pictoList.Length-1; i>=0; i--)
+	//		{
+	//			if (_itemInfo.pictoList[i].sprite == null)
+	//			{
+	//				currentPicto = _itemInfo.pictoList[i];
+	//			}
+	//		}
+	//		if (currentPicto != null)
+	//		{
+	//			string pictoName = itemName + "Picto";
+	//			currentPicto.sprite = Resources.Load(pictoName, typeof(Sprite)) as Sprite;
+	//		}
 			
 
-			_itemInfo.itemList.Add(itemName);
+	//		_itemInfo.itemList.Add(itemName);
 
-			if (_itemInfo.itemList.Count > 1)
-			{
-				_progressBarScript.value = (_progressBarScript.value / 3f) * 2f;
-			}
-			if (_itemInfo.itemList.Count == _itemInfo.maxItem)
-			{
-				isFull = true;
-			}
-		}
-		else
-		{
-			isFull = true;
-		}
-	}
-	//Offline Version
-	public void AddItem(string pName)
+	//		if (_itemInfo.itemList.Count > 1)
+	//		{
+	//			_progressBarScript.value = (_progressBarScript.value / 3f) * 2f;
+	//		}
+	//		if (_itemInfo.itemList.Count == _itemInfo.maxItem)
+	//		{
+	//			isFull = true;
+	//		}
+	//	}
+	//	else
+	//	{
+	//		isFull = true;
+	//	}
+	//}
+	////Offline Version
+	//public void AddItem(string pName)
+	//{
+	//	if (_itemInfo.itemList.Count < _itemInfo.maxItem)
+	//	{
+	//		isDone = false;
+	//		isBurning = false;
+	//		_progressBar.GetComponentInChildren<SpriteRenderer>().color = _barColor;
+	//		_burningCoef = 0f;
+	//		burningDelay = initialBurningDelay;
+
+	//		_itemInfo.itemList.Add(pName);
+
+	//		Debug.Log("Adding item and picking picto");
+
+	//		SpriteRenderer currentPicto = null;
+
+	//		for (int i = _itemInfo.pictoList.Length - 1; i >= 0; i--)
+	//		{
+	//			if (_itemInfo.pictoList[i].sprite == null)
+	//			{
+	//				currentPicto = _itemInfo.pictoList[i];
+	//			}
+	//		}
+	//		if (currentPicto != null)
+	//		{
+	//			Debug.Log("Picto found and setting it up ",currentPicto);
+	//			string pictoName = pName + "Picto";
+	//			currentPicto.sprite = Resources.Load(pictoName, typeof(Sprite)) as Sprite;
+	//			Debug.Log("Picto name : "+pictoName);
+	//		}
+
+	//		if (_itemInfo.itemList.Count > 1)
+	//		{
+	//			_progressBarScript.value = (_progressBarScript.value / 3f) * 2f;
+	//		}
+	//		if (_itemInfo.itemList.Count == _itemInfo.maxItem)
+	//		{
+	//			isFull = true;
+	//		}
+	//	}
+	//	else
+	//	{
+	//		isFull = true;
+	//	}
+	//}
+	//Global Version
+	public void AddItem(string pItemName)
 	{
 		if (_itemInfo.itemList.Count < _itemInfo.maxItem)
 		{
@@ -110,10 +157,8 @@ public class ChaudronScriptNetwork : Photon.PunBehaviour, IPunObservable
 			_progressBar.GetComponentInChildren<SpriteRenderer>().color = _barColor;
 			_burningCoef = 0f;
 			burningDelay = initialBurningDelay;
-
-			_itemInfo.itemList.Add(pName);
-
-			Debug.Log("Adding item and picking picto");
+			
+			//string itemName = pItem.GetComponent<ItemInfoNetwork>().itemName;
 
 			SpriteRenderer currentPicto = null;
 
@@ -126,11 +171,11 @@ public class ChaudronScriptNetwork : Photon.PunBehaviour, IPunObservable
 			}
 			if (currentPicto != null)
 			{
-				Debug.Log("Picto found and setting it up ",currentPicto);
-				string pictoName = pName + "Picto";
+				string pictoName = pItemName + "Picto";
 				currentPicto.sprite = Resources.Load(pictoName, typeof(Sprite)) as Sprite;
-				Debug.Log("Picto name : "+pictoName);
 			}
+
+			_itemInfo.itemList.Add(pItemName);
 
 			if (_itemInfo.itemList.Count > 1)
 			{
@@ -146,6 +191,7 @@ public class ChaudronScriptNetwork : Photon.PunBehaviour, IPunObservable
 			isFull = true;
 		}
 	}
+
 
 	[PunRPC]
 	public void ControlFire(int pPlayerOwner)
@@ -237,6 +283,36 @@ public class ChaudronScriptNetwork : Photon.PunBehaviour, IPunObservable
 	public float GetCookingTime()
 	{
 		return _progressBarScript.value;
+	}
+
+	[PunRPC]
+	public void GetGameObjects(string pCallback, int pItemID = -1)
+	{
+		GameObject item = null;
+		string itemName = "";
+		if (pItemID != -1)
+		{
+			item = PhotonView.Find(pItemID).gameObject;
+			itemName = item.GetComponent<ItemInfoNetwork>().itemName;
+		}
+
+		//Get the method information using the method info class
+		MethodInfo mi = this.GetType().GetMethod(pCallback);
+
+		//Invoke the method
+		// (null- no parameter for the method call
+		// or you can pass the array of parameters...)
+		if (mi != null)
+		{
+			if (item != null && itemName != "")
+			{
+				mi.Invoke(this, new object[] { itemName });
+			}
+		}
+		else
+		{
+			Debug.LogWarning("method with name: function" + pCallback + " doesn't exist");
+		}
 	}
 
 	void IPunObservable.OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)

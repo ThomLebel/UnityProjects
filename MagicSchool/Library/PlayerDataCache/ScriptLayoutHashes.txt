@@ -15,7 +15,7 @@ fa1fc82d940c3de726a0716502bd2606 Assembly-CSharp.dll:.SpellProjectile
 05524b8f659e7bfe5756d1335fec24ba Assembly-CSharp.dll:.ReporterGUI
 e17f92d3b13f18bef6e4629b9bff76dd Assembly-CSharp.dll:.DemoBoxesGui
 1235609fcbaeb18ef7118947f508f7e0 Assembly-CSharp.dll:.ProgressBarScriptNetwork
-5727312016e29ddd554c311f9b8f5543 Assembly-CSharp.dll:.PlayerInfo
+b1221d42a1ad77247d303fceff6ab6ce Assembly-CSharp.dll:.PlayerInfo
 3e8734d6a14498c4110f697ce11a960e Assembly-CSharp.dll:.FireScript
 05524b8f659e7bfe5756d1335fec24ba Assembly-CSharp.dll:.ReporterMessageReceiver
 05524b8f659e7bfe5756d1335fec24ba UnityEngine.Timeline.dll:UnityEngine.Timeline.ActivationPlayableAsset
@@ -153,7 +153,7 @@ c2d15b04283157b00cbdbfaf16c18482 Assembly-CSharp.dll:.PickupItemSyncer
 1cb40c746a01332eb78618e045b0b5a9 Assembly-CSharp.dll:.Reporter
 05524b8f659e7bfe5756d1335fec24ba Assembly-CSharp.dll:.UseItemNetwork
 c1df6bba7f7b35a48ac544b9017761dd Assembly-CSharp.dll:.PlayerDiamond
-4f3108710a8de4014bab9807475cfe75 Assembly-CSharp.dll:.ItemScript
+a8b113b3611b45ed39aba7554c0edcf2 Assembly-CSharp.dll:.ItemScript
 090584907af2e462994cc893ced507b3 Assembly-CSharp.dll:.PhotonRigidbody2DView
 05524b8f659e7bfe5756d1335fec24ba Assembly-CSharp.dll:.OnStartDelete
 60dd09b9fc97bf7c6d6f3c7ad80869ae Assembly-CSharp.dll:.ItemDispenserScriptNetwork
@@ -173,7 +173,7 @@ c2275a8bfbb9f9942cad75ecdfded41d UnityEngine.HoloLens.dll:UnityEngine.XR.WSA.Spa
 e0d7152ecf22ae2a833ea3b9acd8d0a2 Assembly-CSharp.dll:.WorkerInGame
 e626bae268f8b272b7a2d07760d262c6 Assembly-CSharp.dll:.PickupController
 1356b4a6096c35c829823b7e28399030 Assembly-CSharp.dll:.HubGui
-244f46b4be3e40d161361d77bd3cf9af Assembly-CSharp.dll:.ItemInfoNetwork
+608961b5d4870dbb19a5cd71ec3b7cb7 Assembly-CSharp.dll:.ItemInfoNetwork
 05524b8f659e7bfe5756d1335fec24ba Assembly-CSharp.dll:Com.OniriqueStudio.MagicSchool.PlayerNamerInputField
 5a78906060300940acb71bc3dfb6396d Assembly-CSharp.dll:.DragToMove
 05524b8f659e7bfe5756d1335fec24ba Assembly-CSharp.dll:.CubeLerp
@@ -193,7 +193,7 @@ a7a85e3660316548e6df72942099a49d Assembly-CSharp.dll:.MessageOverlay
 79faa3d65f06fd0a6111fd24966956f5 Assembly-CSharp.dll:.ChatAppIdCheckerUI
 05524b8f659e7bfe5756d1335fec24ba UnityEngine.Advertisements.dll:UnityEngine.Advertisements.CallbackExecutor
 05524b8f659e7bfe5756d1335fec24ba UnityEngine.Advertisements.dll:UnityEngine.Advertisements.Editor.Placeholder
-250f56eceb4dd4d3b0ecebaded8d8d8d Assembly-CSharp.dll:.FioleScriptNetwork
+9e46de5cc806a506e7f5cb62fe062e0e Assembly-CSharp.dll:.FioleScriptNetwork
 47d4dbb91b8073a64be47276b7d4f29a Assembly-CSharp.dll:Com.OniriqueStudio.MagicSchool.GameManager
 ada54cb428213a7e0c4b986e95788f97 Assembly-CSharp.dll:.PhotonTransformView
 c0ad1fb5d400aa83cb257e5f6c3714cf Assembly-CSharp.dll:.OnClickDestroy
@@ -219,6 +219,7 @@ e9bdabf9265d758d56f01bb188916fa8 UnityEngine.Networking.dll:UnityEngine.Networki
 3f32f08a64daf40b09ed864d96fe3840 UnityEngine.Networking.dll:UnityEngine.Networking.NetworkTransform
 73843688b51256aed059f049c540bca8 UnityEngine.Networking.dll:UnityEngine.Networking.NetworkTransformChild
 528ea1fd7c01796fc60c4e2f172ea229 UnityEngine.Networking.dll:UnityEngine.Networking.NetworkTransformVisualizer
+3e8734d6a14498c4110f697ce11a960e Assembly-CSharp.dll:.CraftingTableScript
 05524b8f659e7bfe5756d1335fec24ba Assembly-CSharp.dll:.OnAwakePhysicsSettings
 4efe297689455799fab987dfaf7ba0d5 Assembly-CSharp.dll:.OnClickLoadSomething
 05524b8f659e7bfe5756d1335fec24ba Assembly-CSharp.dll:.PointedAtGameObjectInfo
@@ -247,6 +248,7 @@ c2275a8bfbb9f9942cad75ecdfded41d UnityEngine.HoloLens.dll:UnityEngine.XR.WSA.Spa
 45f3431f0103c41611e8d4eec3d439df UnityEngine.HoloLens.dll:UnityEngine.XR.WSA.SpatialMappingRenderer
 ee8540d1efea9148410a914295c889e3 Assembly-CSharp.dll:.OnJoinedInstantiate
 fe180736ec3bd9cf69fd20bbec04acfb Assembly-CSharp.dll:ExitGames.Demos.DemoAnimator.LoaderAnime
+1c443aba06f59a1a656f0159dad6a20b Assembly-CSharp.dll:.PotionManager
 05524b8f659e7bfe5756d1335fec24ba Assembly-CSharp.dll:.OnClickRequestOwnership
 83cdb8120edcaa23b6fdddba5f800435 Assembly-CSharp.dll:.PlayerPotionAction
 6b7f3b627f03aa2dae54ad0ecb0a7d7a Assembly-CSharp.dll:.PhotonLagSimulationGui
@@ -285,4 +287,3 @@ b2dc25029b6f083ffbbdf9df269f825a Assembly-CSharp.dll:.InRoomChat
 d92d8cadcb426c80579470f65448e624 Assembly-CSharp.dll:Com.OniriqueStudio.MagicSchool.Launcher
 05524b8f659e7bfe5756d1335fec24ba Assembly-CSharp.dll:.ClickDetector
 54a26a95db9c623b6eb6fc01ae3ef891 Assembly-CSharp.dll:.CubeExtra
-1c443aba06f59a1a656f0159dad6a20b Assembly-CSharp.dll:.PotionManager
