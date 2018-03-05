@@ -94,6 +94,8 @@ public class PlayerInfo : Photon.PunBehaviour, IPunObservable
 			stream.SendNext(isHolding);
 			stream.SendNext(isStun);
 			stream.SendNext(isPreparing);
+			stream.SendNext(itemLocation.localPosition);
+			stream.SendNext(spriteRenderer.transform.localScale);
 		}
 		else
 		{
@@ -101,6 +103,8 @@ public class PlayerInfo : Photon.PunBehaviour, IPunObservable
 			this.isHolding = (bool)stream.ReceiveNext();
 			this.isStun = (bool)stream.ReceiveNext();
 			this.isPreparing = (bool)stream.ReceiveNext();
+			this.itemLocation.localPosition = (Vector3)stream.ReceiveNext();
+			this.spriteRenderer.transform.localScale = (Vector3)stream.ReceiveNext();
 		}
 	}
 }

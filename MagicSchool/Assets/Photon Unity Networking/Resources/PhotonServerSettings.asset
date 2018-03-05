@@ -71,4 +71,5 @@ MonoBehaviour:
   - PlaceObject
   - GetObjects
   - GetGameObjects
+  - PrepareIngredient
   DisableAutoOpenWizard: 1

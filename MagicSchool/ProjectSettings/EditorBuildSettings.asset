@@ -23,3 +23,6 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/PhotonTest/Room for 4.unity
     guid: f12d311b4e860324ab07f20738d892f3
+  - enabled: 0
+    path: Assets/Photon Unity Networking/Demos/DemoSynchronization/DemoSynchronization-Scene.unity
+    guid: caec1ee6e27780946b8db3d1aebaa478

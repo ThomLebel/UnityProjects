@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class ItemScript : MonoBehaviour {
+public class ItemScript : MonoBehaviour, IPunObservable {
 
 	public float spellForce = 30f;
 	public float preparingCoef = 0.1f;
@@ -40,6 +40,7 @@ public class ItemScript : MonoBehaviour {
 		}
 	}
 
+	[PunRPC]
 	public void PrepareIngredient()
 	{
 		if (isDone)
@@ -55,6 +56,24 @@ public class ItemScript : MonoBehaviour {
 			{
 				isDone = true;
 			}
+		}
+	}
+
+	void IPunObservable.OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
+	{
+		if (stream.isWriting)
+		{
+			// We own this player: send the others our data
+			stream.SendNext(isPrepared);
+			stream.SendNext(isDone);
+			stream.SendNext(onCraftingTable);
+		}
+		else
+		{
+			// Network player, receive data
+			this.isPrepared = (bool)stream.ReceiveNext();
+			this.isDone = (bool)stream.ReceiveNext();
+			this.onCraftingTable = (bool)stream.ReceiveNext();
 		}
 	}
 }

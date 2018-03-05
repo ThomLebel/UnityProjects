@@ -110,7 +110,7 @@ public class UseItemNetwork : Photon.PunBehaviour
 					{
 						if (PhotonNetwork.connected)
 						{
-							photonView.RPC("GetGameObjects", PhotonTargets.All, "CookItem", targetID, itemID);
+							photonView.RPC("GetGameObjects", PhotonTargets.All, "AddItemToCauldron", targetID, itemID);
 							//CookItem(targetID, itemID);
 							//photonView.RPC("CookItem", PhotonTargets.All, targetID, itemID);
 						}
@@ -212,7 +212,14 @@ public class UseItemNetwork : Photon.PunBehaviour
 				{
 					if (_playerInfo.isPreparing)
 					{
-						_itemScript.PrepareIngredient();
+						if (PhotonNetwork.connected)
+						{
+							target.transform.GetChild(0).GetComponentInChildren<PhotonView>().RPC("PrepareIngredient", PhotonTargets.All);
+						}
+						else
+						{
+							_itemScript.PrepareIngredient();
+						}
 					}
 				}
 			}
@@ -455,7 +462,7 @@ public class UseItemNetwork : Photon.PunBehaviour
 	//	}
 	//}
 
-	private void SwitchContent(GameObject pTarget, GameObject pItem)
+	public void SwitchContent(GameObject pTarget, GameObject pItem)
 	{
 		ItemInfoNetwork targetInfoScript = pTarget.GetComponent<ItemInfoNetwork>();
 		ItemInfoNetwork itemInfoScript = pItem.GetComponent<ItemInfoNetwork>();
@@ -579,7 +586,7 @@ public class UseItemNetwork : Photon.PunBehaviour
 	//	}
 	//}
 
-	private void ServePotion(GameObject pTarget, GameObject pItem)
+	public void ServePotion(GameObject pTarget, GameObject pItem)
 	{
 		PotionMasterScript potionMasterScript = pTarget.GetComponent<PotionMasterScript>();
 		potionMasterScript.CheckPotionValidity(pItem.GetComponent<FioleScriptNetwork>().itemList);
@@ -648,7 +655,8 @@ public class UseItemNetwork : Photon.PunBehaviour
 			{
 				if (PhotonNetwork.isMasterClient)
 				{
-					pTarget.GetComponent<PhotonView>().RPC("GetGameObjects", PhotonTargets.All, "AddItem", itemID);
+					int _itemID = pItem.GetComponent<PhotonView>().viewID;
+					pTarget.GetComponent<PhotonView>().RPC("GetGameObjects", PhotonTargets.All, "AddItem", _itemID);
 					PhotonNetwork.Destroy(pItem);
 				}
 			}

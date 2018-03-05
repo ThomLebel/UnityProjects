@@ -227,7 +227,7 @@ BoxCollider2D:
   m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: 0.03, y: -0.06}
+  m_Offset: {x: 0.03, y: -0.07}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0.5}
@@ -238,7 +238,7 @@ BoxCollider2D:
     adaptiveTiling: 0
   m_AutoTiling: 0
   serializedVersion: 2
-  m_Size: {x: 0.27, y: 0.5}
+  m_Size: {x: 0.3, y: 0.55}
   m_EdgeRadius: 0
 --- !u!61 &61315562236525598
 BoxCollider2D:
@@ -252,7 +252,7 @@ BoxCollider2D:
   m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: 0.019003794, y: -0.2660544}
+  m_Offset: {x: 0.03, y: -0.25}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0, y: 0}
@@ -263,7 +263,7 @@ BoxCollider2D:
     adaptiveTiling: 0
   m_AutoTiling: 0
   serializedVersion: 2
-  m_Size: {x: 0.23224244, y: 0.17903233}
+  m_Size: {x: 0.25, y: 0.2}
   m_EdgeRadius: 0
 --- !u!114 &114059060147497000
 MonoBehaviour:
@@ -279,6 +279,7 @@ MonoBehaviour:
   itemName: ingredient
   maxItem: 3
   itemList: []
+  pictoList: []
   isHold: 0
   isOccupied: 0
 --- !u!114 &114178730500240278
@@ -356,6 +357,7 @@ MonoBehaviour:
   ownershipTransfer: 0
   ObservedComponents:
   - {fileID: 114059060147497000}
+  - {fileID: 114593729291417810}
   ObservedComponentsFoldoutOpen: 1
   viewIdField: 0
   instantiationId: -1

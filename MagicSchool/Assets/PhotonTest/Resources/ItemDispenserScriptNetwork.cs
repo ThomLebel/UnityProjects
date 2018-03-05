@@ -19,28 +19,28 @@ public class ItemDispenserScriptNetwork : Photon.PunBehaviour, IPunObservable
 		timeBeforeNextItem = cooldown;
 	}
 
-	[PunRPC]
-	public void GiveItem(int pPlayerID)
-	{
-		if (Time.time >= elapsedTime)
-		{
-			GameObject item;
-			GameObject player = PhotonView.Find(pPlayerID).gameObject;
+	//[PunRPC]
+	//public void GiveItem(int pPlayerID)
+	//{
+	//	if (Time.time >= elapsedTime)
+	//	{
+	//		GameObject item;
+	//		GameObject player = PhotonView.Find(pPlayerID).gameObject;
 
-			if (PhotonNetwork.connected && PhotonNetwork.isMasterClient)
-			{
-				item = PhotonNetwork.Instantiate(this.itemGiven.name, new Vector3(0f, 0f, 0f), Quaternion.identity, 0) as GameObject;
-				int itemID = item.GetComponent<PhotonView>().viewID;
-				player.GetComponent<PhotonView>().RPC("PickUp", PhotonTargets.All, itemID);
-			}
+	//		if (PhotonNetwork.connected && PhotonNetwork.isMasterClient)
+	//		{
+	//			item = PhotonNetwork.Instantiate(this.itemGiven.name, new Vector3(0f, 0f, 0f), Quaternion.identity, 0) as GameObject;
+	//			int itemID = item.GetComponent<PhotonView>().viewID;
+	//			player.GetComponent<PhotonView>().RPC("PickUp", PhotonTargets.All, itemID);
+	//		}
 
-			elapsedTime = Time.time + cooldown;
-			timeBeforeNextItem = cooldown;
+	//		elapsedTime = Time.time + cooldown;
+	//		timeBeforeNextItem = cooldown;
 
-			coroutine = WaitAndPrint(1.0f);
-			StartCoroutine(coroutine);
-		}
-	}
+	//		coroutine = WaitAndPrint(1.0f);
+	//		StartCoroutine(coroutine);
+	//	}
+	//}
 	//Offline version
 	public void GiveItem(GameObject pPlayer)
 	{
@@ -54,7 +54,7 @@ public class ItemDispenserScriptNetwork : Photon.PunBehaviour, IPunObservable
 				{
 					item = PhotonNetwork.Instantiate(this.itemGiven.name, new Vector3(0f, 0f, 0f), Quaternion.identity, 0) as GameObject;
 					int itemID = item.GetComponent<PhotonView>().viewID;
-					pPlayer.GetComponent<PhotonView>().RPC("GetGameObjects", PhotonTargets.All, "PickUp", itemID);
+					pPlayer.GetComponent<PhotonView>().RPC("GetGameObjects", PhotonTargets.All, "PickUp", -1, itemID);
 				}
 			}
 			else
