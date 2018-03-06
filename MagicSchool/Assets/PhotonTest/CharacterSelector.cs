@@ -130,6 +130,10 @@ namespace Com.OniriqueStudio.MagicSchool
 				{
 					if (gameReady)
 					{
+						if (PhotonNetwork.connected && !PhotonNetwork.isMasterClient)
+						{
+							return;
+						}
 						string levelName = "Room for "+playersReady;
 						GameManager.Instance.LoadArena(levelName);
 					}

@@ -142,8 +142,8 @@ public class PlayerNetwork : Photon.PunBehaviour, IPunObservable
 		}
 		//Vector3 newPos = new Vector3(0,0,0);
 		//newPos += new Vector3(horizontal, vertical, 0) * speed * Time.deltaTime;
-		transform.position += new Vector3(horizontal, vertical, 0) * speed * Time.deltaTime;
-		transform.position = new Vector3(transform.position.x, transform.position.y, transform.position.y);
+		transform.position += new Vector3(horizontal, vertical, vertical) * speed * Time.deltaTime;
+		//transform.position = new Vector3(transform.position.x, transform.position.y, transform.position.y);
 
 		//Change player orientation
 		if (lastDir.x != 0)
