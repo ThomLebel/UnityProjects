@@ -72,7 +72,8 @@ GameObject:
   - component: {fileID: 114858662794190148}
   - component: {fileID: 114432932280025118}
   - component: {fileID: 114785487786147080}
-  - component: {fileID: 114538856847208962}
+  - component: {fileID: 114195963506086002}
+  - component: {fileID: 114634530505540550}
   m_Layer: 0
   m_Name: PlayerPhoton
   m_TagString: Player
@@ -237,18 +238,7 @@ MonoBehaviour:
   playerSprite: {fileID: 0}
   pickUpRange: 0.5
   itemLocation: {fileID: 4631874776851482}
---- !u!114 &114432932280025118
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1941742067039458}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7d6b2414bfd279348876eabf3654a36c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
---- !u!114 &114538856847208962
+--- !u!114 &114195963506086002
 MonoBehaviour:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
@@ -263,8 +253,8 @@ MonoBehaviour:
     SynchronizeEnabled: 1
     TeleportEnabled: 1
     TeleportIfDistanceGreaterThan: 3
-    InterpolateOption: 4
-    InterpolateMoveTowardsSpeed: 5
+    InterpolateOption: 0
+    InterpolateMoveTowardsSpeed: 1
     InterpolateLerpSpeed: 15
     InterpolateMoveTowardsAcceleration: 2
     InterpolateMoveTowardsDeceleration: 2
@@ -299,7 +289,7 @@ MonoBehaviour:
       m_PostInfinity: 2
       m_RotationOrder: 4
     ExtrapolateOption: 0
-    ExtrapolateSpeed: 5
+    ExtrapolateSpeed: 10
     ExtrapolateIncludingRoundTripTime: 1
     ExtrapolateNumberOfStoredPositions: 1
     DrawErrorGizmo: 1
@@ -313,6 +303,30 @@ MonoBehaviour:
     InterpolateOption: 0
     InterpolateMoveTowardsSpeed: 1
     InterpolateLerpSpeed: 0
+--- !u!114 &114432932280025118
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1941742067039458}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7d6b2414bfd279348876eabf3654a36c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &114634530505540550
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1941742067039458}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0e7cb724808c322458aa4d15f5035fa9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_SynchronizeVelocity: 1
+  m_SynchronizeAngularVelocity: 1
 --- !u!114 &114785487786147080
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -333,8 +347,10 @@ MonoBehaviour:
   onSerializeRigidBodyOption: 2
   ownershipTransfer: 1
   ObservedComponents:
-  - {fileID: 114538856847208962}
+  - {fileID: 0}
   - {fileID: 114030939717551992}
+  - {fileID: 114634530505540550}
+  - {fileID: 114195963506086002}
   ObservedComponentsFoldoutOpen: 1
   viewIdField: 0
   instantiationId: -1
@@ -351,7 +367,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 93f25d482b4c7ff4385202e435a7d384, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  speed: 5
+  speed: 10
   lastDir: {x: 0, y: 0, z: 0}
   projectilePrefab: {fileID: 1304568552454650, guid: 927204a58438028499164e6e3a8fc430,
     type: 2}

@@ -39,6 +39,7 @@ public class PlayerNetwork : Photon.PunBehaviour, IPunObservable
 	private float nextCast;
 
 	private SpriteRenderer spriteRenderer;
+	private Rigidbody2D rb2d;
 
 	#endregion
 
@@ -66,6 +67,9 @@ public class PlayerNetwork : Photon.PunBehaviour, IPunObservable
 		_useItem = gameObject.GetComponent<UseItemNetwork>();
 
 		lastDir = new Vector3(1, 0, 0);
+
+		rb2d = GetComponent<Rigidbody2D>();
+
 
 #if UNITY_MIN_5_4
 		//Unity 5.4 has a new scene management. Register a method to call CalledOnLevelWasLoaded.
@@ -140,10 +144,14 @@ public class PlayerNetwork : Photon.PunBehaviour, IPunObservable
 			vertical = -1;
 			lastDir = new Vector3(0, -1, -1);
 		}
+		Vector2 movement = new Vector2(horizontal, vertical);
+
+		rb2d.AddForce(movement * speed);
 		//Vector3 newPos = new Vector3(0,0,0);
 		//newPos += new Vector3(horizontal, vertical, 0) * speed * Time.deltaTime;
-		transform.position += new Vector3(horizontal, vertical, vertical) * speed * Time.deltaTime;
-		//transform.position = new Vector3(transform.position.x, transform.position.y, transform.position.y);
+		//transform.position += new Vector3(horizontal, vertical, 0) * speed * Time.deltaTime;
+		transform.position = new Vector3(transform.position.x, transform.position.y, transform.position.y);
+
 
 		//Change player orientation
 		if (lastDir.x != 0)
