@@ -274,15 +274,6 @@
     <Reference Include="SyntaxTree.VisualStudio.Unity.Bridge">
       <HintPath>C:/Program Files (x86)/Microsoft Visual Studio Tools for Unity/15.0/Editor/SyntaxTree.VisualStudio.Unity.Bridge.dll</HintPath>
     </Reference>
-    <Reference Include="Newtonsoft.Json">
-      <HintPath>Assets/Photon Unity Networking/Editor/PhotonNetwork/Newtonsoft.Json.dll</HintPath>
-    </Reference>
-    <Reference Include="Photon3Unity3D">
-      <HintPath>Assets/Plugins/Photon3Unity3D.dll</HintPath>
-    </Reference>
-    <Reference Include="websocket-sharp">
-      <HintPath>Assets/Plugins/WebSocket/websocket-sharp.dll</HintPath>
-    </Reference>
     <Reference Include="UnityEngine.Advertisements">
       <HintPath>C:/Users/thomas lebel/AppData/LocalLow/Unity/cache/packages/packages.unity.com/com.unity.ads@2.0.3/UnityEngine.Advertisements.dll</HintPath>
     </Reference>
@@ -312,47 +303,16 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="MagicSchool.Plugins.csproj">
-      <Project>{7FCAEC6A-1013-0818-DDC4-521E650E0571}</Project>
-      <Name>MagicSchool.Plugins</Name>
-    </ProjectReference>
     <ProjectReference Include="MagicSchool.csproj">
       <Project>{96CCA89E-74E2-2635-E7AF-596F15E8EC14}</Project>
       <Name>MagicSchool</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Assets\Photon Unity Networking\Demos\DemoHub\Editor\PunStartup.cs" />
-    <Compile Include="Assets\Photon Unity Networking\Editor\PhotonNetwork\AccountService.cs" />
-    <Compile Include="Assets\Photon Unity Networking\Editor\PhotonNetwork\CullAreaEditor.cs" />
-    <Compile Include="Assets\Photon Unity Networking\Editor\PhotonNetwork\PhotonConverter.cs" />
-    <Compile Include="Assets\Photon Unity Networking\Editor\PhotonNetwork\PhotonEditor.cs" />
-    <Compile Include="Assets\Photon Unity Networking\Editor\PhotonNetwork\PhotonEditorUtils.cs" />
-    <Compile Include="Assets\Photon Unity Networking\Editor\PhotonNetwork\PhotonGUI.cs" />
-    <Compile Include="Assets\Photon Unity Networking\Editor\PhotonNetwork\PhotonViewHandler.cs" />
-    <Compile Include="Assets\Photon Unity Networking\Editor\PhotonNetwork\PhotonViewInspector.cs" />
-    <Compile Include="Assets\Photon Unity Networking\Editor\PhotonNetwork\PunSceneSettings.cs" />
-    <Compile Include="Assets\Photon Unity Networking\Editor\PhotonNetwork\ReorderableListResources.cs" />
-    <Compile Include="Assets\Photon Unity Networking\Editor\PhotonNetwork\ServerSettingsInspector.cs" />
-    <Compile Include="Assets\Photon Unity Networking\Editor\PhotonNetwork\Views\PhotonAnimatorViewEditor.cs" />
-    <Compile Include="Assets\Photon Unity Networking\Editor\PhotonNetwork\Views\PhotonRigidbody2DViewEditor.cs" />
-    <Compile Include="Assets\Photon Unity Networking\Editor\PhotonNetwork\Views\PhotonRigidbodyViewEditor.cs" />
-    <Compile Include="Assets\Photon Unity Networking\Editor\PhotonNetwork\Views\PhotonTransformViewEditor.cs" />
-    <Compile Include="Assets\Photon Unity Networking\UtilityScripts\PhotonPlayer\Editor\PlayerRoomIndexingInspector.cs" />
-    <Compile Include="Assets\Photon Unity Networking\UtilityScripts\PhotonPlayer\Editor\PunTeamsInspector.cs" />
     <Compile Include="Assets\Unity-Logs-Viewer\Reporter\Editor\ReporterEditor.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\Bug.txt" />
-    <None Include="Assets\Photon Unity Networking\Demos\DemoBoxes\Resources\eurof_tt.txt" />
-    <None Include="Assets\Photon Unity Networking\Demos\DemoRockPaperScissors\Assets\OpenSans\Apache License.txt" />
-    <None Include="Assets\Photon Unity Networking\Demos\MarcoPolo-Tutorial\marcopolo-readme.txt" />
-    <None Include="Assets\Photon Unity Networking\Demos\Shared Assets\Skin\3dText.shader" />
-    <None Include="Assets\Photon Unity Networking\changelog.txt" />
-    <None Include="Assets\Photon Unity Networking\link.xml" />
-    <None Include="Assets\Photon Unity Networking\readme.txt" />
-    <None Include="Assets\Plugins\Photon3Unity3D.xml" />
-    <None Include="Assets\Plugins\release_history.txt" />
     <None Include="Assets\StreamingAssets\build_info.txt" />
     <None Include="Assets\TODO.txt" />
   </ItemGroup>

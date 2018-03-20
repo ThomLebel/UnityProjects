@@ -1,4 +1,4 @@
 sceneSetups:
-- path: Assets/PhotonTest/Launcher.unity
+- path: Assets/Resources/Scenes/Launcher.unity
   isLoaded: 1
   isActive: 1

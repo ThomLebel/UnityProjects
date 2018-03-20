@@ -3,8 +3,6 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2017
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MagicSchool", "MagicSchool.csproj", "{96CCA89E-74E2-2635-E7AF-596F15E8EC14}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MagicSchool.Plugins", "MagicSchool.Plugins.csproj", "{7FCAEC6A-1013-0818-DDC4-521E650E0571}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MagicSchool.Editor", "MagicSchool.Editor.csproj", "{A4023434-3D35-E5EE-0851-4186D123AF93}"
 EndProject
 Global
@@ -17,10 +15,6 @@ Global
 		{96CCA89E-74E2-2635-E7AF-596F15E8EC14}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{96CCA89E-74E2-2635-E7AF-596F15E8EC14}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{96CCA89E-74E2-2635-E7AF-596F15E8EC14}.Release|Any CPU.Build.0 = Release|Any CPU
-		{7FCAEC6A-1013-0818-DDC4-521E650E0571}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{7FCAEC6A-1013-0818-DDC4-521E650E0571}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{7FCAEC6A-1013-0818-DDC4-521E650E0571}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{7FCAEC6A-1013-0818-DDC4-521E650E0571}.Release|Any CPU.Build.0 = Release|Any CPU
 		{A4023434-3D35-E5EE-0851-4186D123AF93}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{A4023434-3D35-E5EE-0851-4186D123AF93}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A4023434-3D35-E5EE-0851-4186D123AF93}.Release|Any CPU.ActiveCfg = Release|Any CPU
