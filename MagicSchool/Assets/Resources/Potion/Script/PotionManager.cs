@@ -15,7 +15,6 @@ public class PotionManager : MonoBehaviour {
 		foreach (GameObject player in _players)
 		{
 			Debug.Log("Init a player : "+player);
-			Debug.Log("Init a player : ",player);
 
 			player.GetComponent<PlayerInfo>().Init(SpawnPositionsList[i].position);
 
