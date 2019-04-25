@@ -17,9 +17,11 @@ public class PlayerPotion : MonoBehaviour
 	public Vector3 lastDir;
 
 	public GameObject projectilePrefab;
-	public float castingRate;
+	public float shootCastRate;
+	public float protectCastRate;
 	public float spellForce;
 	public float stunTime;
+	public float protectedTime;
 
 	#endregion
 
@@ -32,8 +34,10 @@ public class PlayerPotion : MonoBehaviour
 	private int horizontal;
 	private int vertical;
 	private IEnumerator stunCoroutine;
+	private IEnumerator protectCoroutine;
 
-	private float nextCast;
+	private float nextCastShoot;
+	private float nextCastProtect;
 
 	private SpriteRenderer spriteRenderer;
 	private Rigidbody2D rb2d;
@@ -205,15 +209,19 @@ public class PlayerPotion : MonoBehaviour
 		{
 			return;
 		}
-		if (Input.GetButton("Fire3_P" + _playerInfo.playerController) && Time.time > nextCast)
+		if (Input.GetButton("Fire3_P" + _playerInfo.playerController) && Time.time > nextCastShoot)
 		{
 			Shoot(lastDir);
+		}
+		else if (Input.GetButton("Fire4_P" + _playerInfo.playerController) && Time.time > nextCastProtect)
+		{
+			Protect();
 		}
 	}
 
 	private void Shoot(Vector3 pDir)
 	{
-		nextCast = Time.time + castingRate;
+		nextCastShoot = Time.time + shootCastRate;
 
 		GameObject projectile;
 
@@ -224,12 +232,31 @@ public class PlayerPotion : MonoBehaviour
 		projectile.transform.position = transform.position + pDir;
 	}
 
+	private void Protect()
+	{
+		nextCastProtect = Time.time + protectCastRate;
+		
+		Debug.Log("Player " + _playerInfo.playerController + " is Protected !");
+		_playerInfo.isProtected = true;
+		_playerInfo.State = "protected";
+		protectCoroutine = PlayerProtected(protectedTime);
+		StartCoroutine(protectCoroutine);
+	}
+
 	private IEnumerator PlayerStun(float stunTime)
 	{
 		yield return new WaitForSeconds(stunTime);
 		_playerInfo.isStun = false;
 		_playerInfo.State = "idle";
 		Debug.Log("Isn't stun anymore !");
+	}
+
+	private IEnumerator PlayerProtected(float protectedTime)
+	{
+		yield return new WaitForSeconds(stunTime);
+		_playerInfo.isProtected = false;
+		_playerInfo.State = "idle";
+		Debug.Log("Isn't protected anymore !");
 	}
 
 	#endregion
@@ -239,6 +266,10 @@ public class PlayerPotion : MonoBehaviour
 
 	public void SpellHit(Vector3 pDir)
 	{
+		if (_playerInfo.isProtected)
+		{
+			return;
+		}
 		if (_playerInfo.isHolding)
 		{
 			_useItem.DropOff();

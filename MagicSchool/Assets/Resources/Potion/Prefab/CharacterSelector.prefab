@@ -99,12 +99,10 @@ MonoBehaviour:
   - {fileID: 0}
   - {fileID: 0}
   spriteList:
-  - {fileID: 21300456, guid: d315b93f2af89444bbd000ab6d23d8e3, type: 3}
-  - {fileID: 21300458, guid: d315b93f2af89444bbd000ab6d23d8e3, type: 3}
-  - {fileID: 21300460, guid: d315b93f2af89444bbd000ab6d23d8e3, type: 3}
-  - {fileID: 21300462, guid: d315b93f2af89444bbd000ab6d23d8e3, type: 3}
-  - {fileID: 21300472, guid: d315b93f2af89444bbd000ab6d23d8e3, type: 3}
-  - {fileID: 21300474, guid: d315b93f2af89444bbd000ab6d23d8e3, type: 3}
+  - {fileID: 21300000, guid: 365ebcc2d6d8293428b9fe7c5a10239c, type: 3}
+  - {fileID: 21300000, guid: 01e99064ec5fa794588747388fd72743, type: 3}
+  - {fileID: 21300000, guid: a3c8dba9b66db2442b49fed5200515b3, type: 3}
+  - {fileID: 21300000, guid: c568248b0f2195346837a8c576ad37da, type: 3}
   startText: {fileID: 0}
   activateCharacterPhrase: Press Action to Join
   confirmCharacterPhrase: Press Action to Validate

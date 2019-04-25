@@ -8,7 +8,7 @@ public class PlayerInfo : MonoBehaviour
 
 	//States
 	//[HideInInspector]
-	public bool isHolding, isStun, isPreparing;
+	public bool isHolding, isStun, isPreparing, isProtected;
 	public string State;
 
 	//Mesures
@@ -26,6 +26,8 @@ public class PlayerInfo : MonoBehaviour
 	public int playerID;
 	[Tooltip("Sprite du joueur")]
 	public Sprite playerSprite;
+	[Tooltip("Numero de l'équipe du joueur")]
+	public int playerTeam;
 
 	public float pickUpRange = 0.5f;
 
@@ -44,6 +46,7 @@ public class PlayerInfo : MonoBehaviour
 		isHolding = false;
 		isStun = false;
 		isPreparing = false;
+		isProtected = false;
 		playerWidth = GetComponentInChildren<Renderer>().bounds.size.x;
 		playerHeight = GetComponentInChildren<Renderer>().bounds.size.y;
 		originalScale = spriteRenderer.transform.localScale.x;

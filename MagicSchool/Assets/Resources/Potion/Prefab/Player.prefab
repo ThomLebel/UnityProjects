@@ -85,7 +85,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1518744409503616}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: -0.26, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 4801803155589482}
@@ -98,7 +98,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1162665445975842}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0.36, y: 0, z: 0}
+  m_LocalPosition: {x: 0.32, y: -0.41, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 4801803155589482}
@@ -124,7 +124,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1941742067039458}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: -4.931152, y: -1.9280691, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 4631874776851482}
@@ -165,7 +165,7 @@ BoxCollider2D:
   m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: 0, y: -0.06}
+  m_Offset: {x: 0.07, y: -0.05}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0.5}
@@ -176,7 +176,7 @@ BoxCollider2D:
     adaptiveTiling: 0
   m_AutoTiling: 0
   serializedVersion: 2
-  m_Size: {x: 0.5, y: 0.7}
+  m_Size: {x: 0.7, y: 1.25}
   m_EdgeRadius: 0
 --- !u!61 &61563878713270508
 BoxCollider2D:
@@ -217,6 +217,7 @@ MonoBehaviour:
   isHolding: 0
   isStun: 0
   isPreparing: 0
+  isProtected: 0
   State: 
   playerWidth: 0
   playerHeight: 0
@@ -232,6 +233,7 @@ MonoBehaviour:
   playerController: 0
   playerID: 0
   playerSprite: {fileID: 0}
+  playerTeam: 0
   pickUpRange: 0.5
   itemLocation: {fileID: 4631874776851482}
 --- !u!114 &114432932280025118
@@ -260,9 +262,11 @@ MonoBehaviour:
   lastDir: {x: 0, y: 0, z: 0}
   projectilePrefab: {fileID: 1304568552454650, guid: 927204a58438028499164e6e3a8fc430,
     type: 2}
-  castingRate: 0.5
+  shootCastRate: 1.5
+  protectCastRate: 1.5
   spellForce: 100
   stunTime: 2
+  protectedTime: 0
 --- !u!212 &212837258839710860
 SpriteRenderer:
   m_ObjectHideFlags: 1
@@ -297,7 +301,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: 21300458, guid: d315b93f2af89444bbd000ab6d23d8e3, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 365ebcc2d6d8293428b9fe7c5a10239c, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
