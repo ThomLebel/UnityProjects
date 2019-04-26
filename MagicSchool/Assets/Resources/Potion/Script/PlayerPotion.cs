@@ -17,6 +17,7 @@ public class PlayerPotion : MonoBehaviour
 	public Vector3 lastDir;
 
 	public GameObject projectilePrefab;
+	public GameObject bubblePrefab;
 	public float shootCastRate;
 	public float protectCastRate;
 	public float spellForce;
@@ -38,9 +39,11 @@ public class PlayerPotion : MonoBehaviour
 
 	private float nextCastShoot;
 	private float nextCastProtect;
+	private Vector3 shootingDir;
 
 	private SpriteRenderer spriteRenderer;
 	private Rigidbody2D rb2d;
+	private Animator animator;
 
 	#endregion
 
@@ -54,8 +57,8 @@ public class PlayerPotion : MonoBehaviour
 		DontDestroyOnLoad(this.gameObject);
 
 		spriteRenderer = gameObject.GetComponentInChildren<SpriteRenderer>();
-
 		rb2d = gameObject.GetComponent<Rigidbody2D>();
+		animator = gameObject.GetComponentInChildren<Animator>();
 	}
 
 	private void Start()
@@ -116,16 +119,20 @@ public class PlayerPotion : MonoBehaviour
 		horizontal = 0;     //Used to store the horizontal move direction.
 		vertical = 0;       //Used to store the vertical move direction.
 
+		animator.SetBool("playerMove", false);
+
 		//Get input from the input manager and store in horizontal to set x axis move direction
 		if (Input.GetAxisRaw("Horizontal_P" + _playerInfo.playerController) > 0.2)
 		{
 			horizontal = 1;
 			lastDir = new Vector3(1, 0, 0);
+			animator.SetBool("playerMove", true);
 		}
 		if (Input.GetAxisRaw("Horizontal_P" + _playerInfo.playerController) < -0.2)
 		{
 			horizontal = -1;
 			lastDir = new Vector3(-1, 0, 0);
+			animator.SetBool("playerMove", true);
 		}
 
 		//Get input from the input manager and store in vertical to set y axis move direction
@@ -133,11 +140,13 @@ public class PlayerPotion : MonoBehaviour
 		{
 			vertical = 1;
 			lastDir = new Vector3(0, 1, 1);
+			animator.SetBool("playerMove", true);
 		}
 		if (Input.GetAxisRaw("Vertical_P" + _playerInfo.playerController) < -0.2)
 		{
 			vertical = -1;
 			lastDir = new Vector3(0, -1, -1);
+			animator.SetBool("playerMove", true);
 		}
 
 		//Vector2 movement = new Vector2(horizontal, vertical);
@@ -192,10 +201,12 @@ public class PlayerPotion : MonoBehaviour
 		if (Input.GetButtonDown("Fire2_P" + _playerInfo.playerController))
 		{
 			_playerInfo.isPreparing = true;
+			animator.SetBool("playerCook", true);
 		}
 		if (Input.GetButtonUp("Fire2_P" + _playerInfo.playerController))
 		{
 			_playerInfo.isPreparing = false;
+			animator.SetBool("playerCook", false);
 		}
 		if (Input.GetButton("Fire2_P" + _playerInfo.playerController))
 		{
@@ -222,20 +233,26 @@ public class PlayerPotion : MonoBehaviour
 	private void Shoot(Vector3 pDir)
 	{
 		nextCastShoot = Time.time + shootCastRate;
+		animator.SetTrigger("playerShoot");
+		shootingDir = pDir;
+	}
 
+	public void instantiateBlast()
+	{
 		GameObject projectile;
 
 		projectile = Instantiate(projectilePrefab) as GameObject;
 
-		projectile.GetComponent<SpellProjectileScript>().direction = pDir;
+		projectile.GetComponent<SpellProjectileScript>().direction = shootingDir;
 		projectile.GetComponent<SpellProjectileScript>().playerOwner = _playerInfo.playerID;
-		projectile.transform.position = transform.position + pDir;
+		projectile.transform.position = transform.position + shootingDir;
 	}
 
 	private void Protect()
 	{
 		nextCastProtect = Time.time + protectCastRate;
-		
+
+		animator.SetTrigger("playerProtect");
 		Debug.Log("Player " + _playerInfo.playerController + " is Protected !");
 		_playerInfo.isProtected = true;
 		_playerInfo.State = "protected";
@@ -243,9 +260,16 @@ public class PlayerPotion : MonoBehaviour
 		StartCoroutine(protectCoroutine);
 	}
 
+	public void instantiateProtection()
+	{
+		bubblePrefab.SetActive(true);
+		bubblePrefab.GetComponentInChildren<Animator>().enabled = true;
+	}
+
 	private IEnumerator PlayerStun(float stunTime)
 	{
 		yield return new WaitForSeconds(stunTime);
+		animator.SetBool("playerStun", false);
 		_playerInfo.isStun = false;
 		_playerInfo.State = "idle";
 		Debug.Log("Isn't stun anymore !");
@@ -253,10 +277,17 @@ public class PlayerPotion : MonoBehaviour
 
 	private IEnumerator PlayerProtected(float protectedTime)
 	{
-		yield return new WaitForSeconds(stunTime);
-		_playerInfo.isProtected = false;
+		yield return new WaitForSeconds(protectedTime);
+		destroyBubble();
 		_playerInfo.State = "idle";
 		Debug.Log("Isn't protected anymore !");
+	}
+
+	private void destroyBubble()
+	{
+		_playerInfo.isProtected = false;
+		bubblePrefab.SetActive(false);
+		bubblePrefab.GetComponentInChildren<Animator>().enabled = false;
 	}
 
 	#endregion
@@ -268,6 +299,7 @@ public class PlayerPotion : MonoBehaviour
 	{
 		if (_playerInfo.isProtected)
 		{
+			destroyBubble();
 			return;
 		}
 		if (_playerInfo.isHolding)
@@ -284,6 +316,10 @@ public class PlayerPotion : MonoBehaviour
 		}
 
 		Debug.Log("Player " + _playerInfo.playerController + " is Stun !");
+		animator.SetTrigger("playerHit");
+		animator.SetBool("playerStun", true);
+		animator.SetBool("playerMove", false);
+		animator.SetBool("playerCook", false);
 		_playerInfo.isStun = true;
 		_playerInfo.State = "stun";
 		stunCoroutine = PlayerStun(stunTime);

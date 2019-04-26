@@ -309,6 +309,7 @@
     <Compile Include="Assets\Resources\GeneralScript\Launcher.cs" />
     <Compile Include="Assets\Resources\GeneralScript\MapGenerator.cs" />
     <Compile Include="Assets\Resources\GeneralScript\PlayerNamerInputField.cs" />
+    <Compile Include="Assets\Resources\Potion\Script\AnimationCallback.cs" />
     <Compile Include="Assets\Resources\Potion\Script\ChaudronScript.cs" />
     <Compile Include="Assets\Resources\Potion\Script\CraftingTableScript.cs" />
     <Compile Include="Assets\Resources\Potion\Script\FioleScript.cs" />

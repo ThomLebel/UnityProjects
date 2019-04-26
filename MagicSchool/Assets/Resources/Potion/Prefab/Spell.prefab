@@ -37,8 +37,9 @@ GameObject:
   m_Component:
   - component: {fileID: 4137708493710326}
   - component: {fileID: 212969455966958282}
+  - component: {fileID: 95186882974660436}
   m_Layer: 16
-  m_Name: 0x72_16x16DungeonTileset.v4_232
+  m_Name: sprite
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -96,6 +97,23 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 0.5, y: 0.19}
   m_EdgeRadius: 0
+--- !u!95 &95186882974660436
+Animator:
+  serializedVersion: 3
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1887993043443838}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 138fc1ee6aa1a264185786fe9ef346aa, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
 --- !u!114 &114655127076120214
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -145,12 +163,12 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: 21300000, guid: c338b50bf072d324ead0c2d7e24b0280, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 9a6e4be722e95d44ca96b6a416e0d9a1, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
-  m_Size: {x: 0.52, y: 0.27}
+  m_Size: {x: 0.5, y: 0.26}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
