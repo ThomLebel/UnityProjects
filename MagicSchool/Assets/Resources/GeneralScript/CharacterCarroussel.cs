@@ -30,7 +30,7 @@ namespace Com.OniriqueStudio.MagicSchool
 			if (Input.GetButtonUp("Fire1_P" + playerController) && !validate)
 			{
 				validate = true;
-				Debug.Log("On valide notre choix de skin !");
+				Debug.Log("On valide notre choix de skin ! "+ CharacterSelector.Instance.spriteList[currentSprite].name);
 				CharacterSelector.Instance.ConfigurePlayer(playerID, playerController, currentSprite);
 			}
 			if (!validate)

@@ -20,7 +20,7 @@ public class UseItemPotion : MonoBehaviour
 	//Pick-up item !
 	public void PickItem()
 	{
-		Collider2D target = GetClosestCollider(_playerInfo.pickUpLayer);
+		Collider2D target = GetClosestCollider(_playerInfo.pickupTags);
 
 		if (target != null)
 		{
@@ -34,7 +34,6 @@ public class UseItemPotion : MonoBehaviour
 				else
 				{
 					target.GetComponent<ItemDispenserScript>().GiveItem(gameObject);
-					
 				}
 			}
 		}
@@ -45,20 +44,20 @@ public class UseItemPotion : MonoBehaviour
 	{
 		Transform itemHolded = transform.GetChild(0).transform.GetChild(0);
 
-		Debug.Log("trying to drop : "+itemHolded.name);
+		Debug.Log("trying to drop : " + itemHolded.name);
 
-		int layerMask;
+		string[] tagList;
 
 		if (itemHolded.tag == "item")
-			layerMask = _playerInfo.chaudronLayer | _playerInfo.craftTableLayer;
+			tagList = new string[] { "chaudron", "craftTable" };
 		else if (itemHolded.tag == "chaudron")
-			layerMask = _playerInfo.fireLayer | _playerInfo.itemLayer;
+			tagList = new string[] { "fiole", "fire" };
 		else if (itemHolded.tag == "fiole")
-			layerMask = _playerInfo.pnjLayer | _playerInfo.chaudronLayer;
+			tagList = new string[] { "pnj", "chaudron" };
 		else
-			layerMask = 0;
+			tagList = new string[] { "" };
 
-		Collider2D target = GetClosestCollider(layerMask);
+		Collider2D target = GetClosestCollider(tagList);
 
 		Debug.Log("Closest target : "+target);
 		
@@ -76,7 +75,14 @@ public class UseItemPotion : MonoBehaviour
 					}
 					else
 					{
-						AddItemToCauldron(target.gameObject, itemHolded.gameObject);
+						if (itemHolded.GetComponent<ItemScript>().isDone)
+						{
+							AddItemToCauldron(target.gameObject, itemHolded.gameObject);
+						}
+						else
+						{
+							DropOff();
+						}
 					}
 				}
 				else if (itemHolded.tag == "chaudron")
@@ -112,7 +118,8 @@ public class UseItemPotion : MonoBehaviour
 	//Prepare ingredient
 	public void PrepareItem()
 	{
-		Collider2D target = GetClosestCollider(_playerInfo.craftTableLayer);
+		//Collider2D target = GetClosestCollider(_playerInfo.craftTableLayer);
+		Collider2D target = GetClosestCollider(new string[] { "craftTable" });
 
 		if (target != null)
 		{
@@ -352,24 +359,30 @@ public class UseItemPotion : MonoBehaviour
 	}
 
 
-	private Collider2D GetClosestCollider(int pLayerMask)
+	private Collider2D GetClosestCollider(String[] tagList)
 	{
 		float dist = 1000;
 		Collider2D target = null;
 
-		Collider2D[] colliders = Physics2D.OverlapCircleAll(transform.position, _playerInfo.pickUpRange, pLayerMask);
+		Collider2D[] colliders = Physics2D.OverlapCircleAll(transform.position, _playerInfo.pickUpRange);
 		if (colliders.Length > 0)
 		{
-
 			for (int i = 0; i < colliders.Length; i++)
 			{
 				Collider2D item = colliders[i];
 
-				float distTemp = Math.Abs(item.transform.position.x - transform.position.x);
-				if (distTemp < dist)
+				//Check if this object has the tag needed
+				for (int t = 0; t < tagList.Length; t++)
 				{
-					dist = distTemp;
-					target = item;
+					if (item.tag == tagList[t])
+					{
+						float distTemp = Math.Abs(item.transform.position.x - transform.position.x);
+						if (distTemp < dist)
+						{
+							dist = distTemp;
+							target = item;
+						}
+					}
 				}
 			}
 		}
@@ -382,14 +395,14 @@ public class UseItemPotion : MonoBehaviour
 		//Horizontal
 		if (_playerAction.lastDir.x > 0)
 		{
-			if (pTarget.transform.position.x > transform.position.x)
+			if (pTarget.transform.position.x >= transform.position.x)
 			{
 				return true;
 			}
 		}
 		else if(_playerAction.lastDir.x < 0)
 		{
-			if (pTarget.transform.position.x < transform.position.x)
+			if (pTarget.transform.position.x <= transform.position.x)
 			{
 				return true;
 			}
@@ -397,14 +410,14 @@ public class UseItemPotion : MonoBehaviour
 		//Vertical
 		else if (_playerAction.lastDir.y > 0)
 		{
-			if (pTarget.transform.position.y > transform.position.y)
+			if (pTarget.transform.position.y >= transform.position.y)
 			{
 				return true;
 			}
 		}
 		else if (_playerAction.lastDir.y < 0)
 		{
-			if (pTarget.transform.position.y < transform.position.y)
+			if (pTarget.transform.position.y <= transform.position.y)
 			{
 				return true;
 			}

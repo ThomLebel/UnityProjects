@@ -10,30 +10,21 @@ using System;
 
 public class PlayerPotion : MonoBehaviour
 {
-
-	#region Public Variables
-
 	public float speed = 5;
 	public Vector3 lastDir;
 
-	public GameObject projectilePrefab;
-	public GameObject bubblePrefab;
 	public float shootCastRate;
 	public float protectCastRate;
 	public float spellForce;
 	public float stunTime;
 	public float protectedTime;
 
-	#endregion
-
-
-	#region Private Variables
-
 	private PlayerInfo _playerInfo;
 	private UseItemPotion _useItem;
 
-	private int horizontal;
-	private int vertical;
+	private float horizontal;
+	private float vertical;
+	private float safeSpot = 0.2f;
 	private IEnumerator stunCoroutine;
 	private IEnumerator protectCoroutine;
 
@@ -45,10 +36,6 @@ public class PlayerPotion : MonoBehaviour
 	private Rigidbody2D rb2d;
 	private Animator animator;
 
-	#endregion
-
-
-	#region MonoBehavior CallBacks
 
 	void Awake()
 	{
@@ -82,7 +69,8 @@ public class PlayerPotion : MonoBehaviour
 	{
 		if (!_playerInfo.isStun)
 		{
-			UpdateMovement();
+			if(_playerInfo.canMove)
+				UpdateMovement();
 			//Action 1
 			ItemAction();
 			//Action 2
@@ -105,75 +93,58 @@ public class PlayerPotion : MonoBehaviour
 		transform.position = new Vector3(0f, 0f, 0f);
 	}
 
-	#endregion
 
-
-	#region Private Methods
 
 	private void UpdateMovement()
 	{
-		float newX = transform.position.x;
-		float newY = transform.position.y;
-		float newZ = transform.position.z;
-
-		horizontal = 0;     //Used to store the horizontal move direction.
-		vertical = 0;       //Used to store the vertical move direction.
+		//float newX = transform.position.x;
+		//float newY = transform.position.y;
+		//float newZ = transform.position.z;
 
 		animator.SetBool("playerMove", false);
 
 		//Get input from the input manager and store in horizontal to set x axis move direction
-		if (Input.GetAxisRaw("Horizontal_P" + _playerInfo.playerController) > 0.2)
+		horizontal = Input.GetAxisRaw("Horizontal_P" + _playerInfo.playerController);     //Used to store the horizontal move direction.
+		vertical = Input.GetAxisRaw("Vertical_P" + _playerInfo.playerController);       //Used to store the vertical move direction.
+
+		if (Math.Abs(horizontal) > safeSpot || Math.Abs(vertical) > safeSpot)
 		{
-			horizontal = 1;
-			lastDir = new Vector3(1, 0, 0);
 			animator.SetBool("playerMove", true);
-		}
-		if (Input.GetAxisRaw("Horizontal_P" + _playerInfo.playerController) < -0.2)
-		{
-			horizontal = -1;
-			lastDir = new Vector3(-1, 0, 0);
-			animator.SetBool("playerMove", true);
-		}
+			if (horizontal > safeSpot)
+			{
+				lastDir = new Vector3(1, 0, 0);
+			}
+			else if (horizontal < safeSpot * -1)
+			{
+				lastDir = new Vector3(-1, 0, 0);
+			}
 
-		//Get input from the input manager and store in vertical to set y axis move direction
-		if (Input.GetAxisRaw("Vertical_P" + _playerInfo.playerController) > 0.2)
-		{
-			vertical = 1;
-			lastDir = new Vector3(0, 1, 1);
-			animator.SetBool("playerMove", true);
-		}
-		if (Input.GetAxisRaw("Vertical_P" + _playerInfo.playerController) < -0.2)
-		{
-			vertical = -1;
-			lastDir = new Vector3(0, -1, -1);
-			animator.SetBool("playerMove", true);
+			//Get input from the input manager and store in vertical to set y axis move direction
+			if (vertical > safeSpot)
+			{
+				lastDir = new Vector3(0, 1, 0);
+			}
+			else if (vertical < safeSpot * -1)
+			{
+				lastDir = new Vector3(0, -1, 0);
+			}
 		}
 
-		//Vector2 movement = new Vector2(horizontal, vertical);
-		//rb2d.AddForce(movement * speed);
+		Vector2 movement = new Vector2(horizontal, vertical);
+		rb2d.AddForce(movement * speed);
 
-
-		//newX = transform.position.x;
-		//newY = transform.position.y;
-		newX += horizontal * speed * Time.deltaTime;
-		newY += vertical * speed * Time.deltaTime;
-		newZ = newY;
-
-		transform.position = new Vector3(newX, newY, newZ);
-
-
-		//Vector3 newPos = new Vector3(0,0,0);
-		//newPos += new Vector3(horizontal, vertical, 0) * speed * Time.deltaTime;
-		//transform.position += new Vector3(horizontal, vertical, 0) * speed * Time.deltaTime;
-		//transform.position = new Vector3(transform.position.x, transform.position.y, transform.position.y);
-
+		//newX += horizontal * speed * Time.deltaTime;
+		//newY += vertical * speed * Time.deltaTime;
+		//newZ = newY;
+		//transform.position = new Vector3(newX, newY, 0);
 
 		//Change player orientation
 		if (lastDir.x != 0)
 		{
 			spriteRenderer.transform.localScale = new Vector3(_playerInfo.originalScale * lastDir.x, spriteRenderer.transform.localScale.y, spriteRenderer.transform.localScale.z);
+			_playerInfo.itemLocation.localPosition = new Vector3(lastDir.x * _playerInfo.itemOffset, _playerInfo.itemLocation.localPosition.y, _playerInfo.itemLocation.localPosition.z);
 		}
-		_playerInfo.itemLocation.localPosition = lastDir * _playerInfo.itemOffset;
+		//_playerInfo.itemLocation.localPosition = lastDir * _playerInfo.itemOffset;
 	}
 
 	private void ItemAction()
@@ -200,11 +171,13 @@ public class PlayerPotion : MonoBehaviour
 		}
 		if (Input.GetButtonDown("Fire2_P" + _playerInfo.playerController))
 		{
+			_playerInfo.canMove = false;
 			_playerInfo.isPreparing = true;
 			animator.SetBool("playerCook", true);
 		}
 		if (Input.GetButtonUp("Fire2_P" + _playerInfo.playerController))
 		{
+			_playerInfo.canMove = true;
 			_playerInfo.isPreparing = false;
 			animator.SetBool("playerCook", false);
 		}
@@ -233,19 +206,21 @@ public class PlayerPotion : MonoBehaviour
 	private void Shoot(Vector3 pDir)
 	{
 		nextCastShoot = Time.time + shootCastRate;
+		_playerInfo.canMove = false;
 		animator.SetTrigger("playerShoot");
 		shootingDir = pDir;
 	}
 
-	public void instantiateBlast()
+	public void InstantiateBlast()
 	{
+		_playerInfo.canMove = true;
+
 		GameObject projectile;
-
-		projectile = Instantiate(projectilePrefab) as GameObject;
-
+		projectile = Instantiate(_playerInfo.projectilePrefab) as GameObject;
 		projectile.GetComponent<SpellProjectileScript>().direction = shootingDir;
 		projectile.GetComponent<SpellProjectileScript>().playerOwner = _playerInfo.playerID;
-		projectile.transform.position = transform.position + shootingDir;
+		projectile.transform.position = new Vector3(transform.position.x + shootingDir.x, (transform.position.y + _playerInfo.playerHeight/2) + shootingDir.y, transform.position.z + shootingDir.z);
+		//projectile.transform.position = transform.position + shootingDir;
 	}
 
 	private void Protect()
@@ -253,23 +228,25 @@ public class PlayerPotion : MonoBehaviour
 		nextCastProtect = Time.time + protectCastRate;
 
 		animator.SetTrigger("playerProtect");
-		Debug.Log("Player " + _playerInfo.playerController + " is Protected !");
+		_playerInfo.canMove = false;
 		_playerInfo.isProtected = true;
 		_playerInfo.State = "protected";
 		protectCoroutine = PlayerProtected(protectedTime);
 		StartCoroutine(protectCoroutine);
 	}
 
-	public void instantiateProtection()
+	public void InstantiateProtection()
 	{
-		bubblePrefab.SetActive(true);
-		bubblePrefab.GetComponentInChildren<Animator>().enabled = true;
+		_playerInfo.canMove = true;
+		_playerInfo.bubblePrefab.SetActive(true);
+		_playerInfo.bubblePrefab.GetComponentInChildren<Animator>().enabled = true;
 	}
 
 	private IEnumerator PlayerStun(float stunTime)
 	{
 		yield return new WaitForSeconds(stunTime);
 		animator.SetBool("playerStun", false);
+		_playerInfo.canMove = true;
 		_playerInfo.isStun = false;
 		_playerInfo.State = "idle";
 		Debug.Log("Isn't stun anymore !");
@@ -278,28 +255,27 @@ public class PlayerPotion : MonoBehaviour
 	private IEnumerator PlayerProtected(float protectedTime)
 	{
 		yield return new WaitForSeconds(protectedTime);
-		destroyBubble();
+		DestroyBubble();
 		_playerInfo.State = "idle";
 		Debug.Log("Isn't protected anymore !");
 	}
 
-	private void destroyBubble()
+	private void DestroyBubble()
 	{
 		_playerInfo.isProtected = false;
-		bubblePrefab.SetActive(false);
-		bubblePrefab.GetComponentInChildren<Animator>().enabled = false;
+		_playerInfo.bubblePrefab.SetActive(false);
+		_playerInfo.bubblePrefab.GetComponentInChildren<Animator>().enabled = false;
 	}
-
-	#endregion
-
-
-	#region Public Methods
 
 	public void SpellHit(Vector3 pDir)
 	{
 		if (_playerInfo.isProtected)
 		{
-			destroyBubble();
+			DestroyBubble();
+			return;
+		}
+		if (_playerInfo.isStun)
+		{
 			return;
 		}
 		if (_playerInfo.isHolding)
@@ -325,7 +301,4 @@ public class PlayerPotion : MonoBehaviour
 		stunCoroutine = PlayerStun(stunTime);
 		StartCoroutine(stunCoroutine);
 	}
-
-	#endregion
-
 }

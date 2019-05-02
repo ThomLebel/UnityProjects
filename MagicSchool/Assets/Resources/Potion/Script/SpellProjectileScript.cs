@@ -19,7 +19,7 @@ public class SpellProjectileScript : MonoBehaviour
 		else
 		{
 			transform.Rotate(0, 0, 90);
-			transform.localScale = new Vector3(transform.localScale.x, transform.localScale.y * direction.y, transform.localScale.z);
+			transform.localScale = new Vector3(transform.localScale.x * direction.y, transform.localScale.y, transform.localScale.z);
 		}
 
 		coroutine = WaitAndDie(lifeSpan);

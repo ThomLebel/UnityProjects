@@ -13,10 +13,10 @@ public class AnimationCallback : MonoBehaviour {
 
 	private void shootAnimOver()
 	{
-		_parent.instantiateBlast();
+		_parent.InstantiateBlast();
 	}
 	private void protectAnimOver()
 	{
-		_parent.instantiateProtection();
+		_parent.InstantiateProtection();
 	}
 }

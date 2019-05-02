@@ -23,6 +23,6 @@ public class ItemInfoScript : MonoBehaviour
 
 	private void Update()
 	{
-		transform.position = new Vector3(transform.position.x, transform.position.y, transform.position.y);
+		transform.position = new Vector3(transform.position.x, transform.position.y, 0);
 	}
 }

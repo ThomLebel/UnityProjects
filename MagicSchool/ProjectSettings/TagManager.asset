@@ -33,7 +33,7 @@ TagManager:
   - baseCollider
   - bodyCollider
   - spell
-  - 
+  - floor
   - 
   - 
   - 
@@ -49,6 +49,12 @@ TagManager:
   - 
   - 
   m_SortingLayers:
+  - name: floor
+    uniqueID: 124925457
+    locked: 0
   - name: Default
     uniqueID: 0
+    locked: 0
+  - name: spell
+    uniqueID: 4247298467
     locked: 0

@@ -5,7 +5,7 @@ using UnityEngine;
 public class ItemScript : MonoBehaviour {
 
 	public float spellForce = 30f;
-	public float preparingCoef = 0.1f;
+	public float preparingCoef = 0.2f;
 
 	public bool isPrepared = false;
 	public bool isDone = false;
@@ -20,15 +20,7 @@ public class ItemScript : MonoBehaviour {
 		_progressBarScript = gameObject.GetComponentInChildren<ProgressBarScript>();
 	}
 
-	private void Update()
-	{
-		//if (isPrepared && !isDone)
-		//{
-		//	PrepareIngredient();
-		//}
-	}
-
-	public void AccioItem(Vector3 pDir)
+	public virtual void AccioItem(Vector3 pDir)
 	{
 		if (pDir.x != 0)
 		{
@@ -40,7 +32,7 @@ public class ItemScript : MonoBehaviour {
 		}
 	}
 
-	public void PrepareIngredient()
+	public virtual void PrepareIngredient()
 	{
 		if (isDone)
 		{
