@@ -42,7 +42,7 @@ public class UseItemPotion : MonoBehaviour
 	//What to do with this object ?
 	public void DropItem()
 	{
-		Transform itemHolded = transform.GetChild(0).transform.GetChild(0);
+		Transform itemHolded = _playerInfo.itemLocation.GetChild(0);
 
 		Debug.Log("trying to drop : " + itemHolded.name);
 
@@ -51,7 +51,7 @@ public class UseItemPotion : MonoBehaviour
 		if (itemHolded.tag == "item")
 			tagList = new string[] { "chaudron", "craftTable" };
 		else if (itemHolded.tag == "chaudron")
-			tagList = new string[] { "fiole", "fire" };
+			tagList = new string[] { "fiole", "fire", "item" };
 		else if (itemHolded.tag == "fiole")
 			tagList = new string[] { "pnj", "chaudron" };
 		else
@@ -91,9 +91,20 @@ public class UseItemPotion : MonoBehaviour
 					{
 						DropOnSupport(target.gameObject);
 					}
-					else
+					else if (target.tag == "fiole")
 					{
 						SwitchContent(target.gameObject, itemHolded.gameObject);
+					}
+					else
+					{
+						if (target.GetComponent<ItemScript>().isDone)
+						{
+							AddItemToCauldron(itemHolded.gameObject, target.gameObject);
+						}
+						else
+						{
+							DropOff();
+						}
 					}
 				}
 				else if (itemHolded.tag == "fiole")
@@ -247,9 +258,21 @@ public class UseItemPotion : MonoBehaviour
 		{
 			chaudronScript.AddItem(itemName);
 
-			Destroy(pItem);
+			if (_playerInfo.itemLocation.GetChild(0).tag == "item")
+			{
+				_playerInfo.isHolding = false;
+			}
+			if (_playerInfo.itemLocation.GetChild(0).tag == "chaudron")
+			{
+				if (itemScript.craftingTable != null)
+				{
+					GameObject craftingTable = itemScript.craftingTable;
+					craftingTable.GetComponent<ItemInfoScript>().isOccupied = false;
+					itemScript.craftingTable = null;
+				}
+			}
 
-			_playerInfo.isHolding = false;
+			Destroy(pItem);
 		}
 	}
 
@@ -314,7 +337,7 @@ public class UseItemPotion : MonoBehaviour
 	{
 		if (_playerInfo.isHolding)
 		{
-			if (transform.GetChild(0).transform.childCount > 0)
+			if (_playerInfo.itemLocation.childCount > 0)
 			{
 				ItemInfoScript targetScript = pTarget.GetComponent<ItemInfoScript>();
 
@@ -322,9 +345,8 @@ public class UseItemPotion : MonoBehaviour
 				{
 					Debug.Log("target name : " + pTarget.name);
 
-					Transform item = transform.GetChild(0).transform.GetChild(0);
+					Transform item = _playerInfo.itemLocation.GetChild(0);
 					
-
 					item.parent = pTarget.transform.GetChild(0);
 					item.position = pTarget.transform.GetChild(0).position;
 
@@ -345,6 +367,7 @@ public class UseItemPotion : MonoBehaviour
 					else
 					{
 						item.GetComponent<ItemScript>().onCraftingTable = true;
+						item.GetComponent<ItemScript>().craftingTable = pTarget;
 						pTarget.GetComponent<ItemInfoScript>().isOccupied = true;
 					}
 

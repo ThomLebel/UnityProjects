@@ -8,6 +8,7 @@ public class PlayerInfo : MonoBehaviour
 
 	//States
 	//[HideInInspector]
+	public Transform itemLocation;
 	public GameObject projectilePrefab;
 	public GameObject bubblePrefab;
 	public bool isHolding, isStun, isPreparing, isProtected, canMove;
@@ -32,14 +33,12 @@ public class PlayerInfo : MonoBehaviour
 	public int playerTeam;
 
 	public float pickUpRange = 0.5f;
-
-	public Transform itemLocation;
+	
 	private SpriteRenderer spriteRenderer;
 
 	private void Awake()
 	{
 		spriteRenderer = gameObject.GetComponentInChildren<SpriteRenderer>();
-		//itemLocation = gameObject.transform.GetChild(0);
 	}
 
 	private void Start()

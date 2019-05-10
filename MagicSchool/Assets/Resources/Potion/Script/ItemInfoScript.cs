@@ -20,9 +20,4 @@ public class ItemInfoScript : MonoBehaviour
 		isOccupied = false;
 		//itemList = new string[maxItem];
 	}
-
-	private void Update()
-	{
-		transform.position = new Vector3(transform.position.x, transform.position.y, 0);
-	}
 }

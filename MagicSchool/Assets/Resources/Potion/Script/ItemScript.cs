@@ -10,6 +10,7 @@ public class ItemScript : MonoBehaviour {
 	public bool isPrepared = false;
 	public bool isDone = false;
 	public bool onCraftingTable = false;
+	public GameObject craftingTable;
 
 	//public GameObject _progressBar;
 	private ProgressBarScript _progressBarScript;
