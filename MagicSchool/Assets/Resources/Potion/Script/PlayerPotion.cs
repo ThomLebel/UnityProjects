@@ -8,9 +8,10 @@ using UnityEngine;
 using System.Linq;
 using System;
 
-public class PlayerPotion : MonoBehaviour
+public class PlayerPotion : PhysicsObject
 {
 	public float speed = 5;
+	public float jumptakeOffSpeed = 7;
 	public Vector3 lastDir;
 
 	public float shootCastRate;
@@ -33,7 +34,6 @@ public class PlayerPotion : MonoBehaviour
 	private Vector3 shootingDir;
 
 	private SpriteRenderer spriteRenderer;
-	private Rigidbody2D rb2d;
 	private Animator animator;
 
 
@@ -44,7 +44,6 @@ public class PlayerPotion : MonoBehaviour
 		DontDestroyOnLoad(this.gameObject);
 
 		spriteRenderer = gameObject.GetComponentInChildren<SpriteRenderer>();
-		rb2d = gameObject.GetComponent<Rigidbody2D>();
 		animator = gameObject.GetComponentInChildren<Animator>();
 	}
 
@@ -65,12 +64,13 @@ public class PlayerPotion : MonoBehaviour
 #endif
 	}
 
-	private void Update()
+	protected override void Update()
 	{
+		base.Update();
 		if (!_playerInfo.isStun)
 		{
 			if(_playerInfo.canMove)
-				UpdateMovement();
+				//UpdateMovement();
 			//Action 1
 			ItemAction();
 			//Action 2
@@ -95,19 +95,16 @@ public class PlayerPotion : MonoBehaviour
 
 
 
-	private void UpdateMovement()
+	protected override void ComputeVelocity()
 	{
-		//float newX = transform.position.x;
-		//float newY = transform.position.y;
-		//float newZ = transform.position.z;
-
 		animator.SetBool("playerMove", false);
 
-		//Get input from the input manager and store in horizontal to set x axis move direction
+		Vector2 move = Vector2.zero;
+
 		horizontal = Input.GetAxisRaw("Horizontal_P" + _playerInfo.playerController);     //Used to store the horizontal move direction.
 		vertical = Input.GetAxisRaw("Vertical_P" + _playerInfo.playerController);       //Used to store the vertical move direction.
 
-		if (Math.Abs(horizontal) > safeSpot || Math.Abs(vertical) > safeSpot)
+		if (Math.Abs(horizontal) > safeSpot)
 		{
 			animator.SetBool("playerMove", true);
 			if (horizontal > safeSpot)
@@ -118,33 +115,29 @@ public class PlayerPotion : MonoBehaviour
 			{
 				lastDir = new Vector3(-1, 0, 0);
 			}
-
-			//Get input from the input manager and store in vertical to set y axis move direction
-			if (vertical > safeSpot)
-			{
-				lastDir = new Vector3(0, 1, 0);
-			}
-			else if (vertical < safeSpot * -1)
-			{
-				lastDir = new Vector3(0, -1, 0);
-			}
 		}
 
-		Vector2 movement = new Vector2(horizontal, vertical);
-		rb2d.AddForce(movement * speed);
+		if (Math.Abs(vertical) > safeSpot)
+		{
+			if (vertical > safeSpot && grounded)
+			{
+				velocity.y = vertical * jumptakeOffSpeed;
+			}
+		}
+		else if (vertical <= safeSpot && velocity.y > 0)
+		{
+			velocity.y = velocity.y * .5f;
+		}
 
-		//newX += horizontal * speed * Time.deltaTime;
-		//newY += vertical * speed * Time.deltaTime;
-		//newZ = newY;
-		//transform.position = new Vector3(newX, newY, 0);
+		move.x = horizontal;
 
-		//Change player orientation
+		targetVelocity = move * speed;
+
 		if (lastDir.x != 0)
 		{
 			spriteRenderer.transform.localScale = new Vector3(_playerInfo.originalScale * lastDir.x, spriteRenderer.transform.localScale.y, spriteRenderer.transform.localScale.z);
 			_playerInfo.itemLocation.localPosition = new Vector3(lastDir.x * _playerInfo.itemOffset, _playerInfo.itemLocation.localPosition.y, _playerInfo.itemLocation.localPosition.z);
 		}
-		//_playerInfo.itemLocation.localPosition = lastDir * _playerInfo.itemOffset;
 	}
 
 	private void ItemAction()
@@ -284,11 +277,11 @@ public class PlayerPotion : MonoBehaviour
 		}
 		if (pDir.x != 0)
 		{
-			gameObject.GetComponent<Rigidbody2D>().AddForce(transform.right * spellForce * pDir.x);
+			rb2d.AddForce(transform.right * spellForce * pDir.x);
 		}
 		else
 		{
-			gameObject.GetComponent<Rigidbody2D>().AddForce(transform.up * spellForce * pDir.y);
+			rb2d.AddForce(transform.up * spellForce * pDir.y);
 		}
 
 		Debug.Log("Player " + _playerInfo.playerController + " is Stun !");

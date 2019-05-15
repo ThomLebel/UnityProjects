@@ -684,6 +684,7 @@
     <Compile Include="Assets\Resources\GeneralScript\GameManager.cs" />
     <Compile Include="Assets\Resources\GeneralScript\Launcher.cs" />
     <Compile Include="Assets\Resources\GeneralScript\MapGenerator.cs" />
+    <Compile Include="Assets\Resources\GeneralScript\PhysicsObject.cs" />
     <Compile Include="Assets\Resources\GeneralScript\PlayerNamerInputField.cs" />
     <Compile Include="Assets\Resources\GeneralScript\TopdownDynamicLayerSorting.cs" />
     <Compile Include="Assets\Resources\GeneralScript\TopdownTransform.cs" />

@@ -157,7 +157,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &4448819816303088
 Transform:
   m_ObjectHideFlags: 0
@@ -363,7 +363,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4801803155589482}
   - component: {fileID: 50364686278096188}
-  - component: {fileID: 61174213519696772}
+  - component: {fileID: 5462337197241732091}
   - component: {fileID: 114030939717551992}
   - component: {fileID: 114858662794190148}
   - component: {fileID: 114432932280025118}
@@ -400,21 +400,21 @@ Rigidbody2D:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1941742067039458}
-  m_BodyType: 0
+  m_BodyType: 1
   m_Simulated: 1
-  m_UseFullKinematicContacts: 0
+  m_UseFullKinematicContacts: 1
   m_UseAutoMass: 0
   m_Mass: 0.5
   m_LinearDrag: 5
   m_AngularDrag: 0.05
   m_GravityScale: 0
   m_Material: {fileID: 0}
-  m_Interpolate: 0
-  m_SleepingMode: 1
-  m_CollisionDetection: 0
+  m_Interpolate: 1
+  m_SleepingMode: 0
+  m_CollisionDetection: 1
   m_Constraints: 4
---- !u!61 &61174213519696772
-BoxCollider2D:
+--- !u!70 &5462337197241732091
+CapsuleCollider2D:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -426,19 +426,9 @@ BoxCollider2D:
   m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: 0.07, y: 0.62}
-  m_SpriteTilingProperty:
-    border: {x: 0, y: 0, z: 0, w: 0}
-    pivot: {x: 0.5, y: 0.5}
-    oldSize: {x: 0.16, y: 0.16}
-    newSize: {x: 0.16, y: 0.16}
-    adaptiveTilingThreshold: 0.5
-    drawMode: 0
-    adaptiveTiling: 0
-  m_AutoTiling: 0
-  serializedVersion: 2
-  m_Size: {x: 0.7, y: 1.25}
-  m_EdgeRadius: 0
+  m_Offset: {x: 0.05, y: 0.6}
+  m_Size: {x: 0.6, y: 1.2}
+  m_Direction: 0
 --- !u!114 &114030939717551992
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -451,6 +441,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f8e22b601b00c854aa98f6213a55914f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  itemLocation: {fileID: 4631874776851482}
   projectilePrefab: {fileID: 1304568552454650, guid: 927204a58438028499164e6e3a8fc430,
     type: 3}
   bubblePrefab: {fileID: 1922506219980670}
@@ -474,7 +465,6 @@ MonoBehaviour:
   playerSprite: {fileID: 0}
   playerTeam: 0
   pickUpRange: 1
-  itemLocation: {fileID: 4631874776851482}
 --- !u!114 &114858662794190148
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -487,7 +477,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 93f25d482b4c7ff4385202e435a7d384, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  speed: 8
+  minGroundNormalY: 0.65
+  gravityModifier: 1
+  speed: 4
+  jumptakeOffSpeed: 5
   lastDir: {x: 1, y: 0, z: 0}
   shootCastRate: 1.5
   protectCastRate: 6.5
@@ -506,4 +499,3 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7d6b2414bfd279348876eabf3654a36c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  itemLocation: {fileID: 4631874776851482}
