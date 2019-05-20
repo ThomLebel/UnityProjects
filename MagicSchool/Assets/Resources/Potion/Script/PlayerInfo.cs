@@ -9,10 +9,15 @@ public class PlayerInfo : MonoBehaviour
 	//States
 	//[HideInInspector]
 	public Transform itemLocation;
+	public Transform groundCheck;
 	public GameObject projectilePrefab;
 	public GameObject bubblePrefab;
 	public bool isHolding, isStun, isPreparing, isProtected, canMove;
 	public string State;
+
+
+	[HideInInspector]
+	public Rigidbody2D rb2d;
 
 	//Mesures
 	[HideInInspector]
@@ -22,6 +27,8 @@ public class PlayerInfo : MonoBehaviour
 	//Layers
 	[HideInInspector]
 	public string[] pickupTags;
+	public LayerMask groundLayerMask;
+	public LayerMask jumpThroughLayerMask;
 
 	[Tooltip("Numero du contrôleur du joueur")]
 	public int playerController;
@@ -39,6 +46,7 @@ public class PlayerInfo : MonoBehaviour
 	private void Awake()
 	{
 		spriteRenderer = gameObject.GetComponentInChildren<SpriteRenderer>();
+		rb2d = GetComponent<Rigidbody2D>();
 	}
 
 	private void Start()
@@ -56,6 +64,8 @@ public class PlayerInfo : MonoBehaviour
 		Debug.Log("PLAYERINFO // Original scale = "+originalScale);
 		
 		pickupTags = new string[] { "item", "chaudron", "dispenser", "fiole" };
+
+		jumpThroughLayerMask = LayerMask.GetMask("jumpThrough");
 	}
 
 	public void ConfigurePlayer(int pID, int pController, int pSpriteID)

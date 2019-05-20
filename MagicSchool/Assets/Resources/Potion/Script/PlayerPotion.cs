@@ -8,10 +8,10 @@ using UnityEngine;
 using System.Linq;
 using System;
 
-public class PlayerPotion : PhysicsObject
+public class PlayerPotion : MonoBehaviour
 {
-	public float speed = 5;
-	public float jumptakeOffSpeed = 7;
+	public float speed = 40f;
+	public float jumpTakeOff = 40f;
 	public Vector3 lastDir;
 
 	public float shootCastRate;
@@ -26,13 +26,17 @@ public class PlayerPotion : PhysicsObject
 	private float horizontal;
 	private float vertical;
 	private float safeSpot = 0.2f;
+	[SerializeField]
+	private bool isJumping = false;
+	[SerializeField]
+	private bool grounded = false;
 	private IEnumerator stunCoroutine;
 	private IEnumerator protectCoroutine;
 
 	private float nextCastShoot;
 	private float nextCastProtect;
 	private Vector3 shootingDir;
-
+	
 	private SpriteRenderer spriteRenderer;
 	private Animator animator;
 
@@ -43,6 +47,7 @@ public class PlayerPotion : PhysicsObject
 		//we flag as don't destroy on load so that instance survives level synchronization, thus giving a seamless experience when levels load.
 		DontDestroyOnLoad(this.gameObject);
 
+		//rb2d = GetComponent<Rigidbody2D>();
 		spriteRenderer = gameObject.GetComponentInChildren<SpriteRenderer>();
 		animator = gameObject.GetComponentInChildren<Animator>();
 	}
@@ -64,13 +69,12 @@ public class PlayerPotion : PhysicsObject
 #endif
 	}
 
-	protected override void Update()
+	void Update()
 	{
-		base.Update();
 		if (!_playerInfo.isStun)
 		{
 			if(_playerInfo.canMove)
-				//UpdateMovement();
+				UpdateMovement();
 			//Action 1
 			ItemAction();
 			//Action 2
@@ -94,12 +98,11 @@ public class PlayerPotion : PhysicsObject
 	}
 
 
-
-	protected override void ComputeVelocity()
+	void UpdateMovement()
 	{
-		animator.SetBool("playerMove", false);
+		grounded = Physics2D.Linecast(transform.position, _playerInfo.groundCheck.position, _playerInfo.groundLayerMask);
 
-		Vector2 move = Vector2.zero;
+		animator.SetBool("playerMove", false);
 
 		horizontal = Input.GetAxisRaw("Horizontal_P" + _playerInfo.playerController);     //Used to store the horizontal move direction.
 		vertical = Input.GetAxisRaw("Vertical_P" + _playerInfo.playerController);       //Used to store the vertical move direction.
@@ -107,6 +110,7 @@ public class PlayerPotion : PhysicsObject
 		if (Math.Abs(horizontal) > safeSpot)
 		{
 			animator.SetBool("playerMove", true);
+
 			if (horizontal > safeSpot)
 			{
 				lastDir = new Vector3(1, 0, 0);
@@ -117,27 +121,44 @@ public class PlayerPotion : PhysicsObject
 			}
 		}
 
-		if (Math.Abs(vertical) > safeSpot)
+		if (vertical > safeSpot && !isJumping && grounded)
 		{
-			if (vertical > safeSpot && grounded)
+			isJumping = true;
+			_playerInfo.rb2d.AddForce(new Vector2(0f, jumpTakeOff));
+		}
+		if (vertical < safeSpot)
+		{
+			if (grounded)
 			{
-				velocity.y = vertical * jumptakeOffSpeed;
+				isJumping = false;
+			}
+			if (isJumping && _playerInfo.rb2d.velocity.y > 0)
+			{
+				_playerInfo.rb2d.velocity = new Vector2(_playerInfo.rb2d.velocity.x, _playerInfo.rb2d.velocity.y * 0.5f);
+			}
+			if (vertical < safeSpot * -1 && grounded)
+			{
+				RaycastHit2D ray = Physics2D.Linecast(transform.position, _playerInfo.groundCheck.position, _playerInfo.jumpThroughLayerMask);
+
+				Debug.Log(ray);
 			}
 		}
-		else if (vertical <= safeSpot && velocity.y > 0)
-		{
-			velocity.y = velocity.y * .5f;
-		}
-
-		move.x = horizontal;
-
-		targetVelocity = move * speed;
 
 		if (lastDir.x != 0)
 		{
 			spriteRenderer.transform.localScale = new Vector3(_playerInfo.originalScale * lastDir.x, spriteRenderer.transform.localScale.y, spriteRenderer.transform.localScale.z);
 			_playerInfo.itemLocation.localPosition = new Vector3(lastDir.x * _playerInfo.itemOffset, _playerInfo.itemLocation.localPosition.y, _playerInfo.itemLocation.localPosition.z);
 		}
+	}
+
+	private void FixedUpdate()
+	{
+		_playerInfo.rb2d.velocity = new Vector2(horizontal * speed * Time.fixedDeltaTime, _playerInfo.rb2d.velocity.y);
+	}
+
+	private void OnPlayerLanded()
+	{
+		isJumping = false;
 	}
 
 	private void ItemAction()
@@ -277,11 +298,11 @@ public class PlayerPotion : PhysicsObject
 		}
 		if (pDir.x != 0)
 		{
-			rb2d.AddForce(transform.right * spellForce * pDir.x);
+			_playerInfo.rb2d.AddForce(transform.right * spellForce * pDir.x);
 		}
 		else
 		{
-			rb2d.AddForce(transform.up * spellForce * pDir.y);
+			_playerInfo.rb2d.AddForce(transform.up * spellForce * pDir.y);
 		}
 
 		Debug.Log("Player " + _playerInfo.playerController + " is Stun !");
