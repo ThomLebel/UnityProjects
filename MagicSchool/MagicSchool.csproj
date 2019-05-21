@@ -12,12 +12,15 @@
     <ProjectTypeGuids>{E097FAD1-6243-4DAD-9C02-E9B9EFC3FFC1};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <TargetFrameworkIdentifier>.NETFramework</TargetFrameworkIdentifier>
     <TargetFrameworkVersion>v4.6</TargetFrameworkVersion>
-    <TargetFrameworkProfile></TargetFrameworkProfile>
-    <CompilerResponseFile></CompilerResponseFile>
+    <TargetFrameworkProfile>
+    </TargetFrameworkProfile>
+    <CompilerResponseFile>
+    </CompilerResponseFile>
     <UnityProjectType>Game:1</UnityProjectType>
     <UnityBuildTarget>StandaloneWindows64:19</UnityBuildTarget>
     <UnityVersion>2019.1.0f2</UnityVersion>
-    <RootNamespace></RootNamespace>
+    <RootNamespace>
+    </RootNamespace>
     <LangVersion>6</LangVersion>
   </PropertyGroup>
   <PropertyGroup>
@@ -687,22 +690,42 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Assets\Anima2D\Examples\Scripts\CharacterMotion.cs" />
+    <Compile Include="Assets\Anima2D\Examples\Scripts\Follow.cs" />
+    <Compile Include="Assets\Anima2D\Examples\Scripts\SkinnedMeshCombiner.cs" />
+    <Compile Include="Assets\Anima2D\Examples\Scripts\SpringBone.cs" />
+    <Compile Include="Assets\Anima2D\Examples\Scripts\SpringCollider.cs" />
+    <Compile Include="Assets\Anima2D\Examples\Scripts\SpringManager.cs" />
+    <Compile Include="Assets\Anima2D\Examples\Scripts\SpriteCycle.cs" />
+    <Compile Include="Assets\Anima2D\Examples\Scripts\SpriteCycleParallax.cs" />
+    <Compile Include="Assets\Anima2D\Scripts\Bone2D.cs" />
+    <Compile Include="Assets\Anima2D\Scripts\Control.cs" />
+    <Compile Include="Assets\Anima2D\Scripts\EditorUpdaterProxy.cs" />
+    <Compile Include="Assets\Anima2D\Scripts\Ik2D.cs" />
+    <Compile Include="Assets\Anima2D\Scripts\IkCCD2D.cs" />
+    <Compile Include="Assets\Anima2D\Scripts\IkGroup.cs" />
+    <Compile Include="Assets\Anima2D\Scripts\IkLimb2D.cs" />
+    <Compile Include="Assets\Anima2D\Scripts\IkSolver2D.cs" />
+    <Compile Include="Assets\Anima2D\Scripts\IkSolver2DCCD.cs" />
+    <Compile Include="Assets\Anima2D\Scripts\IkSolver2DLimb.cs" />
+    <Compile Include="Assets\Anima2D\Scripts\MathUtils.cs" />
+    <Compile Include="Assets\Anima2D\Scripts\Pose.cs" />
+    <Compile Include="Assets\Anima2D\Scripts\PoseManager.cs" />
+    <Compile Include="Assets\Anima2D\Scripts\SpriteMesh.cs" />
+    <Compile Include="Assets\Anima2D\Scripts\SpriteMeshAnimation.cs" />
+    <Compile Include="Assets\Anima2D\Scripts\SpriteMeshInstance.cs" />
     <Compile Include="Assets\Resources\GeneralScript\CharacterCarroussel.cs" />
     <Compile Include="Assets\Resources\GeneralScript\CharacterSelector.cs" />
     <Compile Include="Assets\Resources\GeneralScript\GameManager.cs" />
     <Compile Include="Assets\Resources\GeneralScript\Launcher.cs" />
     <Compile Include="Assets\Resources\GeneralScript\MapGenerator.cs" />
     <Compile Include="Assets\Resources\GeneralScript\PlayerNamerInputField.cs" />
-    <Compile Include="Assets\Resources\GeneralScript\TopdownDynamicLayerSorting.cs" />
-    <Compile Include="Assets\Resources\GeneralScript\TopdownTransform.cs" />
-    <Compile Include="Assets\Resources\GeneralScript\TopdownUtils.cs" />
     <Compile Include="Assets\Resources\Potion\Script\AnimationCallback.cs" />
     <Compile Include="Assets\Resources\Potion\Script\blobScript.cs" />
     <Compile Include="Assets\Resources\Potion\Script\ChaudronScript.cs" />
     <Compile Include="Assets\Resources\Potion\Script\CraftingTableScript.cs" />
     <Compile Include="Assets\Resources\Potion\Script\FioleScript.cs" />
     <Compile Include="Assets\Resources\Potion\Script\FireScript.cs" />
-    <Compile Include="Assets\Resources\Potion\Script\Follow.cs" />
     <Compile Include="Assets\Resources\Potion\Script\ItemDispenserScript.cs" />
     <Compile Include="Assets\Resources\Potion\Script\ItemInfoScript.cs" />
     <Compile Include="Assets\Resources\Potion\Script\ItemScript.cs" />
@@ -722,6 +745,13 @@
     <Compile Include="Assets\Unity-Logs-Viewer\Reporter\Test\TestReporter.cs" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Assets\Anima2D\Examples\Shaders\Unlit-Alpha-Cull-off.shader" />
+    <None Include="Assets\Anima2D\Examples\Shaders\VertexLitOneDirectional.shader" />
+    <None Include="Assets\Anima2D\Examples\Shaders\VisibleInsideMask.shader" />
+    <None Include="Assets\Anima2D\Examples\Shaders\VisibleOutsideMask.shader" />
+    <None Include="Assets\Anima2D\Licenses.txt" />
+    <None Include="Assets\Anima2D\Readme.txt" />
+    <None Include="Assets\Anima2D\Version.txt" />
     <None Include="Assets\Bug.txt" />
     <None Include="Assets\StreamingAssets\build_info.txt" />
     <None Include="Assets\TODO.txt" />

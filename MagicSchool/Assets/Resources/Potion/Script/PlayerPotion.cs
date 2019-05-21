@@ -27,16 +27,20 @@ public class PlayerPotion : MonoBehaviour
 	private float vertical;
 	private float safeSpot = 0.2f;
 	[SerializeField]
+	private bool grounded = false;
+	[SerializeField]
 	private bool isJumping = false;
 	[SerializeField]
-	private bool grounded = false;
+	private bool isFalling = false;
+	private Collider2D platformCollider;
 	private IEnumerator stunCoroutine;
 	private IEnumerator protectCoroutine;
 
 	private float nextCastShoot;
 	private float nextCastProtect;
 	private Vector3 shootingDir;
-	
+
+	private CapsuleCollider2D playerCollider;
 	private SpriteRenderer spriteRenderer;
 	private Animator animator;
 
@@ -48,6 +52,7 @@ public class PlayerPotion : MonoBehaviour
 		DontDestroyOnLoad(this.gameObject);
 
 		//rb2d = GetComponent<Rigidbody2D>();
+		playerCollider = gameObject.GetComponent<CapsuleCollider2D>();
 		spriteRenderer = gameObject.GetComponentInChildren<SpriteRenderer>();
 		animator = gameObject.GetComponentInChildren<Animator>();
 	}
@@ -139,8 +144,23 @@ public class PlayerPotion : MonoBehaviour
 			if (vertical < safeSpot * -1 && grounded)
 			{
 				RaycastHit2D ray = Physics2D.Linecast(transform.position, _playerInfo.groundCheck.position, _playerInfo.jumpThroughLayerMask);
+				
+				if (ray.collider != null)
+				{
+					platformCollider = ray.collider;
+					playerCollider.isTrigger = true;
+					isFalling = true;
+				}
+			}
+		}
 
-				Debug.Log(ray);
+		if (isFalling)
+		{
+			if (!playerCollider.IsTouching(platformCollider))
+			{
+				isFalling = false;
+				platformCollider = null;
+				playerCollider.isTrigger = false;
 			}
 		}
 
@@ -296,14 +316,8 @@ public class PlayerPotion : MonoBehaviour
 		{
 			_useItem.DropOff();
 		}
-		if (pDir.x != 0)
-		{
-			_playerInfo.rb2d.AddForce(transform.right * spellForce * pDir.x);
-		}
-		else
-		{
-			_playerInfo.rb2d.AddForce(transform.up * spellForce * pDir.y);
-		}
+
+		_playerInfo.rb2d.AddForce(transform.right * spellForce * pDir.x);
 
 		Debug.Log("Player " + _playerInfo.playerController + " is Stun !");
 		animator.SetTrigger("playerHit");

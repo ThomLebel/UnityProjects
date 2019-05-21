@@ -35,7 +35,7 @@ TagManager:
   - spell
   - floor
   - jumpThrough
-  - 
+  - player
   - 
   - 
   - 
@@ -57,4 +57,7 @@ TagManager:
     locked: 0
   - name: spell
     uniqueID: 4247298467
+    locked: 0
+  - name: player
+    uniqueID: 3183937885
     locked: 0
