@@ -41,7 +41,7 @@ public class PlayerPotion : MonoBehaviour
 	private Vector3 shootingDir;
 
 	private CapsuleCollider2D playerCollider;
-	private SpriteRenderer spriteRenderer;
+	//private SpriteRenderer spriteRenderer;
 	private Animator animator;
 
 
@@ -53,7 +53,7 @@ public class PlayerPotion : MonoBehaviour
 
 		//rb2d = GetComponent<Rigidbody2D>();
 		playerCollider = gameObject.GetComponent<CapsuleCollider2D>();
-		spriteRenderer = gameObject.GetComponentInChildren<SpriteRenderer>();
+		//spriteRenderer = gameObject.GetComponentInChildren<SpriteRenderer>();
 		animator = gameObject.GetComponentInChildren<Animator>();
 	}
 
@@ -166,13 +166,13 @@ public class PlayerPotion : MonoBehaviour
 
 		if (lastDir.x != 0)
 		{
-			spriteRenderer.transform.localScale = new Vector3(_playerInfo.originalScale * lastDir.x, spriteRenderer.transform.localScale.y, spriteRenderer.transform.localScale.z);
-			_playerInfo.itemLocation.localPosition = new Vector3(lastDir.x * _playerInfo.itemOffset, _playerInfo.itemLocation.localPosition.y, _playerInfo.itemLocation.localPosition.z);
+			transform.localScale = new Vector3(_playerInfo.originalScale * lastDir.x, transform.localScale.y, transform.localScale.z);
 		}
 	}
 
 	private void FixedUpdate()
 	{
+		if (!_playerInfo.isStun && _playerInfo.canMove)
 		_playerInfo.rb2d.velocity = new Vector2(horizontal * speed * Time.fixedDeltaTime, _playerInfo.rb2d.velocity.y);
 	}
 
@@ -317,8 +317,6 @@ public class PlayerPotion : MonoBehaviour
 			_useItem.DropOff();
 		}
 
-		_playerInfo.rb2d.AddForce(transform.right * spellForce * pDir.x);
-
 		Debug.Log("Player " + _playerInfo.playerController + " is Stun !");
 		animator.SetTrigger("playerHit");
 		animator.SetBool("playerStun", true);
@@ -328,5 +326,7 @@ public class PlayerPotion : MonoBehaviour
 		_playerInfo.State = "stun";
 		stunCoroutine = PlayerStun(stunTime);
 		StartCoroutine(stunCoroutine);
+
+		_playerInfo.rb2d.AddForce(new Vector2(spellForce * pDir.x, _playerInfo.rb2d.velocity.y), ForceMode2D.Force);
 	}
 }

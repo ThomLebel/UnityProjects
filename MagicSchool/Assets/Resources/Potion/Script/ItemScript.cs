@@ -23,13 +23,20 @@ public class ItemScript : MonoBehaviour {
 
 	public virtual void AccioItem(Vector3 pDir)
 	{
-		if (pDir.x != 0)
+		gameObject.GetComponent<Rigidbody2D>().AddForce(transform.right * spellForce * pDir.x * -1);
+	}
+
+	private void OnTriggerEnter2D(Collider2D pOther)
+	{
+		if (pOther.tag == "Player")
 		{
-			gameObject.GetComponent<Rigidbody2D>().AddForce(transform.right * spellForce * pDir.x * -1);
-		}
-		else
-		{
-			gameObject.GetComponent<Rigidbody2D>().AddForce(transform.up * spellForce * pDir.y * -1);
+			PlayerInfo playerInfoScript = pOther.GetComponent<PlayerInfo>();
+			Debug.Log("Colliding with player");
+			if (!playerInfoScript.isHolding && !playerInfoScript.isStun && !playerInfoScript.isPreparing)
+			{
+				pOther.GetComponent<UseItemPotion>().PickUp(gameObject);
+				Debug.Log("Picking up item");
+			}
 		}
 	}
 

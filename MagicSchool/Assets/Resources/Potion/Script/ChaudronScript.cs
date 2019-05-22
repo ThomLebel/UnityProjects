@@ -55,7 +55,7 @@ public class ChaudronScript : MonoBehaviour
 		}
 	}
 
-	public void AddItem(string pItemName)
+	public void AddItem(GameObject pItem)
 	{
 		if (_itemInfo.itemList.Count < _itemInfo.maxItem)
 		{
@@ -76,11 +76,10 @@ public class ChaudronScript : MonoBehaviour
 			}
 			if (currentPicto != null)
 			{
-				string pictoName = pItemName + "Picto";
-				currentPicto.sprite = Resources.Load("Potion/Picto/"+pictoName, typeof(Sprite)) as Sprite;
+				currentPicto.sprite = pItem.GetComponentInChildren<SpriteRenderer>().sprite;
 			}
 
-			_itemInfo.itemList.Add(pItemName);
+			_itemInfo.itemList.Add(pItem);
 
 			if (_itemInfo.itemList.Count > 1)
 			{
@@ -161,7 +160,7 @@ public class ChaudronScript : MonoBehaviour
 	private void Empty()
 	{
 		_progressBarScript.value = 0f;
-		_itemInfo.itemList = new List<string>();
+		_itemInfo.itemList = new List<GameObject>();
 		isDone = false;
 		isFull = false;
 		isCooking = false;

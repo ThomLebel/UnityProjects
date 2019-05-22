@@ -5,7 +5,7 @@ using UnityEngine;
 public class PotionMasterScript : MonoBehaviour {
 
 
-	public void CheckPotionValidity(List<string> pPotion)
+	public void CheckPotionValidity(List<GameObject> pPotion)
 	{
 		Debug.Log(pPotion);
 	}

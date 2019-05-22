@@ -6,5 +6,5 @@ public class FioleScript : MonoBehaviour
 {
 	public SpriteRenderer[] pictoList;
 
-	public List<string> itemList;
+	public List<GameObject> itemList;
 }

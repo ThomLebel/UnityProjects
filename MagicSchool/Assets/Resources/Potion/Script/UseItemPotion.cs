@@ -6,6 +6,10 @@ using UnityEngine;
 
 public class UseItemPotion : MonoBehaviour
 {
+	public Transform itemLocation;
+
+	private GameObject itemHolded;
+
 	private PlayerInfo _playerInfo;
 	private PlayerPotion _playerAction;
 
@@ -42,8 +46,6 @@ public class UseItemPotion : MonoBehaviour
 	//What to do with this object ?
 	public void DropItem()
 	{
-		Transform itemHolded = _playerInfo.itemLocation.GetChild(0);
-
 		Debug.Log("trying to drop : " + itemHolded.name);
 
 		string[] tagList;
@@ -171,7 +173,7 @@ public class UseItemPotion : MonoBehaviour
 				}
 				chaudronScript.isDone = true;
 				chaudronScript.SetCookingTime(1f);
-				itemInfoScript.itemList = new List<string>();
+				itemInfoScript.itemList = new List<GameObject>();
 
 				for (int i = 0; i < itemInfoScript.pictoList.Length; i++)
 				{
@@ -187,7 +189,7 @@ public class UseItemPotion : MonoBehaviour
 					chaudronScript.isFull = false;
 					chaudronScript.isDone = false;
 					chaudronScript.SetCookingTime(0f);
-					itemInfoScript.itemList = new List<string>();
+					itemInfoScript.itemList = new List<GameObject>();
 
 					for (int i = 0; i < itemInfoScript.pictoList.Length; i++)
 					{
@@ -208,7 +210,7 @@ public class UseItemPotion : MonoBehaviour
 					chaudronScript.isFull = false;
 					chaudronScript.isDone = false;
 					chaudronScript.SetCookingTime(0f);
-					targetInfoScript.itemList = new List<string>();
+					targetInfoScript.itemList = new List<GameObject>();
 
 					for (int i = 0; i < itemInfoScript.pictoList.Length; i++)
 					{
@@ -226,7 +228,7 @@ public class UseItemPotion : MonoBehaviour
 				}
 				chaudronScript.isDone = true;
 				chaudronScript.SetCookingTime(1f);
-				targetInfoScript.itemList = new List<string>();
+				targetInfoScript.itemList = new List<GameObject>();
 
 				for (int i = 0; i < itemInfoScript.pictoList.Length; i++)
 				{
@@ -244,6 +246,7 @@ public class UseItemPotion : MonoBehaviour
 		Destroy(pItem.gameObject);
 
 		_playerInfo.isHolding = false;
+		itemHolded = null;
 	}
 
 	public void AddItemToCauldron(GameObject pTarget, GameObject pItem)
@@ -256,13 +259,14 @@ public class UseItemPotion : MonoBehaviour
 
 		if (!chaudronScript.isBurning && !chaudronScript.isFull && itemScript.isDone)
 		{
-			chaudronScript.AddItem(itemName);
+			//chaudronScript.AddItem(itemName);
+			chaudronScript.AddItem(pItem);
 
-			if (_playerInfo.itemLocation.GetChild(0).tag == "item")
+			if (itemLocation.GetChild(0).tag == "item")
 			{
 				_playerInfo.isHolding = false;
 			}
-			if (_playerInfo.itemLocation.GetChild(0).tag == "chaudron")
+			if (itemLocation.GetChild(0).tag == "chaudron")
 			{
 				if (itemScript.craftingTable != null)
 				{
@@ -273,6 +277,7 @@ public class UseItemPotion : MonoBehaviour
 			}
 
 			Destroy(pItem);
+			itemHolded = null;
 		}
 	}
 
@@ -292,17 +297,18 @@ public class UseItemPotion : MonoBehaviour
 			pItem.transform.parent.parent.GetComponent<ItemInfoScript>().isOccupied = false;
 
 		pItem.GetComponent<ItemInfoScript>().isHold = true;
-		pItem.GetComponent<Rigidbody2D>().bodyType = RigidbodyType2D.Kinematic;
-
+		pItem.GetComponent<Rigidbody2D>().isKinematic = true;
 		BoxCollider2D[] _colliders = pItem.GetComponentsInChildren<BoxCollider2D>();
 		foreach (BoxCollider2D collider in _colliders)
 		{
 			collider.enabled = false;
 		}
-		
-		pItem.transform.position = _playerInfo.itemLocation.position;
-		pItem.transform.parent = _playerInfo.itemLocation;
-		pItem.transform.rotation = new Quaternion(0, 0, 0, 0);
+
+		pItem.transform.parent = itemLocation;
+		pItem.transform.localPosition = new Vector3(0,0,0);
+		pItem.transform.localRotation = new Quaternion(0, 0, 0, 0);
+
+		itemHolded = pItem;
 
 		_playerInfo.isHolding = true;
 	}
@@ -311,24 +317,29 @@ public class UseItemPotion : MonoBehaviour
 	{
 		if (_playerInfo.isHolding)
 		{
-			if (transform.GetChild(0).transform.childCount > 0)
+			if (itemHolded != null)
 			{
-				Transform item = transform.GetChild(0).transform.GetChild(0);
+				Debug.Log("Droping on the floor " + itemHolded.name);
 
-				Debug.Log("Droping on the floor " + item.name);
+				float itemHeight = itemHolded.GetComponentInChildren<Renderer>().bounds.size.y;
 
-				item.parent = null;
+				itemHolded.transform.parent = null;
+				itemHolded.transform.position = new Vector3(transform.position.x, transform.position.y + itemHeight, transform.position.z);
+				itemHolded.transform.rotation = Quaternion.Euler(0,0,0);
 
-				item.GetComponent<ItemInfoScript>().isHold = false;
+				itemHolded.GetComponent<ItemInfoScript>().isHold = false;
 
-				BoxCollider2D[] _colliders = item.GetComponentsInChildren<BoxCollider2D>();
+				if(itemHolded.tag == "item" )
+					itemHolded.GetComponent<Rigidbody2D>().isKinematic = false;
+
+				BoxCollider2D[] _colliders = itemHolded.GetComponentsInChildren<BoxCollider2D>();
 				foreach (BoxCollider2D collider in _colliders)
 				{
 					collider.enabled = true;
 				}
 				
-				item.GetComponent<Rigidbody2D>().bodyType = RigidbodyType2D.Dynamic;
 				_playerInfo.isHolding = false;
+				itemHolded = null;
 			}
 		}
 	}
@@ -337,7 +348,7 @@ public class UseItemPotion : MonoBehaviour
 	{
 		if (_playerInfo.isHolding)
 		{
-			if (_playerInfo.itemLocation.childCount > 0)
+			if (itemHolded != null)
 			{
 				ItemInfoScript targetScript = pTarget.GetComponent<ItemInfoScript>();
 
@@ -345,33 +356,32 @@ public class UseItemPotion : MonoBehaviour
 				{
 					Debug.Log("target name : " + pTarget.name);
 
-					Transform item = _playerInfo.itemLocation.GetChild(0);
-					
-					item.parent = pTarget.transform.GetChild(0);
-					item.position = pTarget.transform.GetChild(0).position;
+					itemHolded.transform.parent = pTarget.transform.GetChild(0);
+					itemHolded.transform.position = pTarget.transform.GetChild(0).position;
+					itemHolded.transform.rotation = new Quaternion(0, 0, 0, 0);
 
-					item.GetComponent<ItemInfoScript>().isHold = false;
-					item.GetComponent<Rigidbody2D>().bodyType = RigidbodyType2D.Kinematic;
+					itemHolded.GetComponent<ItemInfoScript>().isHold = false;
 
-					BoxCollider2D[] _colliders = item.GetComponentsInChildren<BoxCollider2D>();
+					BoxCollider2D[] _colliders = itemHolded.GetComponentsInChildren<BoxCollider2D>();
 					foreach (BoxCollider2D collider in _colliders)
 					{
 						collider.enabled = true;
 					}
 
-					if (item.tag == "chaudron")
+					if (itemHolded.tag == "chaudron")
 					{
-						item.GetComponent<ChaudronScript>().isCooking = true;
+						itemHolded.GetComponent<ChaudronScript>().isCooking = true;
 						pTarget.GetComponent<ItemInfoScript>().isOccupied = true;
 					}
 					else
 					{
-						item.GetComponent<ItemScript>().onCraftingTable = true;
-						item.GetComponent<ItemScript>().craftingTable = pTarget;
+						itemHolded.GetComponent<ItemScript>().onCraftingTable = true;
+						itemHolded.GetComponent<ItemScript>().craftingTable = pTarget;
 						pTarget.GetComponent<ItemInfoScript>().isOccupied = true;
 					}
 
 					_playerInfo.isHolding = false;
+					itemHolded = null;
 				}
 				else
 				{

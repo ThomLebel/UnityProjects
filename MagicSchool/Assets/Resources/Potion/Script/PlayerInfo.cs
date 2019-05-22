@@ -1,14 +1,16 @@
 ﻿using Com.OniriqueStudio.MagicSchool;
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Text.RegularExpressions;
 using UnityEngine;
+using UnityEngine.Rendering;
 
 public class PlayerInfo : MonoBehaviour
 {
 
 	//States
 	//[HideInInspector]
-	public Transform itemLocation;
 	public Transform groundCheck;
 	public GameObject projectilePrefab;
 	public GameObject bubblePrefab;
@@ -41,11 +43,12 @@ public class PlayerInfo : MonoBehaviour
 
 	public float pickUpRange = 0.5f;
 	
-	private SpriteRenderer spriteRenderer;
+	public GameObject playerBody;
 
 	private void Awake()
 	{
-		spriteRenderer = gameObject.GetComponentInChildren<SpriteRenderer>();
+		playerBody = gameObject.transform.Find("base_wizard").gameObject;
+		//spriteRenderer = gameObject.GetComponentInChildren<SpriteRenderer>();
 		rb2d = GetComponent<Rigidbody2D>();
 	}
 
@@ -57,9 +60,9 @@ public class PlayerInfo : MonoBehaviour
 		isPreparing = false;
 		isProtected = false;
 		canMove = true;
-		playerWidth = GetComponentInChildren<Renderer>().bounds.size.x;
-		playerHeight = GetComponentInChildren<Renderer>().bounds.size.y;
-		originalScale = spriteRenderer.transform.localScale.x;
+		//playerWidth = GetComponentInChildren<Renderer>().bounds.size.x;
+		//playerHeight = GetComponentInChildren<Renderer>().bounds.size.y;
+		originalScale = playerBody.transform.localScale.x;
 
 		Debug.Log("PLAYERINFO // Original scale = "+originalScale);
 		
@@ -74,13 +77,23 @@ public class PlayerInfo : MonoBehaviour
 		string playerSpriteName = CharacterSelector.Instance.spriteList[pSpriteID].name;
 		playerID = pID;
 		playerController = pController;
-		playerSprite = CharacterSelector.Instance.spriteList[pSpriteID];
-		spriteRenderer.sprite = playerSprite;
-		spriteRenderer.enabled = false;
-		Animator animator = GetComponentInChildren<Animator>();
-		animator.runtimeAnimatorController = (RuntimeAnimatorController)Resources.Load("Potion/Animations/"+playerSpriteName+"_animations/"+ playerSpriteName + "_controller", typeof(RuntimeAnimatorController));
 
-		//bubblePrefab.GetComponentInChildren<SpriteRenderer>().sprite = ;
+		string spriteSheetName = playerSpriteName + "_wizard_spritesheet";
+		Sprite[] spriteSheet = Resources.LoadAll<Sprite>("Sprites/Wizards/"+ spriteSheetName);
+		SpriteRenderer[] playerSprites = GetComponentsInChildren<SpriteRenderer>();
+
+		for (int i = 0; i < playerSprites.Length; i++)
+		{
+			//Get the original sprite name
+			string spriteName = playerSprites[i].sprite.name;
+			//Init the new sprite index in the spritesheet
+			int spriteIndex = 0;
+			//Get the sprite index from the original sprite name (last digit : 0 to 11)
+			Int32.TryParse(Regex.Match(spriteName, @"\d+").Value, out spriteIndex);
+			//Replace the orignal sprite whith the new one
+			playerSprites[i].sprite = spriteSheet[spriteIndex];
+		}
+		
 		Animator bubbleAnimator = bubblePrefab.GetComponentInChildren<Animator>();
 		bubbleAnimator.runtimeAnimatorController = (RuntimeAnimatorController)Resources.Load("Potion/Animations/" + playerSpriteName + "_animations/" + playerSpriteName + "_bubble", typeof(RuntimeAnimatorController));
 
@@ -88,12 +101,16 @@ public class PlayerInfo : MonoBehaviour
 
 		gameObject.GetComponent<PlayerPotion>().enabled = false;
 		bubbleAnimator.enabled = false;
+		rb2d.isKinematic = true;
+		GetComponent<SortingGroup>().sortingOrder = pID;
+		playerBody.SetActive(false);
 	}
 
 	public void Init(Vector3 pPos)
 	{
-		spriteRenderer.enabled = true;
+		playerBody.SetActive(true);
 		gameObject.GetComponent<PlayerPotion>().enabled = true;
 		transform.position = pPos;
+		rb2d.isKinematic = false;
 	}
 }
