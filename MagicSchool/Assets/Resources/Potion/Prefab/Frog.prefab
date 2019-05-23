@@ -137,7 +137,7 @@ GameObject:
   - component: {fileID: 3754207424956921010}
   - component: {fileID: 61049250084230010}
   - component: {fileID: 114059060147497000}
-  - component: {fileID: -5412352065203340068}
+  - component: {fileID: -8542966581059153405}
   m_Layer: 0
   m_Name: Frog
   m_TagString: item
@@ -226,7 +226,7 @@ MonoBehaviour:
   pictoList: []
   isHold: 0
   isOccupied: 0
---- !u!114 &-5412352065203340068
+--- !u!114 &-8542966581059153405
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -235,7 +235,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 1526486081205436}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1823cfdcb482d1443aee7230a4de7900, type: 3}
+  m_Script: {fileID: 11500000, guid: cb27a2246200de14a91c8037180edbd2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   spellForce: 30
@@ -391,7 +391,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: 2653217872831801242, guid: 21f7e114fb33bc74e95d09102d24487e,
+  m_Sprite: {fileID: 4129085186536377779, guid: 1c1f7c1bd90fc0446b9faf1f313e95ac,
     type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0

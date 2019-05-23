@@ -322,14 +322,23 @@ public class UseItemPotion : MonoBehaviour
 				Debug.Log("Droping on the floor " + itemHolded.name);
 
 				float itemHeight = itemHolded.GetComponentInChildren<Renderer>().bounds.size.y;
+				float yPos = transform.position.y + itemHeight;
 
 				itemHolded.transform.parent = null;
-				itemHolded.transform.position = new Vector3(transform.position.x, transform.position.y + itemHeight, transform.position.z);
 				itemHolded.transform.rotation = Quaternion.Euler(0,0,0);
+
+				//Cast a ray to detect closest floor to drop the item on
+				RaycastHit2D hit = Physics2D.Raycast(transform.position, Vector2.down, Mathf.Infinity, _playerInfo.groundLayerMask);
+				if (hit.collider != null)
+				{
+					yPos = hit.transform.position.y + hit.transform.GetComponentInChildren<Renderer>().bounds.size.y + itemHeight;
+				}
+
+				itemHolded.transform.position = new Vector3(transform.position.x, yPos, transform.position.z);
 
 				itemHolded.GetComponent<ItemInfoScript>().isHold = false;
 
-				if(itemHolded.tag == "item" )
+				if(itemHolded.tag == "item" || itemHolded.tag == "fiole")
 					itemHolded.GetComponent<Rigidbody2D>().isKinematic = false;
 
 				BoxCollider2D[] _colliders = itemHolded.GetComponentsInChildren<BoxCollider2D>();

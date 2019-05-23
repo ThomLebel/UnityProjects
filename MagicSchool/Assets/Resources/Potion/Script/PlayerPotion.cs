@@ -114,7 +114,8 @@ public class PlayerPotion : MonoBehaviour
 
 		if (Math.Abs(horizontal) > safeSpot)
 		{
-			animator.SetBool("playerMove", true);
+			if(!isJumping)
+				animator.SetBool("playerMove", true);
 
 			if (horizontal > safeSpot)
 			{
@@ -124,6 +125,20 @@ public class PlayerPotion : MonoBehaviour
 			{
 				lastDir = new Vector3(-1, 0, 0);
 			}
+		}
+
+		if (_playerInfo.rb2d.velocity.y > 0)
+		{
+			animator.SetBool("playerJump", true);
+		}else if (_playerInfo.rb2d.velocity.y < 0)
+		{
+			animator.SetBool("playerJump", false);
+			animator.SetBool("playerFall", true);
+		}
+		else
+		{
+			animator.SetBool("playerJump", false);
+			animator.SetBool("playerFall", false);
 		}
 
 		if (vertical > safeSpot && !isJumping && grounded)
@@ -205,6 +220,8 @@ public class PlayerPotion : MonoBehaviour
 		}
 		if (Input.GetButtonDown("Fire2_P" + _playerInfo.playerController))
 		{
+
+			_playerInfo.rb2d.velocity = Vector2.zero;
 			_playerInfo.canMove = false;
 			_playerInfo.isPreparing = true;
 			animator.SetBool("playerCook", true);

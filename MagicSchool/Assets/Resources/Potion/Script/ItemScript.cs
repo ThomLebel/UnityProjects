@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -12,30 +13,52 @@ public class ItemScript : MonoBehaviour {
 	public bool onCraftingTable = false;
 	public GameObject craftingTable;
 
-	//public GameObject _progressBar;
+	private bool moving = false;
+	private Rigidbody2D rb2d;
 	private ProgressBarScript _progressBarScript;
 	private ItemInfoScript _itemInfo;
 
 	private void Awake()
 	{
+		rb2d = gameObject.GetComponent<Rigidbody2D>();
 		_progressBarScript = gameObject.GetComponentInChildren<ProgressBarScript>();
+	}
+
+	void Start()
+	{
+		//_progressBarScript.ToggleVisibility(false);
+	}
+
+	private void Update()
+	{
+		if (Math.Abs(rb2d.velocity.x) > 0)
+		{
+			moving = true;
+		}
+		else
+		{
+			moving = false;
+		}
 	}
 
 	public virtual void AccioItem(Vector3 pDir)
 	{
-		gameObject.GetComponent<Rigidbody2D>().AddForce(transform.right * spellForce * pDir.x * -1);
+		rb2d.AddForce(transform.right * spellForce * pDir.x * -1);
 	}
 
-	private void OnTriggerEnter2D(Collider2D pOther)
+	void OnTriggerEnter2D(Collider2D pOther)
 	{
+		if (!moving)
+		{
+			return;
+		}
 		if (pOther.tag == "Player")
 		{
 			PlayerInfo playerInfoScript = pOther.GetComponent<PlayerInfo>();
-			Debug.Log("Colliding with player");
 			if (!playerInfoScript.isHolding && !playerInfoScript.isStun && !playerInfoScript.isPreparing)
 			{
+				rb2d.velocity = Vector2.zero;
 				pOther.GetComponent<UseItemPotion>().PickUp(gameObject);
-				Debug.Log("Picking up item");
 			}
 		}
 	}
