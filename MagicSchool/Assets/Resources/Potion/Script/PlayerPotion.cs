@@ -181,7 +181,7 @@ public class PlayerPotion : MonoBehaviour
 
 		if (lastDir.x != 0)
 		{
-			transform.localScale = new Vector3(_playerInfo.originalScale * lastDir.x, transform.localScale.y, transform.localScale.z);
+			_playerInfo.playerBody.transform.localScale = new Vector3(_playerInfo.originalScale * lastDir.x, transform.localScale.y, transform.localScale.z);
 		}
 	}
 
@@ -189,11 +189,6 @@ public class PlayerPotion : MonoBehaviour
 	{
 		if (!_playerInfo.isStun && _playerInfo.canMove)
 		_playerInfo.rb2d.velocity = new Vector2(horizontal * speed * Time.fixedDeltaTime, _playerInfo.rb2d.velocity.y);
-	}
-
-	private void OnPlayerLanded()
-	{
-		isJumping = false;
 	}
 
 	private void ItemAction()
@@ -221,7 +216,7 @@ public class PlayerPotion : MonoBehaviour
 		if (Input.GetButtonDown("Fire2_P" + _playerInfo.playerController))
 		{
 
-			_playerInfo.rb2d.velocity = Vector2.zero;
+			//_playerInfo.rb2d.velocity = Vector2.zero;
 			_playerInfo.canMove = false;
 			_playerInfo.isPreparing = true;
 			animator.SetBool("playerCook", true);
@@ -246,10 +241,12 @@ public class PlayerPotion : MonoBehaviour
 		}
 		if (Input.GetButton("Fire3_P" + _playerInfo.playerController) && Time.time > nextCastShoot)
 		{
+			//_playerInfo.rb2d.velocity = Vector2.zero;
 			Shoot(lastDir);
 		}
 		else if (Input.GetButton("Fire4_P" + _playerInfo.playerController) && Time.time > nextCastProtect)
 		{
+			//_playerInfo.rb2d.velocity = Vector2.zero;
 			Protect();
 		}
 	}

@@ -14,6 +14,18 @@ TextureImporter:
   - first:
       213: 7634809879669098404
     second: ingredients_3
+  - first:
+      213: -3161446357135062343
+    second: ingredients_4
+  - first:
+      213: -6960219621324335271
+    second: ingredients_5
+  - first:
+      213: -7790448460745747974
+    second: ingredients_6
+  - first:
+      213: -1317983596774885118
+    second: ingredients_7
   externalObjects: {}
   serializedVersion: 10
   mipmaps:
@@ -132,8 +144,8 @@ TextureImporter:
       name: ingredients_0
       rect:
         serializedVersion: 2
-        x: 0
-        y: 11
+        x: 72
+        y: 329
         width: 183
         height: 130
       alignment: 0
@@ -143,7 +155,7 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 2e5dfc4fc34776c4aa11352b6d29f611
+      spriteID: 785d1b80cf6e1b140ae6afd8a6d6ad49
       internalID: -5034703955856199138
       vertices: []
       indices: 
@@ -153,8 +165,8 @@ TextureImporter:
       name: ingredients_1
       rect:
         serializedVersion: 2
-        x: 233
-        y: 8
+        x: 305
+        y: 326
         width: 280
         height: 186
       alignment: 0
@@ -164,7 +176,7 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: aa253fca97573104ba2b530e36b1bce9
+      spriteID: 783bf29f4658f6a46bf07014da9f6717
       internalID: 4129085186536377779
       vertices: []
       indices: 
@@ -174,8 +186,8 @@ TextureImporter:
       name: ingredients_2
       rect:
         serializedVersion: 2
-        x: 542
-        y: 0
+        x: 614
+        y: 318
         width: 337
         height: 239
       alignment: 0
@@ -185,7 +197,7 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: b1c8622180d9e1643be63f4ca36c4fce
+      spriteID: 54afc69d3498a5c42873a3883d48be8f
       internalID: -6734107803153752858
       vertices: []
       indices: 
@@ -195,8 +207,8 @@ TextureImporter:
       name: ingredients_3
       rect:
         serializedVersion: 2
-        x: 923
-        y: 1
+        x: 995
+        y: 319
         width: 582
         height: 182
       alignment: 0
@@ -206,8 +218,92 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: af6eee2938a96fc41bd27807b20d4e97
+      spriteID: 12b03ea25fdbe0842b1df3ba0bd9a9a0
       internalID: 7634809879669098404
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: ingredients_4
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 0
+        width: 290
+        height: 277
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: d3808892808e62c478612102313416fc
+      internalID: -3161446357135062343
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: ingredients_5
+      rect:
+        serializedVersion: 2
+        x: 390
+        y: 30
+        width: 129
+        height: 204
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 93446059cc6495445b52e1944b0ca2a9
+      internalID: -6960219621324335271
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: ingredients_6
+      rect:
+        serializedVersion: 2
+        x: 739
+        y: 28
+        width: 72
+        height: 229
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: f233cf61df72fd344832fb65e1688997
+      internalID: -7790448460745747974
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: ingredients_7
+      rect:
+        serializedVersion: 2
+        x: 1007
+        y: 26
+        width: 554
+        height: 178
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 2e73040ce2919fa44aee7572c4793c67
+      internalID: -1317983596774885118
       vertices: []
       indices: 
       edges: []

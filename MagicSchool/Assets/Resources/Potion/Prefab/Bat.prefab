@@ -241,9 +241,12 @@ MonoBehaviour:
   spellForce: 30
   preparingCoef: 0.2
   isPrepared: 0
-  isDone: 0
   onCraftingTable: 0
   craftingTable: {fileID: 0}
+  prepName: blood
+  prepSprite: {fileID: -7790448460745747974, guid: 1c1f7c1bd90fc0446b9faf1f313e95ac,
+    type: 3}
+  _progressBarScript: {fileID: 0}
 --- !u!1 &1996244368370086
 GameObject:
   m_ObjectHideFlags: 0

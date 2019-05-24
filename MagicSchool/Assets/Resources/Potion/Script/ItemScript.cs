@@ -9,24 +9,25 @@ public class ItemScript : MonoBehaviour {
 	public float preparingCoef = 0.2f;
 
 	public bool isPrepared = false;
-	public bool isDone = false;
 	public bool onCraftingTable = false;
 	public GameObject craftingTable;
 
+	[SerializeField]
+	private string prepName = "";
+	[SerializeField]
+	private Sprite prepSprite;
 	private bool moving = false;
+
+	public ProgressBarScript _progressBarScript;
+
 	private Rigidbody2D rb2d;
-	private ProgressBarScript _progressBarScript;
 	private ItemInfoScript _itemInfo;
 
 	private void Awake()
 	{
 		rb2d = gameObject.GetComponent<Rigidbody2D>();
 		_progressBarScript = gameObject.GetComponentInChildren<ProgressBarScript>();
-	}
-
-	void Start()
-	{
-		//_progressBarScript.ToggleVisibility(false);
+		_itemInfo = gameObject.GetComponentInChildren<ItemInfoScript>();
 	}
 
 	private void Update()
@@ -65,18 +66,22 @@ public class ItemScript : MonoBehaviour {
 
 	public virtual void PrepareIngredient()
 	{
-		if (isDone)
-		{
-			return;
-		}
 		if (_progressBarScript.value < 1)
+		{
 			_progressBarScript.value += Time.deltaTime * preparingCoef;
+
+			if (_progressBarScript.value > 0)
+				isPrepared = true;
+		}
 		else
 		{
 			_progressBarScript.value = 1;
-			if (!isDone)
+			if (isPrepared)
 			{
-				isDone = true;
+				//Change visuel and name
+				isPrepared = false;
+				_itemInfo.itemName = prepName;
+				GetComponentInChildren<SpriteRenderer>().sprite = prepSprite;
 			}
 		}
 	}

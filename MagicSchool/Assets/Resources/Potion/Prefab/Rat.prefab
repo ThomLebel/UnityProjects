@@ -220,9 +220,12 @@ MonoBehaviour:
   spellForce: 30
   preparingCoef: 0.2
   isPrepared: 0
-  isDone: 0
   onCraftingTable: 0
   craftingTable: {fileID: 0}
+  prepName: bones
+  prepSprite: {fileID: -1317983596774885118, guid: 1c1f7c1bd90fc0446b9faf1f313e95ac,
+    type: 3}
+  _progressBarScript: {fileID: 0}
 --- !u!50 &2572598206201831172
 Rigidbody2D:
   serializedVersion: 4

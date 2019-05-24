@@ -7,11 +7,13 @@ using UnityEngine;
 public class UseItemPotion : MonoBehaviour
 {
 	public Transform itemLocation;
-
+	[SerializeField]
 	private GameObject itemHolded;
 
 	private PlayerInfo _playerInfo;
 	private PlayerPotion _playerAction;
+	[SerializeField]
+	private SpriteRenderer[] pictoList;
 
 	private int targetID, itemID;
 
@@ -77,7 +79,7 @@ public class UseItemPotion : MonoBehaviour
 					}
 					else
 					{
-						if (itemHolded.GetComponent<ItemScript>().isDone)
+						if (!itemHolded.GetComponent<ItemScript>().isPrepared)
 						{
 							AddItemToCauldron(target.gameObject, itemHolded.gameObject);
 						}
@@ -99,7 +101,7 @@ public class UseItemPotion : MonoBehaviour
 					}
 					else
 					{
-						if (target.GetComponent<ItemScript>().isDone)
+						if (!target.GetComponent<ItemScript>().isPrepared)
 						{
 							AddItemToCauldron(itemHolded.gameObject, target.gameObject);
 						}
@@ -137,7 +139,7 @@ public class UseItemPotion : MonoBehaviour
 		if (target != null)
 		{
 			ItemScript _itemScript = target.GetComponentInChildren<ItemScript>();
-			if (!_itemScript.isDone && _itemScript.onCraftingTable)
+			if (_itemScript.onCraftingTable)
 			{
 				if (CheckPlayerDirection(target))
 				{
@@ -169,16 +171,13 @@ public class UseItemPotion : MonoBehaviour
 				Debug.Log("On tient une potion pleine et on la verse dans le chaudron vide");
 				for (int i = 0; i < itemInfoScript.itemList.Count; i++)
 				{
-					chaudronScript.AddItem(itemInfoScript.itemList[i]);
+					chaudronScript.AddItem(itemInfoScript.itemList[i], itemInfoScript.pictoList[i].sprite);
+					itemInfoScript.pictoList[i].sprite = null;
 				}
 				chaudronScript.isDone = true;
 				chaudronScript.SetCookingTime(1f);
-				itemInfoScript.itemList = new List<GameObject>();
-
-				for (int i = 0; i < itemInfoScript.pictoList.Length; i++)
-				{
-					itemInfoScript.pictoList[i].sprite = null;
-				}
+				itemInfoScript.itemList = new List<string>();
+				RemovePicto(pItem);
 			}
 			else
 			{
@@ -186,16 +185,13 @@ public class UseItemPotion : MonoBehaviour
 				{
 					Debug.Log("On tient un chaudron plein et on le verse dans la potion vide");
 					targetInfoScript.itemList = itemInfoScript.itemList;
-					chaudronScript.isFull = false;
-					chaudronScript.isDone = false;
-					chaudronScript.SetCookingTime(0f);
-					itemInfoScript.itemList = new List<GameObject>();
 
 					for (int i = 0; i < itemInfoScript.pictoList.Length; i++)
 					{
 						targetInfoScript.pictoList[i].sprite = itemInfoScript.pictoList[i].sprite;
-						itemInfoScript.pictoList[i].sprite = null;
 					}
+					RemovePicto(pItem);
+					chaudronScript.Empty();
 				}
 			}
 		}
@@ -207,16 +203,14 @@ public class UseItemPotion : MonoBehaviour
 				{
 					Debug.Log("On tient une potion vide et on la remplit au chaudron");
 					itemInfoScript.itemList = targetInfoScript.itemList;
-					chaudronScript.isFull = false;
-					chaudronScript.isDone = false;
-					chaudronScript.SetCookingTime(0f);
-					targetInfoScript.itemList = new List<GameObject>();
 
 					for (int i = 0; i < itemInfoScript.pictoList.Length; i++)
 					{
 						itemInfoScript.pictoList[i].sprite = targetInfoScript.pictoList[i].sprite;
-						targetInfoScript.pictoList[i].sprite = null;
 					}
+
+					AddPicto(itemHolded);
+					chaudronScript.Empty();
 				}
 			}
 			else
@@ -224,16 +218,14 @@ public class UseItemPotion : MonoBehaviour
 				Debug.Log("On tient un chaudron vide et on le remplit à la potion");
 				for (int i = 0; i < targetInfoScript.itemList.Count; i++)
 				{
-					chaudronScript.AddItem(targetInfoScript.itemList[i]);
+					chaudronScript.AddItem(targetInfoScript.itemList[i], targetInfoScript.pictoList[i].sprite);
+					targetInfoScript.pictoList[i].sprite = null;
 				}
 				chaudronScript.isDone = true;
 				chaudronScript.SetCookingTime(1f);
-				targetInfoScript.itemList = new List<GameObject>();
+				targetInfoScript.itemList = new List<string>();
 
-				for (int i = 0; i < itemInfoScript.pictoList.Length; i++)
-				{
-					targetInfoScript.pictoList[i].sprite = null;
-				}
+				AddPicto(itemHolded);
 			}
 		}
 	}
@@ -257,17 +249,18 @@ public class UseItemPotion : MonoBehaviour
 		ItemScript itemScript = pItem.GetComponent<ItemScript>();
 		string itemName = pItem.GetComponent<ItemInfoScript>().itemName;
 
-		if (!chaudronScript.isBurning && !chaudronScript.isFull && itemScript.isDone)
+		if (!chaudronScript.isBurning && !chaudronScript.isFull && !itemScript.isPrepared)
 		{
-			//chaudronScript.AddItem(itemName);
-			chaudronScript.AddItem(pItem);
+			chaudronScript.AddItem(itemName, pItem.GetComponentInChildren<SpriteRenderer>().sprite);
 
-			if (itemLocation.GetChild(0).tag == "item")
+			if (itemHolded.tag == "item")
 			{
 				_playerInfo.isHolding = false;
 			}
-			if (itemLocation.GetChild(0).tag == "chaudron")
+			if (itemHolded.tag == "chaudron")
 			{
+				AddPicto(itemHolded);
+
 				if (itemScript.craftingTable != null)
 				{
 					GameObject craftingTable = itemScript.craftingTable;
@@ -275,26 +268,38 @@ public class UseItemPotion : MonoBehaviour
 					itemScript.craftingTable = null;
 				}
 			}
-
-			Destroy(pItem);
-			itemHolded = null;
+			
+			if (itemHolded.tag != "chaudron")
+			{
+				itemHolded = null;
+				Destroy(pItem);
+			}
 		}
 	}
 
 	public void PickUp(GameObject pItem)
 	{
 		Debug.Log("Picking up " + pItem.name);
+
+		itemHolded = pItem;
+
 		if (pItem.tag == "chaudron")
 		{
 			pItem.GetComponent<ChaudronScript>().isCooking = false;
 		}
 		if (pItem.tag == "item")
 		{
-			pItem.GetComponent<ItemScript>().isPrepared = false;
+
+			pItem.GetComponent<ItemScript>()._progressBarScript.ToggleVisibility(false);
 			pItem.GetComponent<ItemScript>().onCraftingTable = false;
 		}
 		if (pItem.transform.parent != null)
 			pItem.transform.parent.parent.GetComponent<ItemInfoScript>().isOccupied = false;
+
+		if (pItem.tag == "chaudron" || pItem.tag == "fiole")
+		{
+			AddPicto(pItem);
+		}
 
 		pItem.GetComponent<ItemInfoScript>().isHold = true;
 		pItem.GetComponent<Rigidbody2D>().isKinematic = true;
@@ -308,8 +313,6 @@ public class UseItemPotion : MonoBehaviour
 		pItem.transform.localPosition = new Vector3(0,0,0);
 		pItem.transform.localRotation = new Quaternion(0, 0, 0, 0);
 
-		itemHolded = pItem;
-
 		_playerInfo.isHolding = true;
 	}
 
@@ -320,6 +323,11 @@ public class UseItemPotion : MonoBehaviour
 			if (itemHolded != null)
 			{
 				Debug.Log("Droping on the floor " + itemHolded.name);
+
+				if (itemHolded.tag == "chaudron" || itemHolded.tag == "fiole")
+				{
+					RemovePicto(itemHolded);
+				}
 
 				float itemHeight = itemHolded.GetComponentInChildren<Renderer>().bounds.size.y;
 				float yPos = transform.position.y + itemHeight;
@@ -380,12 +388,15 @@ public class UseItemPotion : MonoBehaviour
 					if (itemHolded.tag == "chaudron")
 					{
 						itemHolded.GetComponent<ChaudronScript>().isCooking = true;
+						itemHolded.GetComponent<ChaudronScript>()._progressBarScript.ToggleVisibility(true);
 						pTarget.GetComponent<ItemInfoScript>().isOccupied = true;
+						RemovePicto(itemHolded);
 					}
 					else
 					{
 						itemHolded.GetComponent<ItemScript>().onCraftingTable = true;
 						itemHolded.GetComponent<ItemScript>().craftingTable = pTarget;
+						itemHolded.GetComponent<ItemScript>()._progressBarScript.ToggleVisibility(true);
 						pTarget.GetComponent<ItemInfoScript>().isOccupied = true;
 					}
 
@@ -400,6 +411,30 @@ public class UseItemPotion : MonoBehaviour
 		}
 	}
 
+	public void AddPicto(GameObject pItem)
+	{
+		ItemInfoScript itemInfo = pItem.GetComponent<ItemInfoScript>();
+
+		if (itemInfo.itemList.Count > 0)
+		{
+			for (int i = 0; i < itemInfo.pictoList.Length; i++)
+			{
+				pictoList[i].sprite = itemInfo.pictoList[i].sprite;
+				itemInfo.pictoList[i].enabled = false;
+			}
+		}
+	}
+
+	public void RemovePicto(GameObject pItem)
+	{
+		ItemInfoScript itemInfo = pItem.GetComponent<ItemInfoScript>();
+
+		for (int i = 0; i < itemInfo.pictoList.Length; i++)
+		{
+			pictoList[i].sprite = null;
+			itemInfo.pictoList[i].enabled = true;
+		}
+	}
 
 	private Collider2D GetClosestCollider(String[] tagList)
 	{

@@ -14,6 +14,7 @@ public class ProgressBarScript : MonoBehaviour
 	{
 		progressBar = gameObject.GetComponentInChildren<SpriteRenderer>();
 		progressScale = progressBar.transform.localScale;
+		ToggleVisibility(false);
 	}
 
 	private void Update()
@@ -22,14 +23,14 @@ public class ProgressBarScript : MonoBehaviour
 		progressBar.transform.localScale = new Vector3(progressScale.x + value, 1, 1);
 		transform.localScale = transform.parent.localScale;
 
-		if (value == 0f)
-		{
-			ToggleVisibility(false);
-		}
-		else
-		{
-			ToggleVisibility(true);
-		}
+		//if (value == 0f)
+		//{
+		//	ToggleVisibility(false);
+		//}
+		//else
+		//{
+		//	ToggleVisibility(true);
+		//}
 	}
 
 	public void ToggleVisibility(bool pRendered)

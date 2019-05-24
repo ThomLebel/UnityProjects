@@ -80,7 +80,7 @@ public class PlayerInfo : MonoBehaviour
 
 		string spriteSheetName = playerSpriteName + "_wizard_spritesheet";
 		Sprite[] spriteSheet = Resources.LoadAll<Sprite>("Sprites/Wizards/"+ spriteSheetName);
-		SpriteRenderer[] playerSprites = GetComponentsInChildren<SpriteRenderer>();
+		SpriteRenderer[] playerSprites = playerBody.GetComponentsInChildren<SpriteRenderer>();
 
 		for (int i = 0; i < playerSprites.Length; i++)
 		{

@@ -20,7 +20,7 @@ public class ChaudronScript : MonoBehaviour
 	private float initialBurningDelay;
 
 	public GameObject _progressBar;
-	private ProgressBarScript _progressBarScript;
+	public ProgressBarScript _progressBarScript;
 	private ItemInfoScript _itemInfo;
 
 	private Color _barColor;
@@ -55,7 +55,7 @@ public class ChaudronScript : MonoBehaviour
 		}
 	}
 
-	public void AddItem(GameObject pItem)
+	public void AddItem(string pName, Sprite pSprite)
 	{
 		if (_itemInfo.itemList.Count < _itemInfo.maxItem)
 		{
@@ -76,10 +76,10 @@ public class ChaudronScript : MonoBehaviour
 			}
 			if (currentPicto != null)
 			{
-				currentPicto.sprite = pItem.GetComponentInChildren<SpriteRenderer>().sprite;
+				currentPicto.sprite = pSprite;
 			}
 
-			_itemInfo.itemList.Add(pItem);
+			_itemInfo.itemList.Add(pName);
 
 			if (_itemInfo.itemList.Count > 1)
 			{
@@ -157,10 +157,11 @@ public class ChaudronScript : MonoBehaviour
 		Debug.Log("Cauldron is burning !!");
 	}
 
-	private void Empty()
+	public void Empty()
 	{
 		_progressBarScript.value = 0f;
-		_itemInfo.itemList = new List<GameObject>();
+		_progressBarScript.ToggleVisibility(false);
+		_itemInfo.itemList = new List<string>();
 		isDone = false;
 		isFull = false;
 		isCooking = false;

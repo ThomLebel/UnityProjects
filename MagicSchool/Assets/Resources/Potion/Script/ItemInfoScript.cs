@@ -7,7 +7,7 @@ public class ItemInfoScript : MonoBehaviour
 
 	public string itemName;
 	public int maxItem = 3;
-	public List<GameObject> itemList;
+	public List<string> itemList;
 	public SpriteRenderer[] pictoList;
 
 
@@ -18,6 +18,6 @@ public class ItemInfoScript : MonoBehaviour
 	{
 		isHold = false;
 		isOccupied = false;
-		//itemList = new string[maxItem];
+		itemList = new List<string>();
 	}
 }
