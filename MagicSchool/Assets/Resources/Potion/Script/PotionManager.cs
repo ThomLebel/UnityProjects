@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class PotionManager : MonoBehaviour {
 
+	 
+
 	public List<Transform> SpawnPositionsList;
 
 	static public PotionManager Instance;
@@ -20,5 +22,10 @@ public class PotionManager : MonoBehaviour {
 
 			i++;
 		}
+	}
+
+	public void GenerateRecipe()
+	{
+
 	}
 }
