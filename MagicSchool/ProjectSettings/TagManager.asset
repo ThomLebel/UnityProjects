@@ -15,6 +15,7 @@ TagManager:
   - craftTable
   - location
   - pictoIngredient
+  - canvas
   layers:
   - Default
   - TransparentFX

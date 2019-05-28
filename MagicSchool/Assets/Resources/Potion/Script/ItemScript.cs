@@ -11,11 +11,10 @@ public class ItemScript : MonoBehaviour {
 	public bool isPrepared = false;
 	public bool onCraftingTable = false;
 	public GameObject craftingTable;
+	
+	public string prepName = "";
+	public Sprite prepSprite;
 
-	[SerializeField]
-	private string prepName = "";
-	[SerializeField]
-	private Sprite prepSprite;
 	private bool moving = false;
 
 	public ProgressBarScript _progressBarScript;
