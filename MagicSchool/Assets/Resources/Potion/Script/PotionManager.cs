@@ -5,7 +5,8 @@ using UnityEngine.UI;
 
 public class PotionManager : MonoBehaviour {
 
-	public float indicationSpace = 10f;
+	//public float indicationSpace = 10f;
+	public int maxRecipes = 6;
 
 	public List<GameObject> ingredientsList;
 
@@ -18,6 +19,7 @@ public class PotionManager : MonoBehaviour {
 	[SerializeField]
 	private GameObject canvas;
 
+	private float recipeSpace;
 	private float recipeWidth;
 	private float recipeHeight;
 
@@ -37,29 +39,38 @@ public class PotionManager : MonoBehaviour {
 
 			i++;
 		}
-		
+
+		recipeSpace = canvas.GetComponent<RectTransform>().rect.width / maxRecipes;
 		recipeWidth = recipePrefab.GetComponent<RectTransform>().rect.width;
 		recipeHeight = recipePrefab.GetComponent<RectTransform>().rect.height;
 
-
-		GenerateRecipe();
+		for (int r=0; r<maxRecipes; r++)
+		{
+			GenerateRecipe();
+		}
 	}
 
 	public void GenerateRecipe()
 	{
+		if (recipesList.Count >= maxRecipes)
+		{
+			return;
+		}
 		//List of all 4 basic ingredients shuffled
 		List<GameObject> tempIngredientList = ShuffleList(ingredientsList);
 
 		//List containing the recipe ingredients
 		List<string> recipeIngredient = new List<string>();
 
+		//X position of the recipe
+		float recipeX = ((canvas.GetComponent<RectTransform>().rect.width / 2) * -1) + (recipeSpace * recipesList.Count) + (recipeSpace / 2);
+
 		//Prefab of the recipe which will be drawn on screen
 		Image recipe = Instantiate(recipePrefab);
 		recipe.GetComponent<RectTransform>().SetParent(canvas.transform);
-		recipe.GetComponent<RectTransform>().localPosition = new Vector3(0f,0f,0f);
-		
-		int randIngredientQuantity = 4;
-		//int randIngredientQuantity = Random.Range(2, 4);
+		recipe.GetComponent<RectTransform>().anchoredPosition = new Vector2(recipeX, 0f);
+
+		int randIngredientQuantity = Random.Range(2, 4);
 		float ingredientSpace = recipeHeight / randIngredientQuantity;
 		
 		for (int i = 0; i < randIngredientQuantity; i++)
@@ -94,20 +105,22 @@ public class PotionManager : MonoBehaviour {
 			{
 				GameObject indicationElement = new GameObject();
 				Image indicationSprite = indicationElement.AddComponent<Image>();
+
 				indicationElement.GetComponent<RectTransform>().SetParent(recipe.transform);
 				indicationSprite.sprite = ingredient.GetComponentInChildren<SpriteRenderer>().sprite;
 				indicationSprite.SetNativeSize();
 				indicationElement.transform.localScale = new Vector3(0.2f, 0.2f, 1f);
-				float ingredientWidth = ingredientElement.GetComponent<RectTransform>().rect.width * 0.5f;
-				float indicationWidth = indicationElement.GetComponent<RectTransform>().rect.width * 0.2f;
-				float posX = (ingredientWidth / 2 + indicationWidth / 2 + indicationSpace) * -1;
+
+				//float ingredientWidth = ingredientElement.GetComponent<RectTransform>().rect.width * 0.5f;
+				//float indicationWidth = indicationElement.GetComponent<RectTransform>().rect.width * 0.2f;
+				//float posX = (ingredientWidth / 2 + indicationWidth / 2 + indicationSpace) * -1;
 
 				//float ingredientXSpace = recipeWidth / 4;
 				//xPos = (recipeWidth / 2) - (ingredientXSpace * 2) - (ingredientXSpace / 2);
 
-				indicationElement.GetComponent<RectTransform>().anchoredPosition = new Vector2(posX, yPos);
+				indicationElement.GetComponent<RectTransform>().anchoredPosition = new Vector2(-20f, yPos);
 
-				//xPos = (recipeWidth / 2) - ingredientXSpace - (ingredientXSpace / 2);
+				xPos = 20f;
 			}
 
 			ingredientElement.GetComponent<RectTransform>().anchoredPosition = new Vector2(xPos, yPos);

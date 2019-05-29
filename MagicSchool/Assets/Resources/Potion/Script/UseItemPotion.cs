@@ -233,12 +233,22 @@ public class UseItemPotion : MonoBehaviour
 	public void ServePotion(GameObject pTarget, GameObject pItem)
 	{
 		PotionMasterScript potionMasterScript = pTarget.GetComponent<PotionMasterScript>();
-		potionMasterScript.CheckPotionValidity(pItem.GetComponent<FioleScript>().itemList);
+		bool isPotionValide = potionMasterScript.CheckPotionValidity(gameObject, pItem.GetComponent<ItemInfoScript>().itemList);
 
+		RemovePicto(pItem);
 		Destroy(pItem.gameObject);
 
 		_playerInfo.isHolding = false;
 		itemHolded = null;
+
+		if (isPotionValide)
+		{
+			Debug.Log("Congrats ! You delivered a good potion");
+		}
+		else
+		{
+			Debug.Log("This potion isn't good, try again !");
+		}
 	}
 
 	public void AddItemToCauldron(GameObject pTarget, GameObject pItem)
