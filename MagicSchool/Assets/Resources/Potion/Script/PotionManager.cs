@@ -13,12 +13,17 @@ public class PotionManager : MonoBehaviour {
 	public List<Transform> SpawnPositionsList;
 
 	public List<List<string>> recipesList = new List<List<string>>();
+	public List<GameObject> recipeImageList = new List<GameObject>();
 
 	[SerializeField]
 	private Image recipePrefab;
 	[SerializeField]
+	private Sprite recipeSprite;
+	[SerializeField]
 	private GameObject canvas;
 
+	private float canvasWidth;
+	private float canvasHeight;
 	private float recipeSpace;
 	private float recipeWidth;
 	private float recipeHeight;
@@ -40,21 +45,34 @@ public class PotionManager : MonoBehaviour {
 			i++;
 		}
 
+		canvasWidth = canvas.GetComponent<RectTransform>().rect.width;
+		canvasHeight = canvas.GetComponent<RectTransform>().rect.height;
+
 		recipeSpace = canvas.GetComponent<RectTransform>().rect.width / maxRecipes;
 		recipeWidth = recipePrefab.GetComponent<RectTransform>().rect.width;
 		recipeHeight = recipePrefab.GetComponent<RectTransform>().rect.height;
 
+		//recipeWidth = recipeSprite.rect.width;
+		//recipeHeight = recipeSprite.rect.height;
+
+		float recipeAnimationTime = 1f;
+		float recipeAnimationDelay = 0f;
+
 		for (int r=0; r<maxRecipes; r++)
 		{
-			GenerateRecipe();
+			GameObject recipe = GenerateRecipe();
+
+			MoveRecipe(recipe, r, recipeAnimationTime, recipeAnimationDelay);
+
+			recipeAnimationDelay += recipeAnimationTime/2;
 		}
 	}
 
-	public void GenerateRecipe()
+	public GameObject GenerateRecipe()
 	{
 		if (recipesList.Count >= maxRecipes)
 		{
-			return;
+			return null;
 		}
 		//List of all 4 basic ingredients shuffled
 		List<GameObject> tempIngredientList = ShuffleList(ingredientsList);
@@ -62,13 +80,17 @@ public class PotionManager : MonoBehaviour {
 		//List containing the recipe ingredients
 		List<string> recipeIngredient = new List<string>();
 
-		//X position of the recipe
-		float recipeX = ((canvas.GetComponent<RectTransform>().rect.width / 2) * -1) + (recipeSpace * recipesList.Count) + (recipeSpace / 2);
-
 		//Prefab of the recipe which will be drawn on screen
-		Image recipe = Instantiate(recipePrefab);
+		GameObject recipe = new GameObject();
+		Image _recipeSprite = recipe.AddComponent<Image>();
+		recipe.AddComponent<RecipeScript>();
+		_recipeSprite.sprite = recipeSprite;
+		_recipeSprite.SetNativeSize();
+		recipe.GetComponent<RectTransform>().anchorMax = new Vector2(0.5f, 1f);
+		recipe.GetComponent<RectTransform>().anchorMin = new Vector2(0.5f, 1f);
+		recipe.GetComponent<RectTransform>().pivot = new Vector2(0.5f, 1f);
 		recipe.GetComponent<RectTransform>().SetParent(canvas.transform);
-		recipe.GetComponent<RectTransform>().anchoredPosition = new Vector2(recipeX, 0f);
+		recipe.GetComponent<RectTransform>().anchoredPosition = new Vector2((canvasWidth / 2 + recipeWidth / 2) + 10, 0f);
 
 		int randIngredientQuantity = Random.Range(2, 4);
 		float ingredientSpace = recipeHeight / randIngredientQuantity;
@@ -127,6 +149,25 @@ public class PotionManager : MonoBehaviour {
 		}
 
 		recipesList.Add(recipeIngredient);
+		recipeImageList.Add(recipe);
+
+		return recipe;
+	}
+
+	public void MoveRecipe(GameObject recipe, int index, float time, float delay)
+	{
+		RectTransform recipeTransform = recipe.GetComponent<RectTransform>();
+		
+		float recipeX = ((canvasWidth / 2) * -1) + (recipeSpace * index) + (recipeSpace / 2);
+
+		iTween.ValueTo(recipe, iTween.Hash(
+			"from", recipeTransform.anchoredPosition,
+			"to", new Vector2(recipeX, recipeTransform.anchoredPosition.y),
+			"time", time,
+			"delay", delay,
+			"onupdatetarget", recipe,
+			"onupdate", "MoveRecipe"
+		));
 	}
 
 	public static List<GameObject> ShuffleList(List<GameObject> aList)

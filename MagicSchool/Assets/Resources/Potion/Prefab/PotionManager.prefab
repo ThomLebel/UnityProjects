@@ -43,6 +43,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4ae09cebf8b503a44829054ede212957, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  maxRecipes: 6
   ingredientsList:
   - {fileID: 1526486081205436, guid: 875c987360799f74c923d57fde5c6834, type: 3}
   - {fileID: 1526486081205436, guid: 0c7d88aac3c04214aa79d23f1a4bc01d, type: 3}
@@ -51,3 +52,5 @@ MonoBehaviour:
   SpawnPositionsList: []
   recipePrefab: {fileID: 8904956403688207104, guid: be6d3d4a18621d942b1028e62a11028b,
     type: 3}
+  recipeSprite: {fileID: 21300000, guid: 378a95ebfc988bc4eb68abb001d6cc6b, type: 3}
+  canvas: {fileID: 0}

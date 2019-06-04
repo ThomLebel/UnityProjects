@@ -705,6 +705,7 @@
     <None Include="Assets\Anima2D\Readme.txt" />
     <None Include="Assets\Anima2D\Version.txt" />
     <None Include="Assets\Bug.txt" />
+    <None Include="Assets\Plugins\Pixelplacement\iTween\ReadMe!\ReadMe!.txt" />
     <None Include="Assets\StreamingAssets\build_info.txt" />
     <None Include="Assets\TODO.txt" />
     <None Include="Packages\com.unity.analytics\DataPrivacy\Unity.Analytics.DataPrivacy.asmdef" />

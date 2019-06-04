@@ -4,22 +4,24 @@ using UnityEngine;
 
 public class PotionMasterScript : MonoBehaviour {
 
+	public int pointByIngredient = 10;
+
 	[SerializeField]
 	private PotionManager potionManager;
 
-	public bool CheckPotionValidity(GameObject player, List<string> pPotion)
+	public int CheckPotionValidity(GameObject player, List<string> pPotion)
 	{
-		Debug.Log(pPotion);
+		int potionIndex = 0;
 		bool potionValide = false;
+		int score = 0;
 
 		if (potionManager.recipesList.Count > 0)
 		{
 			for (int i = 0; i < potionManager.recipesList.Count; i++)
 			{
 				List<string> recipe = potionManager.recipesList[i];
-				int ingredientValide = 0;
 
-				Debug.Log("Testing recipe number "+i);
+				int ingredientValide = 0;
 
 				if (recipe.Count == pPotion.Count)
 				{
@@ -35,19 +37,51 @@ public class PotionMasterScript : MonoBehaviour {
 					}
 					if (ingredientValide == recipe.Count)
 					{
+						potionIndex = i;
+						score = recipe.Count * pointByIngredient;
 						potionValide = true;
 						break;
 					}
-					
 				}
 			}
 		}
 
 		if (potionValide)
 		{
-			return true;
+			DestroyAndGenerateNewRecipe(potionIndex);
+			return score;
 		}
 
-		return false;
+		score = pPotion.Count * pointByIngredient / 2;
+		return score * -1;
+	}
+
+	private void MalusOnOtherPlayers()
+	{
+		Debug.Log("All other players get a malus");
+	}
+
+	private void DestroyAndGenerateNewRecipe(int potionIndex)
+	{
+		//Destroy the recipe
+		potionManager.recipesList.RemoveAt(potionIndex);
+		Destroy(potionManager.recipeImageList[potionIndex]);
+		potionManager.recipeImageList.RemoveAt(potionIndex);
+
+		//Generate a new recipe
+		GameObject recipe = potionManager.GenerateRecipe();
+
+		//Animate recipes that aren't at the right place
+		float recipeAnimationTime = 1f;
+		float recipeAnimationDelay = 0f;
+
+		for (int i = potionIndex; i < potionManager.maxRecipes; i++)
+		{
+			GameObject animatedRecipe = potionManager.recipeImageList[i];
+
+			potionManager.MoveRecipe(animatedRecipe, i, recipeAnimationTime, recipeAnimationDelay);
+
+			recipeAnimationDelay += recipeAnimationTime / 2;
+		}
 	}
 }

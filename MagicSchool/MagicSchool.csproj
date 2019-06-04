@@ -12,15 +12,12 @@
     <ProjectTypeGuids>{E097FAD1-6243-4DAD-9C02-E9B9EFC3FFC1};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <TargetFrameworkIdentifier>.NETFramework</TargetFrameworkIdentifier>
     <TargetFrameworkVersion>v4.6</TargetFrameworkVersion>
-    <TargetFrameworkProfile>
-    </TargetFrameworkProfile>
-    <CompilerResponseFile>
-    </CompilerResponseFile>
+    <TargetFrameworkProfile></TargetFrameworkProfile>
+    <CompilerResponseFile></CompilerResponseFile>
     <UnityProjectType>Game:1</UnityProjectType>
     <UnityBuildTarget>StandaloneWindows64:19</UnityBuildTarget>
     <UnityVersion>2019.1.0f2</UnityVersion>
-    <RootNamespace>
-    </RootNamespace>
+    <RootNamespace></RootNamespace>
     <LangVersion>6</LangVersion>
   </PropertyGroup>
   <PropertyGroup>
@@ -624,6 +621,10 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="MagicSchool.Plugins.csproj">
+      <Project>{7FCAEC6A-1013-0818-DDC4-521E650E0571}</Project>
+      <Name>MagicSchool.Plugins</Name>
+    </ProjectReference>
     <ProjectReference Include="Unity.Timeline.Editor.csproj">
       <Project>{7C87BE25-0A2E-FC58-1E14-37330F289AA3}</Project>
       <Name>Unity.Timeline.Editor</Name>
@@ -735,6 +736,7 @@
     <Compile Include="Assets\Resources\Potion\Script\PotionManager.cs" />
     <Compile Include="Assets\Resources\Potion\Script\PotionMasterScript.cs" />
     <Compile Include="Assets\Resources\Potion\Script\ProgressBarScript.cs" />
+    <Compile Include="Assets\Resources\Potion\Script\RecipeScript.cs" />
     <Compile Include="Assets\Resources\Potion\Script\SpellProjectileScript.cs" />
     <Compile Include="Assets\Resources\Potion\Script\UseItemPotion.cs" />
     <Compile Include="Assets\Unity-Logs-Viewer\Reporter\MultiKeyDictionary.cs" />
@@ -753,6 +755,7 @@
     <None Include="Assets\Anima2D\Readme.txt" />
     <None Include="Assets\Anima2D\Version.txt" />
     <None Include="Assets\Bug.txt" />
+    <None Include="Assets\Plugins\Pixelplacement\iTween\ReadMe!\ReadMe!.txt" />
     <None Include="Assets\StreamingAssets\build_info.txt" />
     <None Include="Assets\TODO.txt" />
     <None Include="Packages\com.unity.analytics\DataPrivacy\Unity.Analytics.DataPrivacy.asmdef" />

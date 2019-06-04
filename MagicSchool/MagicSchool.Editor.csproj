@@ -660,6 +660,10 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="MagicSchool.Plugins.csproj">
+      <Project>{7FCAEC6A-1013-0818-DDC4-521E650E0571}</Project>
+      <Name>MagicSchool.Plugins</Name>
+    </ProjectReference>
     <ProjectReference Include="MagicSchool.csproj">
       <Project>{96CCA89E-74E2-2635-E7AF-596F15E8EC14}</Project>
       <Name>MagicSchool</Name>
@@ -879,6 +883,7 @@
     <None Include="Assets\Anima2D\Readme.txt" />
     <None Include="Assets\Anima2D\Version.txt" />
     <None Include="Assets\Bug.txt" />
+    <None Include="Assets\Plugins\Pixelplacement\iTween\ReadMe!\ReadMe!.txt" />
     <None Include="Assets\StreamingAssets\build_info.txt" />
     <None Include="Assets\TODO.txt" />
     <None Include="Packages\com.unity.analytics\DataPrivacy\Unity.Analytics.DataPrivacy.asmdef" />

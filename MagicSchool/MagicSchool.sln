@@ -17,6 +17,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UnityEngine.XR.LegacyInputH
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UnityEngine.SpatialTracking", "UnityEngine.SpatialTracking.csproj", "{EDE48CFA-E9C6-66CB-F43E-070EAA2E76B0}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MagicSchool.Plugins", "MagicSchool.Plugins.csproj", "{7FCAEC6A-1013-0818-DDC4-521E650E0571}"
+EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Unity.TextMeshPro.Editor", "Unity.TextMeshPro.Editor.csproj", "{3A848AB7-9891-EDDA-D555-BF184C2F81F4}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Unity.Timeline.Editor", "Unity.Timeline.Editor.csproj", "{7C87BE25-0A2E-FC58-1E14-37330F289AA3}"
@@ -75,6 +77,10 @@ Global
 		{EDE48CFA-E9C6-66CB-F43E-070EAA2E76B0}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{EDE48CFA-E9C6-66CB-F43E-070EAA2E76B0}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{EDE48CFA-E9C6-66CB-F43E-070EAA2E76B0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7FCAEC6A-1013-0818-DDC4-521E650E0571}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7FCAEC6A-1013-0818-DDC4-521E650E0571}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7FCAEC6A-1013-0818-DDC4-521E650E0571}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7FCAEC6A-1013-0818-DDC4-521E650E0571}.Release|Any CPU.Build.0 = Release|Any CPU
 		{3A848AB7-9891-EDDA-D555-BF184C2F81F4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{3A848AB7-9891-EDDA-D555-BF184C2F81F4}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3A848AB7-9891-EDDA-D555-BF184C2F81F4}.Release|Any CPU.ActiveCfg = Release|Any CPU

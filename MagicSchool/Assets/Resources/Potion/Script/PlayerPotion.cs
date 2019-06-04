@@ -208,7 +208,7 @@ public class PlayerPotion : MonoBehaviour
 
 	private void PrepareItem()
 	{
-		if (_playerInfo.isStun)
+		if (_playerInfo.isStun || _playerInfo.isHolding)
 		{
 			_playerInfo.isPreparing = false;
 			return;

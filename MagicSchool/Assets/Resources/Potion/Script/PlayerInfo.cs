@@ -8,7 +8,6 @@ using UnityEngine.Rendering;
 
 public class PlayerInfo : MonoBehaviour
 {
-
 	//States
 	//[HideInInspector]
 	public Transform groundCheck;
@@ -42,6 +41,8 @@ public class PlayerInfo : MonoBehaviour
 	public int playerTeam;
 
 	public float pickUpRange = 0.5f;
+
+	public float score = 0;
 	
 	public GameObject playerBody;
 

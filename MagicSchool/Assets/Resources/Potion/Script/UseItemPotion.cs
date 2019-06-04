@@ -233,7 +233,7 @@ public class UseItemPotion : MonoBehaviour
 	public void ServePotion(GameObject pTarget, GameObject pItem)
 	{
 		PotionMasterScript potionMasterScript = pTarget.GetComponent<PotionMasterScript>();
-		bool isPotionValide = potionMasterScript.CheckPotionValidity(gameObject, pItem.GetComponent<ItemInfoScript>().itemList);
+		int score = potionMasterScript.CheckPotionValidity(gameObject, pItem.GetComponent<ItemInfoScript>().itemList);
 
 		RemovePicto(pItem);
 		Destroy(pItem.gameObject);
@@ -241,7 +241,9 @@ public class UseItemPotion : MonoBehaviour
 		_playerInfo.isHolding = false;
 		itemHolded = null;
 
-		if (isPotionValide)
+		_playerInfo.score += score;
+
+		if (score > 0)
 		{
 			Debug.Log("Congrats ! You delivered a good potion");
 		}
