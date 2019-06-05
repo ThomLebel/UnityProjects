@@ -14,10 +14,17 @@ namespace Com.OniriqueStudio.MagicSchool
 		[Tooltip("The prefab to use for representing the player")]
 		public GameObject playerPrefab;
 
+		[Tooltip("The list of all players")]
+		public List<GameObject> players = new List<GameObject>();
+
 		#endregion
 
 
 		#region MonoBehaviour CallBacks
+		private void Awake()
+		{
+			DontDestroyOnLoad(this.gameObject);
+		}
 
 		private void Start()
 		{

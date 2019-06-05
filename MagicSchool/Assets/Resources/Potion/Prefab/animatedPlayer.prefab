@@ -265,6 +265,7 @@ MonoBehaviour:
   playerSprite: {fileID: 0}
   playerTeam: 0
   pickUpRange: 1
+  score: 0
   playerBody: {fileID: 0}
 --- !u!114 &114858662794190148
 MonoBehaviour:
@@ -278,17 +279,32 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 93f25d482b4c7ff4385202e435a7d384, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  speed: 150
+  originalSpeed: 150
+  speed: 0
+  slowedSpeed: 40
   jumpTakeOff: 1000
   lastDir: {x: 1, y: 0, z: 0}
+  inverted: 1
   shootCastRate: 1.5
   protectCastRate: 6.5
   spellForce: 100
   stunTime: 2
   protectedTime: 5
+  invertedTime: 4
+  slowedTime: 4
+  silenceTime: 4
+  heavyTime: 4
+  uncarryTime: 4
+  uncraftTime: 4
   grounded: 0
   isJumping: 0
   isFalling: 0
+  isInverted: 0
+  isSlowed: 0
+  isSilenced: 0
+  isHeavy: 0
+  cantCarry: 0
+  cantCraft: 0
 --- !u!114 &114432932280025118
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -302,6 +318,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   itemLocation: {fileID: 7136184711230565123}
+  itemHolded: {fileID: 0}
   pictoList:
   - {fileID: 6858813212503744918}
   - {fileID: 3778094972494674477}
@@ -676,6 +693,16 @@ PrefabInstance:
       propertyPath: m_Name
       value: base_wizard
       objectReference: {fileID: 0}
+    - target: {fileID: 2662935719826736981, guid: 38fb1766d052d9a4c937deedb19dfe4a,
+        type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2662935719826736981, guid: 38fb1766d052d9a4c937deedb19dfe4a,
+        type: 3}
+      propertyPath: m_LocalPosition.y
+      value: -0.012
+      objectReference: {fileID: 0}
     - target: {fileID: 4286349849150333122, guid: 38fb1766d052d9a4c937deedb19dfe4a,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -865,16 +892,6 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Layer
       value: 19
-      objectReference: {fileID: 0}
-    - target: {fileID: 2662935719826736981, guid: 38fb1766d052d9a4c937deedb19dfe4a,
-        type: 3}
-      propertyPath: m_LocalPosition.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 2662935719826736981, guid: 38fb1766d052d9a4c937deedb19dfe4a,
-        type: 3}
-      propertyPath: m_LocalPosition.y
-      value: -0.012
       objectReference: {fileID: 0}
     - target: {fileID: 4286349848269234852, guid: 38fb1766d052d9a4c937deedb19dfe4a,
         type: 3}

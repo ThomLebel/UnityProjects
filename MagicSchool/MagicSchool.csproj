@@ -730,6 +730,7 @@
     <Compile Include="Assets\Resources\Potion\Script\ItemDispenserScript.cs" />
     <Compile Include="Assets\Resources\Potion\Script\ItemInfoScript.cs" />
     <Compile Include="Assets\Resources\Potion\Script\ItemScript.cs" />
+    <Compile Include="Assets\Resources\Potion\Script\MalusScript.cs" />
     <Compile Include="Assets\Resources\Potion\Script\MapInformation.cs" />
     <Compile Include="Assets\Resources\Potion\Script\PlayerInfo.cs" />
     <Compile Include="Assets\Resources\Potion\Script\PlayerPotion.cs" />

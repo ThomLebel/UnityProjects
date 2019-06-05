@@ -48,6 +48,8 @@ public class PlayerInfo : MonoBehaviour
 
 	private void Awake()
 	{
+		DontDestroyOnLoad(this.gameObject);
+
 		playerBody = gameObject.transform.Find("base_wizard").gameObject;
 		//spriteRenderer = gameObject.GetComponentInChildren<SpriteRenderer>();
 		rb2d = GetComponent<Rigidbody2D>();

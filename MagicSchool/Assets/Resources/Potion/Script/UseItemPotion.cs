@@ -245,10 +245,12 @@ public class UseItemPotion : MonoBehaviour
 
 		if (score > 0)
 		{
+			//Play happy animation
 			Debug.Log("Congrats ! You delivered a good potion");
 		}
 		else
 		{
+			//Play sad animation
 			Debug.Log("This potion isn't good, try again !");
 		}
 	}

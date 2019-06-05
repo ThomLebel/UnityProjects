@@ -105,6 +105,14 @@ namespace Com.OniriqueStudio.MagicSchool
 				{
 					if (gameReady)
 					{
+						for (int i=0; i<playerPrefabList.Count; i++)
+						{
+							if (playerPrefabList[i] != null)
+							{
+								GameManager.Instance.players.Add(playerPrefabList[i]);
+							}
+						}
+
 						string levelName = "Room for "+playersReady;
 						GameManager.Instance.LoadArena(levelName);
 					}

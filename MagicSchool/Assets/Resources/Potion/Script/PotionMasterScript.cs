@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using Com.OniriqueStudio.MagicSchool;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -6,8 +7,11 @@ public class PotionMasterScript : MonoBehaviour {
 
 	public int pointByIngredient = 10;
 
+	public MalusScript malusScript;
+
 	[SerializeField]
 	private PotionManager potionManager;
+
 
 	public int CheckPotionValidity(GameObject player, List<string> pPotion)
 	{
@@ -48,17 +52,45 @@ public class PotionMasterScript : MonoBehaviour {
 
 		if (potionValide)
 		{
+			MalusOnOtherPlayers(player);
 			DestroyAndGenerateNewRecipe(potionIndex);
 			return score;
 		}
 
+		MalusOnPlayer(player);
 		score = pPotion.Count * pointByIngredient / 2;
 		return score * -1;
 	}
 
-	private void MalusOnOtherPlayers()
+	private void MalusOnOtherPlayers(GameObject player)
 	{
 		Debug.Log("All other players get a malus");
+		int playerID = player.GetComponent<PlayerInfo>().playerID;
+
+		if (GameManager.Instance.players.Count > 1)
+		{
+			int malusIndex = Random.Range(0, malusScript.malusList.Count);
+
+			List<GameObject> playersList = GameManager.Instance.players;
+			for (int i=0; i<playersList.Count; i++)
+			{
+				GameObject target = playersList[i];
+				int targetID = target.GetComponent<PlayerInfo>().playerID;
+
+				//A changer par le team ID
+				if (targetID != playerID)
+				{
+					malusScript.malusList[malusIndex](target);
+				}
+			}
+		}
+	}
+
+	private void MalusOnPlayer(GameObject player)
+	{
+		Debug.Log("You get a malus");
+		int malusIndex = Random.Range(0, malusScript.malusList.Count);
+		malusScript.malusList[malusIndex](player);
 	}
 
 	private void DestroyAndGenerateNewRecipe(int potionIndex)

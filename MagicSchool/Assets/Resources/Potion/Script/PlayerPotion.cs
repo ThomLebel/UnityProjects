@@ -10,15 +10,24 @@ using System;
 
 public class PlayerPotion : MonoBehaviour
 {
-	public float speed = 40f;
+	public float originalSpeed = 150f;
+	public float speed;
+	public float slowedSpeed = 40f;
 	public float jumpTakeOff = 40f;
 	public Vector3 lastDir;
+	public float inverted = 1f;
 
 	public float shootCastRate;
 	public float protectCastRate;
 	public float spellForce;
 	public float stunTime;
 	public float protectedTime;
+	public float invertedTime;
+	public float slowedTime;
+	public float silenceTime;
+	public float heavyTime;
+	public float uncarryTime;
+	public float uncraftTime;
 
 	private PlayerInfo _playerInfo;
 	private UseItemPotion _useItem;
@@ -32,28 +41,40 @@ public class PlayerPotion : MonoBehaviour
 	private bool isJumping = false;
 	[SerializeField]
 	private bool isFalling = false;
+	[SerializeField]
+	private bool isInverted = false;
+	[SerializeField]
+	private bool isSlowed = false;
+	[SerializeField]
+	private bool isSilenced = false;
+	[SerializeField]
+	private bool isHeavy = false;
+	[SerializeField]
+	private bool cantCarry = false;
+	[SerializeField]
+	private bool cantCraft = false;
+
 	private Collider2D platformCollider;
 	private IEnumerator stunCoroutine;
 	private IEnumerator protectCoroutine;
+	private IEnumerator invertCoroutine;
+	private IEnumerator slowCoroutine;
+	private IEnumerator silenceCoroutine;
+	private IEnumerator heavyCoroutine;
+	private IEnumerator uncarryCoroutine;
+	private IEnumerator uncraftCoroutine;
 
 	private float nextCastShoot;
 	private float nextCastProtect;
 	private Vector3 shootingDir;
 
 	private CapsuleCollider2D playerCollider;
-	//private SpriteRenderer spriteRenderer;
 	private Animator animator;
 
 
 	void Awake()
 	{
-		//#Critical
-		//we flag as don't destroy on load so that instance survives level synchronization, thus giving a seamless experience when levels load.
-		DontDestroyOnLoad(this.gameObject);
-
-		//rb2d = GetComponent<Rigidbody2D>();
 		playerCollider = gameObject.GetComponent<CapsuleCollider2D>();
-		//spriteRenderer = gameObject.GetComponentInChildren<SpriteRenderer>();
 		animator = gameObject.GetComponentInChildren<Animator>();
 	}
 
@@ -63,6 +84,7 @@ public class PlayerPotion : MonoBehaviour
 		_useItem = gameObject.GetComponent<UseItemPotion>();
 
 		lastDir = new Vector3(1, 0, 0);
+		speed = originalSpeed;
 
 
 #if UNITY_MIN_5_4
@@ -109,7 +131,7 @@ public class PlayerPotion : MonoBehaviour
 
 		animator.SetBool("playerMove", false);
 
-		horizontal = Input.GetAxisRaw("Horizontal_P" + _playerInfo.playerController);     //Used to store the horizontal move direction.
+		horizontal = Input.GetAxisRaw("Horizontal_P" + _playerInfo.playerController) * inverted;     //Used to store the horizontal move direction.
 		vertical = Input.GetAxisRaw("Vertical_P" + _playerInfo.playerController);       //Used to store the vertical move direction.
 
 		if (Math.Abs(horizontal) > safeSpot)
@@ -141,7 +163,7 @@ public class PlayerPotion : MonoBehaviour
 			animator.SetBool("playerFall", false);
 		}
 
-		if (vertical > safeSpot && !isJumping && grounded)
+		if (vertical > safeSpot && !isJumping && grounded && !isHeavy)
 		{
 			isJumping = true;
 			_playerInfo.rb2d.AddForce(new Vector2(0f, jumpTakeOff));
@@ -195,7 +217,7 @@ public class PlayerPotion : MonoBehaviour
 	{
 		if (Input.GetButtonDown("Fire1_P" + _playerInfo.playerController))
 		{
-			if (!_playerInfo.isHolding)
+			if (!_playerInfo.isHolding && !cantCarry)
 			{
 				_useItem.PickItem();
 			}
@@ -208,7 +230,7 @@ public class PlayerPotion : MonoBehaviour
 
 	private void PrepareItem()
 	{
-		if (_playerInfo.isStun || _playerInfo.isHolding)
+		if (_playerInfo.isStun || _playerInfo.isHolding || cantCraft)
 		{
 			_playerInfo.isPreparing = false;
 			return;
@@ -236,7 +258,7 @@ public class PlayerPotion : MonoBehaviour
 
 	private void CastSpell()
 	{
-		if (_playerInfo.isHolding || _playerInfo.isPreparing)
+		if (_playerInfo.isHolding || _playerInfo.isPreparing || isSilenced)
 		{
 			return;
 		}
@@ -295,24 +317,6 @@ public class PlayerPotion : MonoBehaviour
 		_playerInfo.bubblePrefab.GetComponentInChildren<Animator>().enabled = true;
 	}
 
-	private IEnumerator PlayerStun(float stunTime)
-	{
-		yield return new WaitForSeconds(stunTime);
-		animator.SetBool("playerStun", false);
-		_playerInfo.canMove = true;
-		_playerInfo.isStun = false;
-		_playerInfo.State = "idle";
-		Debug.Log("Isn't stun anymore !");
-	}
-
-	private IEnumerator PlayerProtected(float protectedTime)
-	{
-		yield return new WaitForSeconds(protectedTime);
-		DestroyBubble();
-		_playerInfo.State = "idle";
-		Debug.Log("Isn't protected anymore !");
-	}
-
 	private void DestroyBubble()
 	{
 		_playerInfo.isProtected = false;
@@ -347,5 +351,145 @@ public class PlayerPotion : MonoBehaviour
 		StartCoroutine(stunCoroutine);
 
 		_playerInfo.rb2d.AddForce(new Vector2(spellForce * pDir.x, _playerInfo.rb2d.velocity.y), ForceMode2D.Force);
+	}
+
+	public void InvertDirection()
+	{
+		if (isInverted)
+		{
+			return;
+		}
+
+		isInverted = true;
+		inverted = -1f;
+
+		invertCoroutine = PlayerInverted(invertedTime);
+		StartCoroutine(invertCoroutine);
+	}
+
+	public void SlowSpeed()
+	{
+		if (isSlowed)
+		{
+			return;
+		}
+
+		isSlowed = true;
+		speed = slowedSpeed;
+
+		slowCoroutine = PlayerSlowed(invertedTime);
+		StartCoroutine(slowCoroutine);
+	}
+
+	public void SilencePlayer()
+	{
+		if (isSilenced)
+		{
+			return;
+		}
+
+		isSilenced = true;
+
+		silenceCoroutine = PlayerSilenced(silenceTime);
+		StartCoroutine(silenceCoroutine);
+	}
+
+	public void HeavyPlayer()
+	{
+		if (isSilenced)
+		{
+			return;
+		}
+
+		isHeavy = true;
+
+		heavyCoroutine = PlayerHeavy(heavyTime);
+		StartCoroutine(heavyCoroutine);
+	}
+
+	public void PlayerCantCarry()
+	{
+		if (cantCarry)
+		{
+			return;
+		}
+
+		cantCarry = true;
+
+		uncarryCoroutine = CantCarry(uncarryTime);
+		StartCoroutine(uncarryCoroutine);
+	}
+
+	public void PlayerCantCraft()
+	{
+		if (cantCraft)
+		{
+			return;
+		}
+
+		cantCraft = true;
+
+		uncraftCoroutine = CantCraft(uncraftTime);
+		StartCoroutine(uncraftCoroutine);
+	}
+
+	private IEnumerator PlayerStun(float time)
+	{
+		yield return new WaitForSeconds(time);
+		animator.SetBool("playerStun", false);
+		_playerInfo.canMove = true;
+		_playerInfo.isStun = false;
+		_playerInfo.State = "idle";
+		Debug.Log("Isn't stun anymore !");
+	}
+
+	private IEnumerator PlayerProtected(float time)
+	{
+		yield return new WaitForSeconds(time);
+		DestroyBubble();
+		_playerInfo.State = "idle";
+		Debug.Log("Isn't protected anymore !");
+	}
+
+	private IEnumerator PlayerInverted(float time)
+	{
+		yield return new WaitForSeconds(time);
+		inverted = 1f;
+		isInverted = false;
+	}
+
+	private IEnumerator PlayerSlowed(float time)
+	{
+		yield return new WaitForSeconds(time);
+		speed = originalSpeed;
+		isSlowed = false;
+	}
+
+	private IEnumerator PlayerSilenced(float time)
+	{
+		yield return new WaitForSeconds(time);
+
+		isSilenced = false;
+	}
+
+	private IEnumerator PlayerHeavy(float time)
+	{
+		yield return new WaitForSeconds(time);
+
+		isHeavy = false;
+	}
+
+	private IEnumerator CantCarry(float time)
+	{
+		yield return new WaitForSeconds(time);
+
+		cantCarry = false;
+	}
+
+	private IEnumerator CantCraft(float time)
+	{
+		yield return new WaitForSeconds(time);
+
+		cantCraft = false;
 	}
 }

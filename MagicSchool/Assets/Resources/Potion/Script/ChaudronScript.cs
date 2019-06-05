@@ -120,10 +120,15 @@ public class ChaudronScript : MonoBehaviour
 			if (isCooking)
 			{
 				Debug.Log("On accélère la cuisson du chaudron du joueur " + playerOwner);
-				cookingCoef = 0.1f;
-				burningDelay = 3f;
+				IncreaseFire();
 			}
 		}
+	}
+
+	public void IncreaseFire()
+	{
+		cookingCoef = 0.1f;
+		burningDelay = 3f;
 	}
 
 	private void Cooking()
