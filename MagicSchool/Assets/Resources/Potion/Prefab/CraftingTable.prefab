@@ -11,7 +11,8 @@ GameObject:
   - component: {fileID: 4094604416435568}
   - component: {fileID: 61944697250046570}
   - component: {fileID: 50716729431601302}
-  - component: {fileID: 114499826091622788}
+  - component: {fileID: 644590233104396589}
+  - component: {fileID: 6507234544624353656}
   m_Layer: 0
   m_Name: CraftingTable
   m_TagString: craftTable
@@ -83,7 +84,7 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 0
---- !u!114 &114499826091622788
+--- !u!114 &644590233104396589
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -92,14 +93,22 @@ MonoBehaviour:
   m_GameObject: {fileID: 1220091372219834}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f3082c55f6102554d81cca66ddf29ad5, type: 3}
+  m_Script: {fileID: 11500000, guid: f1125b9981d5c7447813ce8f5f869622, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   itemName: CraftingTable
-  maxItem: 3
-  itemList: []
-  pictoList: []
-  isHold: 0
+--- !u!114 &6507234544624353656
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1220091372219834}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 80724420bebb24e4a88eaa2360df9470, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
   isOccupied: 0
 --- !u!1 &1222100091375136
 GameObject:

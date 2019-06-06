@@ -3,10 +3,8 @@ using System.Collections.Generic;
 using System.Reflection;
 using UnityEngine;
 
-public class ChaudronScript : MonoBehaviour
+public class ChaudronScript : ItemScript
 {
-	public int playerOwner;
-
 	public bool isFull;
 	public bool isCooking;
 	public bool isDone;
@@ -19,9 +17,10 @@ public class ChaudronScript : MonoBehaviour
 	private float burningTimer = 0f;
 	private float initialBurningDelay;
 
-	public GameObject _progressBar;
-	public ProgressBarScript _progressBarScript;
-	private ItemInfoScript _itemInfo;
+	public GameObject progressBar;
+	public ProgressBarScript progressBarScript;
+	public AffiliableScript affiliableScript;
+	private FillableScript fillableScript;
 
 	private Color _barColor;
 	private float _burningCoef = 0f;
@@ -29,10 +28,10 @@ public class ChaudronScript : MonoBehaviour
 	// Use this for initialization
 	void Start()
 	{
-		_itemInfo = gameObject.GetComponent<ItemInfoScript>();
-		_progressBarScript = _progressBar.GetComponent<ProgressBarScript>();
+		fillableScript = gameObject.GetComponent<FillableScript>();
+		progressBarScript = progressBar.GetComponent<ProgressBarScript>();
 
-		_barColor = _progressBar.GetComponentInChildren<SpriteRenderer>().color;
+		_barColor = progressBar.GetComponentInChildren<SpriteRenderer>().color;
 
 		isFull = false;
 		isCooking = false;
@@ -45,33 +44,33 @@ public class ChaudronScript : MonoBehaviour
 
 	private void Update()
 	{
-		if (isCooking && _itemInfo.itemList.Count > 0)
+		if (isCooking && fillableScript.itemList.Count > 0)
 		{
 			Cooking();
 		}
-		if (_itemInfo.itemList.Count == 0)
+		if (fillableScript.itemList.Count == 0)
 		{
-			_progressBarScript.value = 0f;
+			progressBarScript.value = 0f;
 		}
 	}
 
 	public void AddItem(string pName, Sprite pSprite)
 	{
-		if (_itemInfo.itemList.Count < _itemInfo.maxItem)
+		if (fillableScript.itemList.Count < fillableScript.maxItem)
 		{
 			isDone = false;
 			isBurning = false;
-			_progressBar.GetComponentInChildren<SpriteRenderer>().color = _barColor;
+			progressBar.GetComponentInChildren<SpriteRenderer>().color = _barColor;
 			_burningCoef = 0f;
 			burningDelay = initialBurningDelay;
 			
 			SpriteRenderer currentPicto = null;
 
-			for (int i = _itemInfo.pictoList.Length - 1; i >= 0; i--)
+			for (int i = fillableScript.pictoList.Length - 1; i >= 0; i--)
 			{
-				if (_itemInfo.pictoList[i].sprite == null)
+				if (fillableScript.pictoList[i].sprite == null)
 				{
-					currentPicto = _itemInfo.pictoList[i];
+					currentPicto = fillableScript.pictoList[i];
 				}
 			}
 			if (currentPicto != null)
@@ -79,13 +78,13 @@ public class ChaudronScript : MonoBehaviour
 				currentPicto.sprite = pSprite;
 			}
 
-			_itemInfo.itemList.Add(pName);
+			fillableScript.itemList.Add(pName);
 
-			if (_itemInfo.itemList.Count > 1)
+			if (fillableScript.itemList.Count > 1)
 			{
-				_progressBarScript.value = (_progressBarScript.value / 3f) * 2f;
+				progressBarScript.value = (progressBarScript.value / 3f) * 2f;
 			}
-			if (_itemInfo.itemList.Count == _itemInfo.maxItem)
+			if (fillableScript.itemList.Count == fillableScript.maxItem)
 			{
 				isFull = true;
 			}
@@ -100,14 +99,14 @@ public class ChaudronScript : MonoBehaviour
 	public void ControlFire(int pPlayerOwner)
 	{
 		Debug.Log("On joue avec le feu");
-		if (pPlayerOwner == playerOwner)
+		if (pPlayerOwner == affiliableScript.teamID)
 		{
 			Debug.Log("Est-ce que le chaudron brule ?");
 			if (isBurning)
 			{
 				Debug.Log("on éteint son chaudron");
 				isBurning = false;
-				_progressBar.GetComponentInChildren<SpriteRenderer>().color = _barColor;
+				progressBar.GetComponentInChildren<SpriteRenderer>().color = _barColor;
 				_burningCoef = 0f;
 				burningDelay = initialBurningDelay;
 
@@ -119,7 +118,7 @@ public class ChaudronScript : MonoBehaviour
 		{
 			if (isCooking)
 			{
-				Debug.Log("On accélère la cuisson du chaudron du joueur " + playerOwner);
+				Debug.Log("On accélère la cuisson du chaudron du joueur " + affiliableScript.teamID);
 				IncreaseFire();
 			}
 		}
@@ -133,11 +132,11 @@ public class ChaudronScript : MonoBehaviour
 
 	private void Cooking()
 	{
-		if (_progressBarScript.value < 1)
-			_progressBarScript.value += Time.deltaTime * cookingCoef;
+		if (progressBarScript.value < 1)
+			progressBarScript.value += Time.deltaTime * cookingCoef;
 		else
 		{
-			_progressBarScript.value = 1;
+			progressBarScript.value = 1;
 			if (!isDone)
 			{
 				burningTimer = Time.time + burningDelay;
@@ -145,14 +144,14 @@ public class ChaudronScript : MonoBehaviour
 			}
 			if (isDone && !isBurning)
 			{
-				_progressBar.GetComponentInChildren<SpriteRenderer>().color = Color.Lerp(_barColor, Color.red, _burningCoef);
+				progressBar.GetComponentInChildren<SpriteRenderer>().color = Color.Lerp(_barColor, Color.red, _burningCoef);
 				_burningCoef += Time.deltaTime / burningDelay;
 			}
 			if (Time.time > burningTimer && !isBurning && isCooking)
 			{
 				isBurning = true;
 				Burning();
-				_progressBar.GetComponentInChildren<SpriteRenderer>().color = Color.red;
+				progressBar.GetComponentInChildren<SpriteRenderer>().color = Color.red;
 			}
 		}
 	}
@@ -164,27 +163,27 @@ public class ChaudronScript : MonoBehaviour
 
 	public void Empty()
 	{
-		_progressBarScript.value = 0f;
-		_progressBarScript.ToggleVisibility(false);
-		_itemInfo.itemList = new List<string>();
+		progressBarScript.value = 0f;
+		progressBarScript.ToggleVisibility(false);
+		fillableScript.itemList = new List<string>();
 		isDone = false;
 		isFull = false;
 		isCooking = false;
 		isBurning = false;
 
-		for (int i = 0; i < _itemInfo.pictoList.Length; i++)
+		for (int i = 0; i < fillableScript.pictoList.Length; i++)
 		{
-			_itemInfo.pictoList[i].sprite = null;
+			fillableScript.pictoList[i].sprite = null;
 		}
 	}
 
 	public void SetCookingTime(float pTime)
 	{
-		_progressBarScript.value = pTime;
+		progressBarScript.value = pTime;
 	}
 
 	public float GetCookingTime()
 	{
-		return _progressBarScript.value;
+		return progressBarScript.value;
 	}
 }

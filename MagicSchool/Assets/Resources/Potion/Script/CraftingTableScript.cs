@@ -2,13 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class CraftingTableScript : MonoBehaviour
+public class CraftingTableScript : ItemScript
 {
-
-	public bool isOccupied;
-
-	private void Start()
-	{
-		isOccupied = false;
-	}
+	//We might do something here
 }

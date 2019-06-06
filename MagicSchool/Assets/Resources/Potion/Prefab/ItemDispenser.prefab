@@ -91,6 +91,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c3cd4164a0bb5b34fa4a61258f362be1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  itemName: itemD
   itemGiven: {fileID: 1526486081205436, guid: 875c987360799f74c923d57fde5c6834, type: 3}
   cooldown: 5
 --- !u!1 &1572967729072596

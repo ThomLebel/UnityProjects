@@ -3,9 +3,8 @@ using System.Collections.Generic;
 using System.Reflection;
 using UnityEngine;
 
-public class ItemDispenserScript : MonoBehaviour
+public class ItemDispenserScript : ItemScript
 {
-
 	public GameObject itemGiven;
 
 	public int cooldown;
@@ -28,7 +27,6 @@ public class ItemDispenserScript : MonoBehaviour
 			item = Instantiate(itemGiven) as GameObject;
 
 			pPlayer.GetComponent<UseItemPotion>().PickUp(item);
-			
 
 			elapsedTime = Time.time + cooldown;
 			timeBeforeNextItem = cooldown;

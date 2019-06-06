@@ -6,7 +6,7 @@ public class ItemInfoScript : MonoBehaviour
 {
 
 	public string itemName;
-	public int maxItem = 3;
+	public int maxItem = 4;
 	public List<string> itemList;
 	public SpriteRenderer[] pictoList;
 

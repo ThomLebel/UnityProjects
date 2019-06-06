@@ -10,8 +10,8 @@ public class UseItemPotion : MonoBehaviour
 	[SerializeField]
 	private GameObject itemHolded;
 
-	private PlayerInfo _playerInfo;
-	private PlayerPotion _playerAction;
+	private PlayerInfo playerInfo;
+	private PlayerPotion playerAction;
 	[SerializeField]
 	private SpriteRenderer[] pictoList;
 
@@ -19,14 +19,14 @@ public class UseItemPotion : MonoBehaviour
 
 	private void Start()
 	{
-		_playerInfo = gameObject.GetComponent<PlayerInfo>();
-		_playerAction = gameObject.GetComponent<PlayerPotion>();
+		playerInfo = gameObject.GetComponent<PlayerInfo>();
+		playerAction = gameObject.GetComponent<PlayerPotion>();
 	}
 
 	//Pick-up item !
 	public void PickItem()
 	{
-		Collider2D target = GetClosestCollider(_playerInfo.pickupTags);
+		Collider2D target = GetClosestCollider(playerInfo.pickupTags);
 
 		if (target != null)
 		{
@@ -79,7 +79,7 @@ public class UseItemPotion : MonoBehaviour
 					}
 					else
 					{
-						if (!itemHolded.GetComponent<ItemScript>().isPrepared)
+						if (!itemHolded.GetComponent<IngredientScript>().isPrepared)
 						{
 							AddItemToCauldron(target.gameObject, itemHolded.gameObject);
 						}
@@ -101,7 +101,7 @@ public class UseItemPotion : MonoBehaviour
 					}
 					else
 					{
-						if (!target.GetComponent<ItemScript>().isPrepared)
+						if (!target.GetComponent<IngredientScript>().isPrepared)
 						{
 							AddItemToCauldron(itemHolded.gameObject, target.gameObject);
 						}
@@ -133,19 +133,19 @@ public class UseItemPotion : MonoBehaviour
 	//Prepare ingredient
 	public void PrepareItem()
 	{
-		//Collider2D target = GetClosestCollider(_playerInfo.craftTableLayer);
+		//Collider2D target = GetClosestCollider(playerInfo.craftTableLayer);
 		Collider2D target = GetClosestCollider(new string[] { "craftTable" });
 
 		if (target != null)
 		{
-			ItemScript _itemScript = target.GetComponentInChildren<ItemScript>();
-			if (_itemScript.onCraftingTable)
+			IngredientScript ingredientScript = target.GetComponentInChildren<IngredientScript>();
+			if (target.GetComponentInChildren<SupportableScript>().onSupport)
 			{
 				if (CheckPlayerDirection(target))
 				{
-					if (_playerInfo.isPreparing)
+					if (playerInfo.isPreparing)
 					{
-						_itemScript.PrepareIngredient();
+						ingredientScript.PrepareIngredient();
 					}
 				}
 			}
@@ -155,28 +155,35 @@ public class UseItemPotion : MonoBehaviour
 
 	public void SwitchContent(GameObject pTarget, GameObject pItem)
 	{
-		ItemInfoScript targetInfoScript = pTarget.GetComponent<ItemInfoScript>();
-		ItemInfoScript itemInfoScript = pItem.GetComponent<ItemInfoScript>();
-		ChaudronScript chaudronScript = pItem.GetComponent<ChaudronScript>();
+		FillableScript targetFillableScript = pTarget.GetComponent<FillableScript>();
+		FillableScript itemFillableScript = pItem.GetComponent<FillableScript>();
+		ChaudronScript chaudronScript;
 
-		if (chaudronScript == null)
+		if (pItem.tag == "chaudron")
+		{
+			chaudronScript = pItem.GetComponent<ChaudronScript>();
+		}
+		else
+		{
 			chaudronScript = pTarget.GetComponent<ChaudronScript>();
+		}
+			
 
-		Debug.Log("target : " + targetInfoScript.itemName + "; item Count : " + targetInfoScript.itemList.Count + " && item : " + itemInfoScript.itemName + "; item Count : " + itemInfoScript.itemList.Count);
+		Debug.Log("target : " + pTarget.tag + "; item Count : " + targetFillableScript.itemList.Count + " && item : " + pItem.tag + "; item Count : " + itemFillableScript.itemList.Count);
 
-		if (targetInfoScript.itemList.Count == 0 && itemInfoScript.itemList.Count != 0)
+		if (targetFillableScript.itemList.Count == 0 && itemFillableScript.itemList.Count != 0)
 		{
 			if (pTarget.tag == "chaudron")
 			{
 				Debug.Log("On tient une potion pleine et on la verse dans le chaudron vide");
-				for (int i = 0; i < itemInfoScript.itemList.Count; i++)
+				for (int i = 0; i < itemFillableScript.itemList.Count; i++)
 				{
-					chaudronScript.AddItem(itemInfoScript.itemList[i], itemInfoScript.pictoList[i].sprite);
-					itemInfoScript.pictoList[i].sprite = null;
+					chaudronScript.AddItem(itemFillableScript.itemList[i], itemFillableScript.pictoList[i].sprite);
+					itemFillableScript.pictoList[i].sprite = null;
 				}
 				chaudronScript.isDone = true;
 				chaudronScript.SetCookingTime(1f);
-				itemInfoScript.itemList = new List<string>();
+				itemFillableScript.itemList = new List<string>();
 				RemovePicto(pItem);
 			}
 			else
@@ -184,29 +191,29 @@ public class UseItemPotion : MonoBehaviour
 				if (chaudronScript.isDone && !chaudronScript.isBurning)
 				{
 					Debug.Log("On tient un chaudron plein et on le verse dans la potion vide");
-					targetInfoScript.itemList = itemInfoScript.itemList;
+					targetFillableScript.itemList = itemFillableScript.itemList;
 
-					for (int i = 0; i < itemInfoScript.pictoList.Length; i++)
+					for (int i = 0; i < itemFillableScript.pictoList.Length; i++)
 					{
-						targetInfoScript.pictoList[i].sprite = itemInfoScript.pictoList[i].sprite;
+						targetFillableScript.pictoList[i].sprite = itemFillableScript.pictoList[i].sprite;
 					}
 					RemovePicto(pItem);
 					chaudronScript.Empty();
 				}
 			}
 		}
-		else if (itemInfoScript.itemList.Count == 0 && targetInfoScript.itemList.Count != 0)
+		else if (itemFillableScript.itemList.Count == 0 && targetFillableScript.itemList.Count != 0)
 		{
 			if (pTarget.tag == "chaudron")
 			{
 				if (chaudronScript.isDone && !chaudronScript.isBurning)
 				{
 					Debug.Log("On tient une potion vide et on la remplit au chaudron");
-					itemInfoScript.itemList = targetInfoScript.itemList;
+					itemFillableScript.itemList = targetFillableScript.itemList;
 
-					for (int i = 0; i < itemInfoScript.pictoList.Length; i++)
+					for (int i = 0; i < itemFillableScript.pictoList.Length; i++)
 					{
-						itemInfoScript.pictoList[i].sprite = targetInfoScript.pictoList[i].sprite;
+						itemFillableScript.pictoList[i].sprite = targetFillableScript.pictoList[i].sprite;
 					}
 
 					AddPicto(itemHolded);
@@ -216,14 +223,14 @@ public class UseItemPotion : MonoBehaviour
 			else
 			{
 				Debug.Log("On tient un chaudron vide et on le remplit à la potion");
-				for (int i = 0; i < targetInfoScript.itemList.Count; i++)
+				for (int i = 0; i < targetFillableScript.itemList.Count; i++)
 				{
-					chaudronScript.AddItem(targetInfoScript.itemList[i], targetInfoScript.pictoList[i].sprite);
-					targetInfoScript.pictoList[i].sprite = null;
+					chaudronScript.AddItem(targetFillableScript.itemList[i], targetFillableScript.pictoList[i].sprite);
+					targetFillableScript.pictoList[i].sprite = null;
 				}
 				chaudronScript.isDone = true;
 				chaudronScript.SetCookingTime(1f);
-				targetInfoScript.itemList = new List<string>();
+				targetFillableScript.itemList = new List<string>();
 
 				AddPicto(itemHolded);
 			}
@@ -233,15 +240,15 @@ public class UseItemPotion : MonoBehaviour
 	public void ServePotion(GameObject pTarget, GameObject pItem)
 	{
 		PotionMasterScript potionMasterScript = pTarget.GetComponent<PotionMasterScript>();
-		int score = potionMasterScript.CheckPotionValidity(gameObject, pItem.GetComponent<ItemInfoScript>().itemList);
+		int score = potionMasterScript.CheckPotionValidity(gameObject, pItem.GetComponent<FillableScript>().itemList);
 
 		RemovePicto(pItem);
 		Destroy(pItem.gameObject);
 
-		_playerInfo.isHolding = false;
+		playerInfo.isHolding = false;
 		itemHolded = null;
 
-		_playerInfo.score += score;
+		playerInfo.score += score;
 
 		if (score > 0)
 		{
@@ -260,8 +267,10 @@ public class UseItemPotion : MonoBehaviour
 		Debug.Log("Adding to cauldron " + pItem.name);
 
 		ChaudronScript chaudronScript = pTarget.GetComponent<ChaudronScript>();
-		ItemScript itemScript = pItem.GetComponent<ItemScript>();
-		string itemName = pItem.GetComponent<ItemInfoScript>().itemName;
+		IngredientScript itemScript = pItem.GetComponent<IngredientScript>();
+		SupportableScript supportableScript = pItem.GetComponent<SupportableScript>();
+
+		string itemName = itemScript.itemName;
 
 		if (!chaudronScript.isBurning && !chaudronScript.isFull && !itemScript.isPrepared)
 		{
@@ -269,17 +278,17 @@ public class UseItemPotion : MonoBehaviour
 
 			if (itemHolded.tag == "item")
 			{
-				_playerInfo.isHolding = false;
+				playerInfo.isHolding = false;
 			}
-			if (itemHolded.tag == "chaudron")
+			else if (itemHolded.tag == "chaudron")
 			{
 				AddPicto(itemHolded);
 
-				if (itemScript.craftingTable != null)
+				if (supportableScript.support != null)
 				{
-					GameObject craftingTable = itemScript.craftingTable;
-					craftingTable.GetComponent<ItemInfoScript>().isOccupied = false;
-					itemScript.craftingTable = null;
+					GameObject craftingTable = supportableScript.support;
+					craftingTable.GetComponent<SupportScript>().isOccupied = false;
+					supportableScript.support = null;
 				}
 			}
 			
@@ -297,25 +306,31 @@ public class UseItemPotion : MonoBehaviour
 
 		itemHolded = pItem;
 
-		if (pItem.tag == "chaudron")
+		if (pItem.tag == "chaudron" || pItem.tag == "item")
 		{
-			pItem.GetComponent<ChaudronScript>().isCooking = false;
-		}
-		if (pItem.tag == "item")
-		{
+			SupportableScript supportableScript = pItem.GetComponent<SupportableScript>();
+			supportableScript.onSupport = false;
 
-			pItem.GetComponent<ItemScript>()._progressBarScript.ToggleVisibility(false);
-			pItem.GetComponent<ItemScript>().onCraftingTable = false;
+			if (pItem.tag == "chaudron")
+			{
+				pItem.GetComponent<ChaudronScript>().isCooking = false;
+			}
+			else if (pItem.tag == "item")
+			{
+				pItem.GetComponent<IngredientScript>().progressBarScript.ToggleVisibility(false);
+			}
+			if (supportableScript.support != null)
+			{
+				supportableScript.support.GetComponent<SupportScript>().isOccupied = false;
+			}
 		}
-		if (pItem.transform.parent != null)
-			pItem.transform.parent.parent.GetComponent<ItemInfoScript>().isOccupied = false;
 
 		if (pItem.tag == "chaudron" || pItem.tag == "fiole")
 		{
 			AddPicto(pItem);
 		}
 
-		pItem.GetComponent<ItemInfoScript>().isHold = true;
+		pItem.GetComponent<TransportableScript>().isHold = true;
 		pItem.GetComponent<Rigidbody2D>().isKinematic = true;
 		BoxCollider2D[] _colliders = pItem.GetComponentsInChildren<BoxCollider2D>();
 		foreach (BoxCollider2D collider in _colliders)
@@ -327,12 +342,12 @@ public class UseItemPotion : MonoBehaviour
 		pItem.transform.localPosition = new Vector3(0,0,0);
 		pItem.transform.localRotation = new Quaternion(0, 0, 0, 0);
 
-		_playerInfo.isHolding = true;
+		playerInfo.isHolding = true;
 	}
 
 	public void DropOff()
 	{
-		if (_playerInfo.isHolding)
+		if (playerInfo.isHolding)
 		{
 			if (itemHolded != null)
 			{
@@ -350,7 +365,7 @@ public class UseItemPotion : MonoBehaviour
 				itemHolded.transform.rotation = Quaternion.Euler(0,0,0);
 
 				//Cast a ray to detect closest floor to drop the item on
-				RaycastHit2D hit = Physics2D.Raycast(transform.position, Vector2.down, Mathf.Infinity, _playerInfo.groundLayerMask);
+				RaycastHit2D hit = Physics2D.Raycast(transform.position, Vector2.down, Mathf.Infinity, playerInfo.groundLayerMask);
 				if (hit.collider != null)
 				{
 					yPos = hit.transform.position.y + hit.transform.GetComponentInChildren<Renderer>().bounds.size.y + itemHeight;
@@ -358,7 +373,7 @@ public class UseItemPotion : MonoBehaviour
 
 				itemHolded.transform.position = new Vector3(transform.position.x, yPos, transform.position.z);
 
-				itemHolded.GetComponent<ItemInfoScript>().isHold = false;
+				itemHolded.GetComponent<TransportableScript>().isHold = false;
 
 				if(itemHolded.tag == "item" || itemHolded.tag == "fiole")
 					itemHolded.GetComponent<Rigidbody2D>().isKinematic = false;
@@ -369,7 +384,7 @@ public class UseItemPotion : MonoBehaviour
 					collider.enabled = true;
 				}
 				
-				_playerInfo.isHolding = false;
+				playerInfo.isHolding = false;
 				itemHolded = null;
 			}
 		}
@@ -377,11 +392,11 @@ public class UseItemPotion : MonoBehaviour
 
 	public void DropOnSupport(GameObject pTarget)
 	{
-		if (_playerInfo.isHolding)
+		if (playerInfo.isHolding)
 		{
 			if (itemHolded != null)
 			{
-				ItemInfoScript targetScript = pTarget.GetComponent<ItemInfoScript>();
+				SupportScript targetScript = pTarget.GetComponent<SupportScript>();
 
 				if (!targetScript.isOccupied)
 				{
@@ -391,30 +406,30 @@ public class UseItemPotion : MonoBehaviour
 					itemHolded.transform.position = pTarget.transform.GetChild(0).position;
 					itemHolded.transform.rotation = new Quaternion(0, 0, 0, 0);
 
-					itemHolded.GetComponent<ItemInfoScript>().isHold = false;
+					itemHolded.GetComponent<TransportableScript>().isHold = false;
 
 					BoxCollider2D[] _colliders = itemHolded.GetComponentsInChildren<BoxCollider2D>();
 					foreach (BoxCollider2D collider in _colliders)
 					{
 						collider.enabled = true;
 					}
+					SupportableScript supportableScript = itemHolded.GetComponent<SupportableScript>();
 
 					if (itemHolded.tag == "chaudron")
 					{
 						itemHolded.GetComponent<ChaudronScript>().isCooking = true;
-						itemHolded.GetComponent<ChaudronScript>()._progressBarScript.ToggleVisibility(true);
-						pTarget.GetComponent<ItemInfoScript>().isOccupied = true;
+						itemHolded.GetComponent<ChaudronScript>().progressBarScript.ToggleVisibility(true);
 						RemovePicto(itemHolded);
 					}
 					else
 					{
-						itemHolded.GetComponent<ItemScript>().onCraftingTable = true;
-						itemHolded.GetComponent<ItemScript>().craftingTable = pTarget;
-						itemHolded.GetComponent<ItemScript>()._progressBarScript.ToggleVisibility(true);
-						pTarget.GetComponent<ItemInfoScript>().isOccupied = true;
+						itemHolded.GetComponent<IngredientScript>().progressBarScript.ToggleVisibility(true);
 					}
 
-					_playerInfo.isHolding = false;
+					supportableScript.onSupport = true;
+					supportableScript.support = pTarget;
+					targetScript.isOccupied = true;
+					playerInfo.isHolding = false;
 					itemHolded = null;
 				}
 				else
@@ -427,7 +442,7 @@ public class UseItemPotion : MonoBehaviour
 
 	public void AddPicto(GameObject pItem)
 	{
-		ItemInfoScript itemInfo = pItem.GetComponent<ItemInfoScript>();
+		FillableScript itemInfo = pItem.GetComponent<FillableScript>();
 
 		if (itemInfo.itemList.Count > 0)
 		{
@@ -441,7 +456,7 @@ public class UseItemPotion : MonoBehaviour
 
 	public void RemovePicto(GameObject pItem)
 	{
-		ItemInfoScript itemInfo = pItem.GetComponent<ItemInfoScript>();
+		FillableScript itemInfo = pItem.GetComponent<FillableScript>();
 
 		for (int i = 0; i < itemInfo.pictoList.Length; i++)
 		{
@@ -455,7 +470,7 @@ public class UseItemPotion : MonoBehaviour
 		float dist = 1000;
 		Collider2D target = null;
 
-		Collider2D[] colliders = Physics2D.OverlapCircleAll(transform.position, _playerInfo.pickUpRange);
+		Collider2D[] colliders = Physics2D.OverlapCircleAll(transform.position, playerInfo.pickUpRange);
 		if (colliders.Length > 0)
 		{
 			for (int i = 0; i < colliders.Length; i++)
@@ -484,14 +499,14 @@ public class UseItemPotion : MonoBehaviour
 	private bool CheckPlayerDirection(Collider2D pTarget)
 	{
 		//Horizontal
-		if (_playerAction.lastDir.x > 0)
+		if (playerAction.lastDir.x > 0)
 		{
 			if (pTarget.transform.position.x >= transform.position.x)
 			{
 				return true;
 			}
 		}
-		else if(_playerAction.lastDir.x < 0)
+		else if(playerAction.lastDir.x < 0)
 		{
 			if (pTarget.transform.position.x <= transform.position.x)
 			{
@@ -499,14 +514,14 @@ public class UseItemPotion : MonoBehaviour
 			}
 		}
 		//Vertical
-		else if (_playerAction.lastDir.y > 0)
+		else if (playerAction.lastDir.y > 0)
 		{
 			if (pTarget.transform.position.y >= transform.position.y)
 			{
 				return true;
 			}
 		}
-		else if (_playerAction.lastDir.y < 0)
+		else if (playerAction.lastDir.y < 0)
 		{
 			if (pTarget.transform.position.y <= transform.position.y)
 			{

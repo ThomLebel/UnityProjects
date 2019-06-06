@@ -134,10 +134,14 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4337873100267084}
+  - component: {fileID: 2572598206201831172}
   - component: {fileID: 61049250084230010}
   - component: {fileID: 114059060147497000}
   - component: {fileID: 114593729291417810}
-  - component: {fileID: 2572598206201831172}
+  - component: {fileID: 3517947860170546229}
+  - component: {fileID: 1933380239361770549}
+  - component: {fileID: 577258049832752277}
+  - component: {fileID: 7975676985896366670}
   m_Layer: 0
   m_Name: Spider
   m_TagString: item
@@ -161,6 +165,27 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!50 &2572598206201831172
+Rigidbody2D:
+  serializedVersion: 4
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1526486081205436}
+  m_BodyType: 0
+  m_Simulated: 1
+  m_UseFullKinematicContacts: 0
+  m_UseAutoMass: 0
+  m_Mass: 0.05
+  m_LinearDrag: 5
+  m_AngularDrag: 0.05
+  m_GravityScale: 0
+  m_Material: {fileID: 0}
+  m_Interpolate: 0
+  m_SleepingMode: 1
+  m_CollisionDetection: 0
+  m_Constraints: 4
 --- !u!61 &61049250084230010
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -217,36 +242,67 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cb27a2246200de14a91c8037180edbd2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  spellForce: 30
-  preparingCoef: 0.2
-  isPrepared: 0
-  onCraftingTable: 0
-  craftingTable: {fileID: 0}
-  prepName: cobweb
-  prepSprite: {fileID: -3161446357135062343, guid: 1c1f7c1bd90fc0446b9faf1f313e95ac,
-    type: 3}
-  _progressBarScript: {fileID: 0}
---- !u!50 &2572598206201831172
-Rigidbody2D:
-  serializedVersion: 4
+  itemName: 
+--- !u!114 &3517947860170546229
+MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1526486081205436}
-  m_BodyType: 0
-  m_Simulated: 1
-  m_UseFullKinematicContacts: 0
-  m_UseAutoMass: 0
-  m_Mass: 0.05
-  m_LinearDrag: 5
-  m_AngularDrag: 0.05
-  m_GravityScale: 0
-  m_Material: {fileID: 0}
-  m_Interpolate: 0
-  m_SleepingMode: 1
-  m_CollisionDetection: 0
-  m_Constraints: 4
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5ff85944135641d4181fca48fe079667, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  itemName: spider
+  prepName: cobweb
+  prepSprite: {fileID: -3161446357135062343, guid: 1c1f7c1bd90fc0446b9faf1f313e95ac,
+    type: 3}
+  isPrepared: 0
+  preparingCoef: 0.2
+  progressBarScript: {fileID: 114178730500240278}
+--- !u!114 &1933380239361770549
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1526486081205436}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5d55ee9d85371e74ca350e0c5549acf9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  accioForce: 30
+  isMoving: 0
+--- !u!114 &577258049832752277
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1526486081205436}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a5981a37b3a05af49a94298faa1bd0d2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  isHold: 0
+--- !u!114 &7975676985896366670
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1526486081205436}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 58747422ace15344bb976c92d44d7d6a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  onSupport: 0
+  support: {fileID: 0}
 --- !u!1 &1996244368370086
 GameObject:
   m_ObjectHideFlags: 0

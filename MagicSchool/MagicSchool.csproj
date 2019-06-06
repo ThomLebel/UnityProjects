@@ -721,12 +721,15 @@
     <Compile Include="Assets\Resources\GeneralScript\Launcher.cs" />
     <Compile Include="Assets\Resources\GeneralScript\MapGenerator.cs" />
     <Compile Include="Assets\Resources\GeneralScript\PlayerNamerInputField.cs" />
+    <Compile Include="Assets\Resources\Potion\Script\AffiliableScript.cs" />
     <Compile Include="Assets\Resources\Potion\Script\AnimationCallback.cs" />
-    <Compile Include="Assets\Resources\Potion\Script\blobScript.cs" />
+    <Compile Include="Assets\Resources\Potion\Script\AttractionScript.cs" />
     <Compile Include="Assets\Resources\Potion\Script\ChaudronScript.cs" />
     <Compile Include="Assets\Resources\Potion\Script\CraftingTableScript.cs" />
+    <Compile Include="Assets\Resources\Potion\Script\FillableScript.cs" />
     <Compile Include="Assets\Resources\Potion\Script\FioleScript.cs" />
     <Compile Include="Assets\Resources\Potion\Script\FireScript.cs" />
+    <Compile Include="Assets\Resources\Potion\Script\IngredientScript.cs" />
     <Compile Include="Assets\Resources\Potion\Script\ItemDispenserScript.cs" />
     <Compile Include="Assets\Resources\Potion\Script\ItemInfoScript.cs" />
     <Compile Include="Assets\Resources\Potion\Script\ItemScript.cs" />
@@ -739,6 +742,9 @@
     <Compile Include="Assets\Resources\Potion\Script\ProgressBarScript.cs" />
     <Compile Include="Assets\Resources\Potion\Script\RecipeScript.cs" />
     <Compile Include="Assets\Resources\Potion\Script\SpellProjectileScript.cs" />
+    <Compile Include="Assets\Resources\Potion\Script\SupportableScript.cs" />
+    <Compile Include="Assets\Resources\Potion\Script\SupportScript.cs" />
+    <Compile Include="Assets\Resources\Potion\Script\TransportableScript.cs" />
     <Compile Include="Assets\Resources\Potion\Script\UseItemPotion.cs" />
     <Compile Include="Assets\Unity-Logs-Viewer\Reporter\MultiKeyDictionary.cs" />
     <Compile Include="Assets\Unity-Logs-Viewer\Reporter\Reporter.cs" />

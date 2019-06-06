@@ -10,7 +10,9 @@ GameObject:
   m_Component:
   - component: {fileID: 4326235456511476}
   - component: {fileID: 61902581706047758}
-  - component: {fileID: 114039316077974602}
+  - component: {fileID: 1779954620063465990}
+  - component: {fileID: 2700035464767241243}
+  - component: {fileID: 2635958119408025807}
   m_Layer: 11
   m_Name: Fire
   m_TagString: fire
@@ -60,7 +62,7 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 0.3, y: 0.29}
   m_EdgeRadius: 0
---- !u!114 &114039316077974602
+--- !u!114 &1779954620063465990
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -69,15 +71,36 @@ MonoBehaviour:
   m_GameObject: {fileID: 1542057958760328}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f3082c55f6102554d81cca66ddf29ad5, type: 3}
+  m_Script: {fileID: 11500000, guid: ec6281e9963bba442a964e3d62435327, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  itemName: fire
-  maxItem: 3
-  itemList: []
-  pictoList: []
-  isHold: 0
+  itemName: Fire
+--- !u!114 &2700035464767241243
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1542057958760328}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 80724420bebb24e4a88eaa2360df9470, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
   isOccupied: 0
+--- !u!114 &2635958119408025807
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1542057958760328}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ea45c449e40c8b9488d8bb22023d3d79, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  teamID: 0
 --- !u!1 &1590774131893196
 GameObject:
   m_ObjectHideFlags: 0

@@ -2,13 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class FireScript : MonoBehaviour
+public class FireScript : ItemScript
 {
-
-	public bool isOccupied;
-
-	private void Start()
-	{
-		isOccupied = false;
-	}
+	//We might do something here
 }

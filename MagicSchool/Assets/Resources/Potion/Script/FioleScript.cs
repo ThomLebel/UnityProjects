@@ -2,9 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class FioleScript : MonoBehaviour
+public class FioleScript : ItemScript
 {
-	public SpriteRenderer[] pictoList;
-
-	public List<GameObject> itemList;
+	//We might do something here
 }

@@ -98,8 +98,7 @@ public class PotionManager : MonoBehaviour {
 		for (int i = 0; i < randIngredientQuantity; i++)
 		{
 			GameObject ingredient = tempIngredientList[i];
-			ItemScript itemScript = ingredient.GetComponent<ItemScript>();
-			ItemInfoScript infoScript = ingredient.GetComponent<ItemInfoScript>();
+			IngredientScript ingredientScript = ingredient.GetComponent<IngredientScript>();
 
 			GameObject ingredientElement = new GameObject();
 			Image ingredientSprite = ingredientElement.AddComponent<Image>();
@@ -108,12 +107,12 @@ public class PotionManager : MonoBehaviour {
 			bool prepared = (Random.value > 0.5f);
 			if (prepared)
 			{
-				recipeIngredient.Add(itemScript.prepName);
-				ingredientSprite.sprite = itemScript.prepSprite;
+				recipeIngredient.Add(ingredientScript.prepName);
+				ingredientSprite.sprite = ingredientScript.prepSprite;
 			}
 			else
 			{
-				recipeIngredient.Add(infoScript.itemName);
+				recipeIngredient.Add(ingredientScript.itemName);
 				ingredientSprite.sprite = ingredient.GetComponentInChildren<SpriteRenderer>().sprite;
 			}
 

@@ -44,7 +44,7 @@ public class SpellProjectileScript : MonoBehaviour
 		else if (pOther.tag == "item" || pOther.tag == "fiole")
 		{
 			Debug.Log("On touche un item !");
-			pOther.GetComponent<ItemScript>().AccioItem(direction);
+			pOther.GetComponent<AttractionScript>().Accio(direction);
 		}
 		else if (pOther.tag == "chaudron")
 		{

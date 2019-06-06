@@ -88,10 +88,13 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4956859774588024}
-  - component: {fileID: 61629456154421588}
-  - component: {fileID: 114588645670508898}
-  - component: {fileID: 114225018613561276}
   - component: {fileID: 4246096337197157535}
+  - component: {fileID: 61629456154421588}
+  - component: {fileID: 2067255590661565765}
+  - component: {fileID: 6600852640817168851}
+  - component: {fileID: 506281078627513550}
+  - component: {fileID: 5743721632778911126}
+  - component: {fileID: 7665576654808701222}
   m_Layer: 0
   m_Name: Fiole
   m_TagString: fiole
@@ -118,6 +121,27 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!50 &4246096337197157535
+Rigidbody2D:
+  serializedVersion: 4
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1265371826061540}
+  m_BodyType: 0
+  m_Simulated: 1
+  m_UseFullKinematicContacts: 0
+  m_UseAutoMass: 0
+  m_Mass: 0.05
+  m_LinearDrag: 5
+  m_AngularDrag: 0.05
+  m_GravityScale: 0
+  m_Material: {fileID: 0}
+  m_Interpolate: 0
+  m_SleepingMode: 1
+  m_CollisionDetection: 0
+  m_Constraints: 4
 --- !u!61 &61629456154421588
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -144,7 +168,7 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 0.5719825, y: 0.6845367}
   m_EdgeRadius: 0
---- !u!114 &114588645670508898
+--- !u!114 &2067255590661565765
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -153,20 +177,30 @@ MonoBehaviour:
   m_GameObject: {fileID: 1265371826061540}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f3082c55f6102554d81cca66ddf29ad5, type: 3}
+  m_Script: {fileID: 11500000, guid: 2060c7976a72cc848a5868a62d813fe9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  itemName: fiole
-  maxItem: 3
+  itemName: Fiole
+--- !u!114 &6600852640817168851
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1265371826061540}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 62a317e34669da34bb29ad33bfc85644, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  maxItem: 4
   itemList: []
   pictoList:
   - {fileID: 212747066598927640}
   - {fileID: 212818896330159046}
   - {fileID: 212999003989618942}
   - {fileID: 212580078420815536}
-  isHold: 0
-  isOccupied: 0
---- !u!114 &114225018613561276
+--- !u!114 &506281078627513550
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -175,36 +209,38 @@ MonoBehaviour:
   m_GameObject: {fileID: 1265371826061540}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: cb27a2246200de14a91c8037180edbd2, type: 3}
+  m_Script: {fileID: 11500000, guid: 5d55ee9d85371e74ca350e0c5549acf9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  spellForce: 30
-  preparingCoef: 0.1
-  isPrepared: 0
-  isDone: 0
-  onCraftingTable: 0
-  craftingTable: {fileID: 0}
---- !u!50 &4246096337197157535
-Rigidbody2D:
-  serializedVersion: 4
+  accioForce: 30
+  isMoving: 0
+--- !u!114 &5743721632778911126
+MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1265371826061540}
-  m_BodyType: 0
-  m_Simulated: 1
-  m_UseFullKinematicContacts: 0
-  m_UseAutoMass: 0
-  m_Mass: 0.05
-  m_LinearDrag: 5
-  m_AngularDrag: 0.05
-  m_GravityScale: 0
-  m_Material: {fileID: 0}
-  m_Interpolate: 0
-  m_SleepingMode: 1
-  m_CollisionDetection: 0
-  m_Constraints: 4
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a5981a37b3a05af49a94298faa1bd0d2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  isHold: 0
+--- !u!114 &7665576654808701222
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1265371826061540}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 58747422ace15344bb976c92d44d7d6a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  onSupport: 0
+  support: {fileID: 0}
 --- !u!1 &1630655453427540
 GameObject:
   m_ObjectHideFlags: 0

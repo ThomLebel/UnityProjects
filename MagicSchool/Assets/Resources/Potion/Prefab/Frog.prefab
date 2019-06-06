@@ -136,8 +136,10 @@ GameObject:
   - component: {fileID: 4337873100267084}
   - component: {fileID: 3754207424956921010}
   - component: {fileID: 61049250084230010}
-  - component: {fileID: 114059060147497000}
-  - component: {fileID: -8542966581059153405}
+  - component: {fileID: 3374679218096536716}
+  - component: {fileID: 6610413378654761413}
+  - component: {fileID: 8466618292087825137}
+  - component: {fileID: 8456721550745559969}
   m_Layer: 0
   m_Name: Frog
   m_TagString: item
@@ -208,7 +210,7 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 0.47108823, y: 0.31053233}
   m_EdgeRadius: 0
---- !u!114 &114059060147497000
+--- !u!114 &3374679218096536716
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -217,16 +219,17 @@ MonoBehaviour:
   m_GameObject: {fileID: 1526486081205436}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f3082c55f6102554d81cca66ddf29ad5, type: 3}
+  m_Script: {fileID: 11500000, guid: 5ff85944135641d4181fca48fe079667, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   itemName: frog
-  maxItem: 3
-  itemList: []
-  pictoList: []
-  isHold: 0
-  isOccupied: 0
---- !u!114 &-8542966581059153405
+  prepName: poison
+  prepSprite: {fileID: -6960219621324335271, guid: 1c1f7c1bd90fc0446b9faf1f313e95ac,
+    type: 3}
+  isPrepared: 0
+  preparingCoef: 0.2
+  progressBarScript: {fileID: 114178730500240278}
+--- !u!114 &6610413378654761413
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -235,18 +238,38 @@ MonoBehaviour:
   m_GameObject: {fileID: 1526486081205436}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: cb27a2246200de14a91c8037180edbd2, type: 3}
+  m_Script: {fileID: 11500000, guid: 5d55ee9d85371e74ca350e0c5549acf9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  spellForce: 30
-  preparingCoef: 0.2
-  isPrepared: 0
-  onCraftingTable: 0
-  craftingTable: {fileID: 0}
-  prepName: spit
-  prepSprite: {fileID: -6960219621324335271, guid: 1c1f7c1bd90fc0446b9faf1f313e95ac,
-    type: 3}
-  _progressBarScript: {fileID: 0}
+  accioForce: 30
+  isMoving: 0
+--- !u!114 &8466618292087825137
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1526486081205436}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 58747422ace15344bb976c92d44d7d6a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  onSupport: 0
+  support: {fileID: 0}
+--- !u!114 &8456721550745559969
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1526486081205436}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a5981a37b3a05af49a94298faa1bd0d2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  isHold: 0
 --- !u!1 &1996244368370086
 GameObject:
   m_ObjectHideFlags: 0

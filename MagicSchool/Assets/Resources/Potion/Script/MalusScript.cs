@@ -32,7 +32,7 @@ public class MalusScript : MonoBehaviour
 
 		foreach (GameObject caul in cauldrons)
 		{
-			int cauldronID = caul.GetComponent<ChaudronScript>().playerOwner;
+			int cauldronID = caul.GetComponent<AffiliableScript>().teamID;
 
 			if (cauldronID == playerID)
 			{
@@ -42,6 +42,29 @@ public class MalusScript : MonoBehaviour
 		}
 
 		cauldron.GetComponent<ChaudronScript>().Empty();
+	}
+
+	private void BurnPlayerCauldron(GameObject target)
+	{
+		Debug.Log("Burn the cauldron of this player");
+		int playerID = target.GetComponent<PlayerInfo>().playerID;
+
+		//Find the player's cauldron
+		GameObject[] cauldrons = GameObject.FindGameObjectsWithTag("chaudron");
+		GameObject cauldron = null;
+
+		foreach (GameObject caul in cauldrons)
+		{
+			int cauldronID = caul.GetComponent<AffiliableScript>().teamID;
+
+			if (cauldronID == playerID)
+			{
+				cauldron = caul;
+				break;
+			}
+		}
+
+		cauldron.GetComponent<ChaudronScript>().IncreaseFire();
 	}
 
 	private void InvertPlayerDirection(GameObject target)
@@ -66,29 +89,6 @@ public class MalusScript : MonoBehaviour
 		PlayerPotion targetScript = target.GetComponent<PlayerPotion>();
 
 		targetScript.SpellHit(Vector3.zero);
-	}
-
-	private void BurnPlayerCauldron(GameObject target)
-	{
-		Debug.Log("Burn the cauldron of this player");
-		int playerID = target.GetComponent<PlayerInfo>().playerID;
-
-		//Find the player's cauldron
-		GameObject[] cauldrons = GameObject.FindGameObjectsWithTag("chaudron");
-		GameObject cauldron = null;
-
-		foreach (GameObject caul in cauldrons)
-		{
-			int cauldronID = caul.GetComponent<ChaudronScript>().playerOwner;
-
-			if (cauldronID == playerID)
-			{
-				cauldron = caul;
-				break;
-			}
-		}
-
-		cauldron.GetComponent<ChaudronScript>().IncreaseFire();
 	}
 
 	private void BlockPlayerSpell(GameObject target)
@@ -118,5 +118,8 @@ public class MalusScript : MonoBehaviour
 	private void PreventPlayerCraft(GameObject target)
 	{
 		Debug.Log("Prevent this player of crafting ingredient");
+		PlayerPotion targetScript = target.GetComponent<PlayerPotion>();
+
+		targetScript.PlayerCantCraft();
 	}
 }
