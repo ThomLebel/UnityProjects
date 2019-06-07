@@ -158,14 +158,17 @@ public class UseItemPotion : MonoBehaviour
 		FillableScript targetFillableScript = pTarget.GetComponent<FillableScript>();
 		FillableScript itemFillableScript = pItem.GetComponent<FillableScript>();
 		ChaudronScript chaudronScript;
+		FioleScript fioleScript;
 
 		if (pItem.tag == "chaudron")
 		{
 			chaudronScript = pItem.GetComponent<ChaudronScript>();
+			fioleScript = pTarget.GetComponent<FioleScript>();
 		}
 		else
 		{
 			chaudronScript = pTarget.GetComponent<ChaudronScript>();
+			fioleScript = pItem.GetComponent<FioleScript>();
 		}
 			
 
@@ -181,6 +184,7 @@ public class UseItemPotion : MonoBehaviour
 					chaudronScript.AddItem(itemFillableScript.itemList[i], itemFillableScript.pictoList[i].sprite);
 					itemFillableScript.pictoList[i].sprite = null;
 				}
+				fioleScript.EmptyPotion();
 				chaudronScript.isDone = true;
 				chaudronScript.SetCookingTime(1f);
 				itemFillableScript.itemList = new List<string>();
@@ -199,6 +203,7 @@ public class UseItemPotion : MonoBehaviour
 					}
 					RemovePicto(pItem);
 					chaudronScript.Empty();
+					fioleScript.SetPotionVisual();
 				}
 			}
 		}
@@ -218,6 +223,7 @@ public class UseItemPotion : MonoBehaviour
 
 					AddPicto(itemHolded);
 					chaudronScript.Empty();
+					fioleScript.SetPotionVisual();
 				}
 			}
 			else
@@ -228,6 +234,7 @@ public class UseItemPotion : MonoBehaviour
 					chaudronScript.AddItem(targetFillableScript.itemList[i], targetFillableScript.pictoList[i].sprite);
 					targetFillableScript.pictoList[i].sprite = null;
 				}
+				fioleScript.EmptyPotion();
 				chaudronScript.isDone = true;
 				chaudronScript.SetCookingTime(1f);
 				targetFillableScript.itemList = new List<string>();

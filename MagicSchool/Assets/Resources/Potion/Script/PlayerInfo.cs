@@ -80,6 +80,7 @@ public class PlayerInfo : MonoBehaviour
 		string playerSpriteName = CharacterSelector.Instance.spriteList[pSpriteID].name;
 		playerID = pID;
 		playerController = pController;
+		playerTeam = pID;
 
 		string spriteSheetName = playerSpriteName + "_wizard_spritesheet";
 		Sprite[] spriteSheet = Resources.LoadAll<Sprite>("Sprites/Wizards/"+ spriteSheetName);

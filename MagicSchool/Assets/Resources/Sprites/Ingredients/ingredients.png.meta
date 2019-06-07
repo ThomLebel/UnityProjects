@@ -4,28 +4,28 @@ TextureImporter:
   internalIDToNameTable:
   - first:
       213: -5034703955856199138
-    second: ingredients_0
+    second: spider
   - first:
       213: 4129085186536377779
-    second: ingredients_1
+    second: frog
   - first:
       213: -6734107803153752858
-    second: ingredients_2
+    second: bat
   - first:
       213: 7634809879669098404
-    second: ingredients_3
+    second: rat
   - first:
       213: -3161446357135062343
-    second: ingredients_4
+    second: cobweb
   - first:
       213: -6960219621324335271
-    second: ingredients_5
+    second: poison
   - first:
       213: -7790448460745747974
-    second: ingredients_6
+    second: blood
   - first:
       213: -1317983596774885118
-    second: ingredients_7
+    second: bone
   externalObjects: {}
   serializedVersion: 10
   mipmaps:
@@ -141,7 +141,7 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: ingredients_0
+      name: spider
       rect:
         serializedVersion: 2
         x: 72
@@ -149,7 +149,7 @@ TextureImporter:
         width: 183
         height: 130
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -162,7 +162,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: ingredients_1
+      name: frog
       rect:
         serializedVersion: 2
         x: 305
@@ -170,7 +170,7 @@ TextureImporter:
         width: 280
         height: 186
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -183,7 +183,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: ingredients_2
+      name: bat
       rect:
         serializedVersion: 2
         x: 614
@@ -191,7 +191,7 @@ TextureImporter:
         width: 337
         height: 239
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -204,7 +204,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: ingredients_3
+      name: rat
       rect:
         serializedVersion: 2
         x: 995
@@ -212,7 +212,7 @@ TextureImporter:
         width: 582
         height: 182
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -225,7 +225,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: ingredients_4
+      name: cobweb
       rect:
         serializedVersion: 2
         x: 0
@@ -233,7 +233,7 @@ TextureImporter:
         width: 290
         height: 277
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -246,7 +246,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: ingredients_5
+      name: poison
       rect:
         serializedVersion: 2
         x: 390
@@ -254,7 +254,7 @@ TextureImporter:
         width: 129
         height: 204
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -267,7 +267,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: ingredients_6
+      name: blood
       rect:
         serializedVersion: 2
         x: 739
@@ -275,7 +275,7 @@ TextureImporter:
         width: 72
         height: 229
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -288,7 +288,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: ingredients_7
+      name: bone
       rect:
         serializedVersion: 2
         x: 1007
@@ -296,7 +296,7 @@ TextureImporter:
         width: 554
         height: 178
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []

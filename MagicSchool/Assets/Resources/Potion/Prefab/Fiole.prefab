@@ -181,6 +181,17 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   itemName: Fiole
+  spriteRenderer: {fileID: 2700111688942876554}
+  emptyPotion: {fileID: -8485995304713028149, guid: 9c9ea5a47dd516e42a02fea04046d9d8,
+    type: 3}
+  bluePotion: {fileID: 6285645462315052536, guid: 9c9ea5a47dd516e42a02fea04046d9d8,
+    type: 3}
+  greenPotion: {fileID: -7118549172432436139, guid: 9c9ea5a47dd516e42a02fea04046d9d8,
+    type: 3}
+  redPotion: {fileID: -8419157238138717284, guid: 9c9ea5a47dd516e42a02fea04046d9d8,
+    type: 3}
+  yellowPotion: {fileID: 5868065780882382813, guid: 9c9ea5a47dd516e42a02fea04046d9d8,
+    type: 3}
 --- !u!114 &6600852640817168851
 MonoBehaviour:
   m_ObjectHideFlags: 0

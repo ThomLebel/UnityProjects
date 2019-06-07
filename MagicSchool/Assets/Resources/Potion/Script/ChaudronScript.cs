@@ -21,6 +21,7 @@ public class ChaudronScript : ItemScript
 	public ProgressBarScript progressBarScript;
 	public AffiliableScript affiliableScript;
 	private FillableScript fillableScript;
+	private SupportableScript supportableScript;
 
 	private Color _barColor;
 	private float _burningCoef = 0f;
@@ -29,6 +30,7 @@ public class ChaudronScript : ItemScript
 	void Start()
 	{
 		fillableScript = gameObject.GetComponent<FillableScript>();
+		supportableScript = gameObject.GetComponent<SupportableScript>();
 		progressBarScript = progressBar.GetComponent<ProgressBarScript>();
 
 		_barColor = progressBar.GetComponentInChildren<SpriteRenderer>().color;
@@ -87,6 +89,11 @@ public class ChaudronScript : ItemScript
 			if (fillableScript.itemList.Count == fillableScript.maxItem)
 			{
 				isFull = true;
+			}
+			if (supportableScript.onSupport && !isCooking)
+			{
+				isCooking = true;
+				progressBarScript.ToggleVisibility(true);
 			}
 		}
 		else

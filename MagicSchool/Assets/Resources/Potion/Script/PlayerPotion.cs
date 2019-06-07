@@ -215,6 +215,10 @@ public class PlayerPotion : MonoBehaviour
 
 	private void ItemAction()
 	{
+		if (_playerInfo.isPreparing)
+		{
+			return;
+		}
 		if (Input.GetButtonDown("Fire1_P" + _playerInfo.playerController))
 		{
 			if (!_playerInfo.isHolding && !cantCarry)
@@ -258,7 +262,7 @@ public class PlayerPotion : MonoBehaviour
 
 	private void CastSpell()
 	{
-		if (_playerInfo.isHolding || _playerInfo.isPreparing || isSilenced)
+		if (_playerInfo.isPreparing || isSilenced)
 		{
 			return;
 		}
@@ -293,7 +297,7 @@ public class PlayerPotion : MonoBehaviour
 		GameObject projectile;
 		projectile = Instantiate(_playerInfo.projectilePrefab) as GameObject;
 		projectile.GetComponent<SpellProjectileScript>().direction = shootingDir;
-		projectile.GetComponent<SpellProjectileScript>().playerOwner = _playerInfo.playerID;
+		projectile.GetComponent<SpellProjectileScript>().playerOwner = _playerInfo.playerTeam;
 		projectile.transform.position = new Vector3(transform.position.x + shootingDir.x, (transform.position.y + _playerInfo.playerHeight/2) + shootingDir.y, transform.position.z + shootingDir.z);
 		//projectile.transform.position = transform.position + shootingDir;
 	}

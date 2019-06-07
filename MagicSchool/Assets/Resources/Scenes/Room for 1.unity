@@ -1740,6 +1740,11 @@ PrefabInstance:
       propertyPath: instantiationId
       value: 7
       objectReference: {fileID: 0}
+    - target: {fileID: 7851304728877906530, guid: 78403745c305d1e47a8cf197e905bb69,
+        type: 3}
+      propertyPath: teamID
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 78403745c305d1e47a8cf197e905bb69, type: 3}
 --- !u!1 &2124136666

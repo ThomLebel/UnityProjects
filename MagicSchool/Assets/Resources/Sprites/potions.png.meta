@@ -4,19 +4,19 @@ TextureImporter:
   internalIDToNameTable:
   - first:
       213: -8485995304713028149
-    second: potions_0
+    second: emptyPotion
   - first:
       213: -7118549172432436139
-    second: potions_1
+    second: greenPotion
   - first:
       213: 6285645462315052536
-    second: potions_2
+    second: bluePotion
   - first:
       213: -8419157238138717284
-    second: potions_3
+    second: redPotion
   - first:
       213: 5868065780882382813
-    second: potions_4
+    second: yellowPotion
   externalObjects: {}
   serializedVersion: 10
   mipmaps:
@@ -132,7 +132,7 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: potions_0
+      name: emptyPotion
       rect:
         serializedVersion: 2
         x: 0
@@ -140,7 +140,7 @@ TextureImporter:
         width: 163
         height: 273
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -153,7 +153,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: potions_1
+      name: greenPotion
       rect:
         serializedVersion: 2
         x: 202
@@ -161,7 +161,7 @@ TextureImporter:
         width: 163
         height: 273
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -174,7 +174,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: potions_2
+      name: bluePotion
       rect:
         serializedVersion: 2
         x: 398
@@ -182,7 +182,7 @@ TextureImporter:
         width: 163
         height: 273
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -195,7 +195,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: potions_3
+      name: redPotion
       rect:
         serializedVersion: 2
         x: 608
@@ -203,7 +203,7 @@ TextureImporter:
         width: 163
         height: 273
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -216,7 +216,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: potions_4
+      name: yellowPotion
       rect:
         serializedVersion: 2
         x: 805
@@ -224,7 +224,7 @@ TextureImporter:
         width: 163
         height: 273
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []

@@ -1033,6 +1033,11 @@ PrefabInstance:
       propertyPath: m_RootOrder
       value: 6
       objectReference: {fileID: 0}
+    - target: {fileID: 2635958119408025807, guid: 735c0a34b45936e4999a89fa5c9fa077,
+        type: 3}
+      propertyPath: teamID
+      value: 2
+      objectReference: {fileID: 0}
     - target: {fileID: 114977256156889702, guid: 735c0a34b45936e4999a89fa5c9fa077,
         type: 3}
       propertyPath: viewIdField
@@ -1283,6 +1288,11 @@ PrefabInstance:
       propertyPath: playerOwner
       value: 2
       objectReference: {fileID: 0}
+    - target: {fileID: 7851304728877906530, guid: 78403745c305d1e47a8cf197e905bb69,
+        type: 3}
+      propertyPath: teamID
+      value: 2
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 78403745c305d1e47a8cf197e905bb69, type: 3}
 --- !u!1001 &1066853316
@@ -1408,6 +1418,11 @@ PrefabInstance:
         type: 3}
       propertyPath: instantiationId
       value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 7851304728877906530, guid: 78403745c305d1e47a8cf197e905bb69,
+        type: 3}
+      propertyPath: teamID
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 78403745c305d1e47a8cf197e905bb69, type: 3}
@@ -1701,6 +1716,11 @@ PrefabInstance:
     - target: {fileID: 4326235456511476, guid: 735c0a34b45936e4999a89fa5c9fa077, type: 3}
       propertyPath: m_RootOrder
       value: 7
+      objectReference: {fileID: 0}
+    - target: {fileID: 2635958119408025807, guid: 735c0a34b45936e4999a89fa5c9fa077,
+        type: 3}
+      propertyPath: teamID
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 114977256156889702, guid: 735c0a34b45936e4999a89fa5c9fa077,
         type: 3}
