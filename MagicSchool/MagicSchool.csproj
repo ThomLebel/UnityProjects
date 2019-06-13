@@ -735,6 +735,7 @@
     <Compile Include="Assets\Resources\Potion\Script\MalusScript.cs" />
     <Compile Include="Assets\Resources\Potion\Script\MapInformation.cs" />
     <Compile Include="Assets\Resources\Potion\Script\PlayerInfo.cs" />
+    <Compile Include="Assets\Resources\Potion\Script\PlayerMovement.cs" />
     <Compile Include="Assets\Resources\Potion\Script\PlayerPotion.cs" />
     <Compile Include="Assets\Resources\Potion\Script\PotionManager.cs" />
     <Compile Include="Assets\Resources\Potion\Script\PotionMasterScript.cs" />

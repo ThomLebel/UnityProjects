@@ -5,6 +5,8 @@ using UnityEngine.UI;
 
 public class PotionManager : MonoBehaviour {
 
+	public List<Text> playersScore;
+
 	//public float indicationSpace = 10f;
 	public int maxRecipes = 6;
 
@@ -21,6 +23,8 @@ public class PotionManager : MonoBehaviour {
 	private Sprite recipeSprite;
 	[SerializeField]
 	private GameObject canvas;
+	[SerializeField]
+	private GameObject medalPrefab;
 
 	private float canvasWidth;
 	private float canvasHeight;
@@ -38,9 +42,19 @@ public class PotionManager : MonoBehaviour {
 		int i = 0;
 		foreach (GameObject player in _players)
 		{
-			Debug.Log("Init a player : "+player);
+			PlayerInfo info = player.GetComponent<PlayerInfo>();
 
-			player.GetComponent<PlayerInfo>().Init(SpawnPositionsList[i].position);
+			Debug.Log("Init a player : "+player);
+			info.Init(SpawnPositionsList[i].position);
+
+			Debug.Log("Create a medal for this player");
+			GameObject medal = Instantiate(medalPrefab);
+			medal.transform.Find("playerFace/head").GetComponent<Image>().sprite = player.transform.Find("base_wizard/spineBone/headBone/head/headSprite").GetComponent<SpriteRenderer>().sprite;
+			medal.transform.Find("playerFace/eyes").GetComponent<Image>().sprite = player.transform.Find("base_wizard/spineBone/headBone/base_eyes_open").GetComponent<SpriteRenderer>().sprite;
+			medal.transform.SetParent(canvas.transform.Find("BotPanel"));
+			//Position the medal based on team number
+			RectTransform medalTransform = medal.GetComponent<RectTransform>();
+			medalTransform.anchoredPosition = new Vector2(0f,0f);
 
 			i++;
 		}
@@ -66,6 +80,11 @@ public class PotionManager : MonoBehaviour {
 
 			recipeAnimationDelay += recipeAnimationTime/2;
 		}
+	}
+
+	public void SetPlayerScore(int id, float score)
+	{
+		playersScore[id].text = score.ToString();
 	}
 
 	public GameObject GenerateRecipe()
@@ -130,7 +149,7 @@ public class PotionManager : MonoBehaviour {
 				indicationElement.GetComponent<RectTransform>().SetParent(recipe.transform);
 				indicationSprite.sprite = ingredient.GetComponentInChildren<SpriteRenderer>().sprite;
 				indicationSprite.SetNativeSize();
-				indicationElement.transform.localScale = new Vector3(0.2f, 0.2f, 1f);
+				indicationElement.transform.localScale = new Vector3(0.5f, 0.5f, 1f);
 
 				//float ingredientWidth = ingredientElement.GetComponent<RectTransform>().rect.width * 0.5f;
 				//float indicationWidth = indicationElement.GetComponent<RectTransform>().rect.width * 0.2f;

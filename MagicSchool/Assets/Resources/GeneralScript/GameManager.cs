@@ -17,6 +17,9 @@ namespace Com.OniriqueStudio.MagicSchool
 		[Tooltip("The list of all players")]
 		public List<GameObject> players = new List<GameObject>();
 
+		[Tooltip("The number of team")]
+		public int TeamNumber = 0;
+
 		#endregion
 
 

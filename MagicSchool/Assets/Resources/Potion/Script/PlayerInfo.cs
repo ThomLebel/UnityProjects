@@ -43,8 +43,11 @@ public class PlayerInfo : MonoBehaviour
 	public float pickUpRange = 0.5f;
 
 	public float score = 0;
-	
+	public float potionScore = 0;
+
 	public GameObject playerBody;
+
+	public GameObject gameManager;
 
 	private void Awake()
 	{
@@ -116,5 +119,6 @@ public class PlayerInfo : MonoBehaviour
 		gameObject.GetComponent<PlayerPotion>().enabled = true;
 		transform.position = pPos;
 		rb2d.isKinematic = false;
+		gameManager = GameObject.FindWithTag("GameManager");
 	}
 }

@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 114721235835470458}
   m_Layer: 0
   m_Name: PotionManager
-  m_TagString: Untagged
+  m_TagString: GameManager
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -43,6 +43,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4ae09cebf8b503a44829054ede212957, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  playersScore: []
   maxRecipes: 6
   ingredientsList:
   - {fileID: 1526486081205436, guid: 875c987360799f74c923d57fde5c6834, type: 3}
@@ -50,7 +51,10 @@ MonoBehaviour:
   - {fileID: 1526486081205436, guid: b01e6e881169c5441a04877e57142808, type: 3}
   - {fileID: 1526486081205436, guid: 2911b93d0d246b046b9359146a55bb50, type: 3}
   SpawnPositionsList: []
+  recipeImageList: []
   recipePrefab: {fileID: 8904956403688207104, guid: be6d3d4a18621d942b1028e62a11028b,
     type: 3}
   recipeSprite: {fileID: 21300000, guid: 378a95ebfc988bc4eb68abb001d6cc6b, type: 3}
   canvas: {fileID: 0}
+  medalPrefab: {fileID: 7964290675178676698, guid: 86e62344fb9ffb747809d59e51c59d0d,
+    type: 3}

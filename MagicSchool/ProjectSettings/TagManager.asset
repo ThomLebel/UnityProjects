@@ -16,6 +16,7 @@ TagManager:
   - location
   - pictoIngredient
   - canvas
+  - GameManager
   layers:
   - Default
   - TransparentFX

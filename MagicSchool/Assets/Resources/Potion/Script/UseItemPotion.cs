@@ -254,8 +254,9 @@ public class UseItemPotion : MonoBehaviour
 
 		playerInfo.isHolding = false;
 		itemHolded = null;
-
-		playerInfo.score += score;
+		
+		playerInfo.potionScore += score;
+		playerInfo.gameManager.GetComponent<PotionManager>().SetPlayerScore(playerInfo.playerTeam - 1, playerInfo.potionScore);
 
 		if (score > 0)
 		{
@@ -289,14 +290,14 @@ public class UseItemPotion : MonoBehaviour
 			}
 			else if (itemHolded.tag == "chaudron")
 			{
-				AddPicto(itemHolded);
-
 				if (supportableScript.support != null)
 				{
 					GameObject craftingTable = supportableScript.support;
 					craftingTable.GetComponent<SupportScript>().isOccupied = false;
 					supportableScript.support = null;
 				}
+				AddPicto(itemHolded);
+				Destroy(pItem);
 			}
 			
 			if (itemHolded.tag != "chaudron")
@@ -325,6 +326,7 @@ public class UseItemPotion : MonoBehaviour
 			else if (pItem.tag == "item")
 			{
 				pItem.GetComponent<IngredientScript>().progressBarScript.ToggleVisibility(false);
+				pItem.GetComponentInChildren<Animator>().enabled = false;
 			}
 			if (supportableScript.support != null)
 			{
@@ -375,7 +377,7 @@ public class UseItemPotion : MonoBehaviour
 				RaycastHit2D hit = Physics2D.Raycast(transform.position, Vector2.down, Mathf.Infinity, playerInfo.groundLayerMask);
 				if (hit.collider != null)
 				{
-					yPos = hit.transform.position.y + hit.transform.GetComponentInChildren<Renderer>().bounds.size.y + itemHeight;
+					yPos = hit.transform.position.y + hit.transform.GetComponentInChildren<Renderer>().bounds.size.y + itemHeight + 0.3f;
 				}
 
 				itemHolded.transform.position = new Vector3(transform.position.x, yPos, transform.position.z);
@@ -389,6 +391,11 @@ public class UseItemPotion : MonoBehaviour
 				foreach (BoxCollider2D collider in _colliders)
 				{
 					collider.enabled = true;
+				}
+
+				if (itemHolded.tag == "item")
+				{
+					itemHolded.GetComponentInChildren<Animator>().enabled = true;
 				}
 				
 				playerInfo.isHolding = false;
@@ -539,4 +546,3 @@ public class UseItemPotion : MonoBehaviour
 		return false;
 	}
 }
-
