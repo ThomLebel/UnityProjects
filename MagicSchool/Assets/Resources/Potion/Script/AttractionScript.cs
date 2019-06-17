@@ -46,8 +46,8 @@ public class AttractionScript : MonoBehaviour
 		}
 		if (collision.tag == "Player")
 		{
-			PlayerInfo playerInfoScript = collision.GetComponent<PlayerInfo>();
-			if (!playerInfoScript.isHolding && !playerInfoScript.isStun && !playerInfoScript.isPreparing)
+			PlayerPotion playerActionScript = collision.GetComponent<PlayerPotion>();
+			if (!playerActionScript.isHolding && !playerActionScript.isStun && !playerActionScript.isPreparing)
 			{
 				rb2d.velocity = Vector2.zero;
 				collision.GetComponent<UseItemPotion>().PickUp(gameObject);

@@ -10,7 +10,6 @@ GameObject:
   m_Component:
   - component: {fileID: 4928030337582896}
   - component: {fileID: 61539541809040892}
-  - component: {fileID: 114238918443395934}
   - component: {fileID: 114612464058483494}
   m_Layer: 0
   m_Name: ItemDispenser
@@ -61,24 +60,6 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 1, y: 1}
   m_EdgeRadius: 0
---- !u!114 &114238918443395934
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1245564911719858}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f3082c55f6102554d81cca66ddf29ad5, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  itemName: itemDispenser
-  maxItem: 3
-  itemList: []
-  pictoList: []
-  isHold: 0
-  isOccupied: 0
 --- !u!114 &114612464058483494
 MonoBehaviour:
   m_ObjectHideFlags: 0

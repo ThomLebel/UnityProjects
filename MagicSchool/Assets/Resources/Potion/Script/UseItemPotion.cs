@@ -26,7 +26,7 @@ public class UseItemPotion : MonoBehaviour
 	//Pick-up item !
 	public void PickItem()
 	{
-		Collider2D target = GetClosestCollider(playerInfo.pickupTags);
+		Collider2D target = GetClosestCollider(playerAction.pickupTags);
 
 		if (target != null)
 		{
@@ -138,12 +138,19 @@ public class UseItemPotion : MonoBehaviour
 
 		if (target != null)
 		{
+			SupportScript supportScript = target.GetComponent<SupportScript>();
+
+			if (!supportScript.isOccupied)
+			{
+				return;
+			}
+
 			IngredientScript ingredientScript = target.GetComponentInChildren<IngredientScript>();
 			if (target.GetComponentInChildren<SupportableScript>().onSupport)
 			{
 				if (CheckPlayerDirection(target))
 				{
-					if (playerInfo.isPreparing)
+					if (playerAction.isPreparing)
 					{
 						ingredientScript.PrepareIngredient();
 					}
@@ -252,11 +259,12 @@ public class UseItemPotion : MonoBehaviour
 		RemovePicto(pItem);
 		Destroy(pItem.gameObject);
 
-		playerInfo.isHolding = false;
+		playerAction.isHolding = false;
 		itemHolded = null;
 		
 		playerInfo.potionScore += score;
-		playerInfo.gameManager.GetComponent<PotionManager>().SetPlayerScore(playerInfo.playerTeam - 1, playerInfo.potionScore);
+		//playerInfo.gameManager.GetComponent<PotionManager>().SetPlayerScore(playerInfo.playerTeam - 1, playerInfo.potionScore);
+		PotionManager.Instance.SetPlayerScore(playerInfo.playerTeam -1, playerInfo.potionScore);
 
 		if (score > 0)
 		{
@@ -286,7 +294,7 @@ public class UseItemPotion : MonoBehaviour
 
 			if (itemHolded.tag == "item")
 			{
-				playerInfo.isHolding = false;
+				playerAction.isHolding = false;
 			}
 			else if (itemHolded.tag == "chaudron")
 			{
@@ -351,12 +359,12 @@ public class UseItemPotion : MonoBehaviour
 		pItem.transform.localPosition = new Vector3(0,0,0);
 		pItem.transform.localRotation = new Quaternion(0, 0, 0, 0);
 
-		playerInfo.isHolding = true;
+		playerAction.isHolding = true;
 	}
 
 	public void DropOff()
 	{
-		if (playerInfo.isHolding)
+		if (playerAction.isHolding)
 		{
 			if (itemHolded != null)
 			{
@@ -374,7 +382,7 @@ public class UseItemPotion : MonoBehaviour
 				itemHolded.transform.rotation = Quaternion.Euler(0,0,0);
 
 				//Cast a ray to detect closest floor to drop the item on
-				RaycastHit2D hit = Physics2D.Raycast(transform.position, Vector2.down, Mathf.Infinity, playerInfo.groundLayerMask);
+				RaycastHit2D hit = Physics2D.Raycast(transform.position, Vector2.down, Mathf.Infinity, playerAction.groundLayerMask);
 				if (hit.collider != null)
 				{
 					yPos = hit.transform.position.y + hit.transform.GetComponentInChildren<Renderer>().bounds.size.y + itemHeight + 0.3f;
@@ -397,8 +405,8 @@ public class UseItemPotion : MonoBehaviour
 				{
 					itemHolded.GetComponentInChildren<Animator>().enabled = true;
 				}
-				
-				playerInfo.isHolding = false;
+
+				playerAction.isHolding = false;
 				itemHolded = null;
 			}
 		}
@@ -406,7 +414,7 @@ public class UseItemPotion : MonoBehaviour
 
 	public void DropOnSupport(GameObject pTarget)
 	{
-		if (playerInfo.isHolding)
+		if (playerAction.isHolding)
 		{
 			if (itemHolded != null)
 			{
@@ -443,7 +451,7 @@ public class UseItemPotion : MonoBehaviour
 					supportableScript.onSupport = true;
 					supportableScript.support = pTarget;
 					targetScript.isOccupied = true;
-					playerInfo.isHolding = false;
+					playerAction.isHolding = false;
 					itemHolded = null;
 				}
 				else
@@ -484,7 +492,7 @@ public class UseItemPotion : MonoBehaviour
 		float dist = 1000;
 		Collider2D target = null;
 
-		Collider2D[] colliders = Physics2D.OverlapCircleAll(transform.position, playerInfo.pickUpRange);
+		Collider2D[] colliders = Physics2D.OverlapCircleAll(transform.position, playerAction.pickUpRange);
 		if (colliders.Length > 0)
 		{
 			for (int i = 0; i < colliders.Length; i++)

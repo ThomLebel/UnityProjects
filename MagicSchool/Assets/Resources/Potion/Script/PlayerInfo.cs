@@ -10,12 +10,7 @@ public class PlayerInfo : MonoBehaviour
 {
 	//States
 	//[HideInInspector]
-	public Transform groundCheck;
-	public GameObject projectilePrefab;
-	public GameObject bubblePrefab;
-	public bool isHolding, isStun, isPreparing, isProtected, canMove;
 	public string State;
-
 
 	[HideInInspector]
 	public Rigidbody2D rb2d;
@@ -24,12 +19,6 @@ public class PlayerInfo : MonoBehaviour
 	[HideInInspector]
 	public float playerWidth, playerHeight, originalScale;
 	public float itemOffset = 0.4f;
-
-	//Layers
-	[HideInInspector]
-	public string[] pickupTags;
-	public LayerMask groundLayerMask;
-	public LayerMask jumpThroughLayerMask;
 
 	[Tooltip("Numero du contrôleur du joueur")]
 	public int playerController;
@@ -40,41 +29,30 @@ public class PlayerInfo : MonoBehaviour
 	[Tooltip("Numero de l'équipe du joueur")]
 	public int playerTeam;
 
-	public float pickUpRange = 0.5f;
-
 	public float score = 0;
 	public float potionScore = 0;
 
 	public GameObject playerBody;
 
 	public GameObject gameManager;
+	
 
 	private void Awake()
 	{
 		DontDestroyOnLoad(this.gameObject);
 
 		playerBody = gameObject.transform.Find("base_wizard").gameObject;
-		//spriteRenderer = gameObject.GetComponentInChildren<SpriteRenderer>();
 		rb2d = GetComponent<Rigidbody2D>();
 	}
 
 	private void Start()
 	{
 		State = "idle";
-		isHolding = false;
-		isStun = false;
-		isPreparing = false;
-		isProtected = false;
-		canMove = true;
 		//playerWidth = GetComponentInChildren<Renderer>().bounds.size.x;
 		//playerHeight = GetComponentInChildren<Renderer>().bounds.size.y;
 		originalScale = playerBody.transform.localScale.x;
 
 		Debug.Log("PLAYERINFO // Original scale = "+originalScale);
-		
-		pickupTags = new string[] { "item", "chaudron", "dispenser", "fiole" };
-
-		jumpThroughLayerMask = LayerMask.GetMask("jumpThrough");
 	}
 
 	public void ConfigurePlayer(int pID, int pController, int pSpriteID)
@@ -101,10 +79,10 @@ public class PlayerInfo : MonoBehaviour
 			playerSprites[i].sprite = spriteSheet[spriteIndex];
 		}
 		
-		Animator bubbleAnimator = bubblePrefab.GetComponentInChildren<Animator>();
+		Animator bubbleAnimator = gameObject.GetComponent<PlayerPotion>().bubblePrefab.GetComponentInChildren<Animator>();
 		bubbleAnimator.runtimeAnimatorController = (RuntimeAnimatorController)Resources.Load("Potion/Animations/" + playerSpriteName + "_animations/" + playerSpriteName + "_bubble", typeof(RuntimeAnimatorController));
 
-		projectilePrefab = Resources.Load<GameObject>("Potion/Prefab/"+playerSpriteName+"_spell");
+		gameObject.GetComponent<PlayerPotion>().projectilePrefab = Resources.Load<GameObject>("Potion/Prefab/"+playerSpriteName+"_spell");
 
 		gameObject.GetComponent<PlayerPotion>().enabled = false;
 		bubbleAnimator.enabled = false;

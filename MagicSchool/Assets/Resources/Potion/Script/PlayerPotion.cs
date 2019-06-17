@@ -8,13 +8,13 @@ using UnityEngine;
 using System.Linq;
 using System;
 
-public class PlayerPotion : MonoBehaviour
+public class PlayerPotion : PlayerMovement
 {
-	public float originalSpeed = 150f;
-	public float speed;
+	public GameObject projectilePrefab;
+	public GameObject bubblePrefab;
+
+	public float pickUpRange = 0.5f;
 	public float slowedSpeed = 40f;
-	public float jumpTakeOff = 40f;
-	public Vector3 lastDir;
 	public float inverted = 1f;
 
 	public float shootCastRate;
@@ -29,18 +29,12 @@ public class PlayerPotion : MonoBehaviour
 	public float uncarryTime;
 	public float uncraftTime;
 
-	private PlayerInfo _playerInfo;
-	private UseItemPotion _useItem;
+	public bool isHolding, isStun, isPreparing, isProtected;
 
-	private float horizontal;
-	private float vertical;
-	private float safeSpot = 0.2f;
-	[SerializeField]
-	private bool grounded = false;
-	[SerializeField]
-	private bool isJumping = false;
-	[SerializeField]
-	private bool isFalling = false;
+	public string[] pickupTags;
+
+	private UseItemPotion useItem;
+
 	[SerializeField]
 	private bool isInverted = false;
 	[SerializeField]
@@ -53,8 +47,7 @@ public class PlayerPotion : MonoBehaviour
 	private bool cantCarry = false;
 	[SerializeField]
 	private bool cantCraft = false;
-
-	private Collider2D platformCollider;
+	
 	private IEnumerator stunCoroutine;
 	private IEnumerator protectCoroutine;
 	private IEnumerator invertCoroutine;
@@ -68,24 +61,15 @@ public class PlayerPotion : MonoBehaviour
 	private float nextCastProtect;
 	private Vector3 shootingDir;
 
-	private CapsuleCollider2D playerCollider;
-	private Animator animator;
 
-
-	void Awake()
+	public override void Start()
 	{
-		playerCollider = gameObject.GetComponent<CapsuleCollider2D>();
-		animator = gameObject.GetComponentInChildren<Animator>();
-	}
+		base.Start();
+		useItem = gameObject.GetComponent<UseItemPotion>();
 
-	private void Start()
-	{
-		_playerInfo = gameObject.GetComponent<PlayerInfo>();
-		_useItem = gameObject.GetComponent<UseItemPotion>();
+		pickupTags = new string[] { "item", "chaudron", "dispenser", "fiole" };
 
-		lastDir = new Vector3(1, 0, 0);
-		speed = originalSpeed;
-
+		jumpThroughLayerMask = LayerMask.GetMask("jumpThrough");
 
 #if UNITY_MIN_5_4
 		//Unity 5.4 has a new scene management. Register a method to call CalledOnLevelWasLoaded.
@@ -96,12 +80,11 @@ public class PlayerPotion : MonoBehaviour
 #endif
 	}
 
-	void Update()
+	public override void Update()
 	{
-		if (!_playerInfo.isStun)
+		if (!isStun)
 		{
-			if(_playerInfo.canMove)
-				UpdateMovement();
+			base.Update();
 			//Action 1
 			ItemAction();
 			//Action 2
@@ -125,158 +108,70 @@ public class PlayerPotion : MonoBehaviour
 	}
 
 
-	void UpdateMovement()
-	{
-		grounded = Physics2D.Linecast(transform.position, _playerInfo.groundCheck.position, _playerInfo.groundLayerMask);
-
-		animator.SetBool("playerMove", false);
-
-		horizontal = Input.GetAxisRaw("Horizontal_P" + _playerInfo.playerController) * inverted;     //Used to store the horizontal move direction.
-		vertical = Input.GetAxisRaw("Vertical_P" + _playerInfo.playerController);       //Used to store the vertical move direction.
-
-		if (Math.Abs(horizontal) > safeSpot)
-		{
-			if(!isJumping)
-				animator.SetBool("playerMove", true);
-
-			if (horizontal > safeSpot)
-			{
-				lastDir = new Vector3(1, 0, 0);
-			}
-			else if (horizontal < safeSpot * -1)
-			{
-				lastDir = new Vector3(-1, 0, 0);
-			}
-		}
-
-		if (_playerInfo.rb2d.velocity.y > 0)
-		{
-			animator.SetBool("playerJump", true);
-		}else if (_playerInfo.rb2d.velocity.y < 0)
-		{
-			animator.SetBool("playerJump", false);
-			animator.SetBool("playerFall", true);
-		}
-		else
-		{
-			animator.SetBool("playerJump", false);
-			animator.SetBool("playerFall", false);
-		}
-
-		if (vertical > safeSpot && !isJumping && grounded && !isHeavy)
-		{
-			isJumping = true;
-			_playerInfo.rb2d.AddForce(new Vector2(0f, jumpTakeOff));
-		}
-		if (vertical < safeSpot)
-		{
-			if (grounded)
-			{
-				isJumping = false;
-			}
-			if (isJumping && _playerInfo.rb2d.velocity.y > 0)
-			{
-				_playerInfo.rb2d.velocity = new Vector2(_playerInfo.rb2d.velocity.x, _playerInfo.rb2d.velocity.y * 0.5f);
-			}
-			if (vertical < safeSpot * -1 && grounded)
-			{
-				RaycastHit2D ray = Physics2D.Linecast(transform.position, _playerInfo.groundCheck.position, _playerInfo.jumpThroughLayerMask);
-				
-				if (ray.collider != null)
-				{
-					platformCollider = ray.collider;
-					playerCollider.isTrigger = true;
-					isFalling = true;
-				}
-			}
-		}
-
-		if (isFalling)
-		{
-			if (!playerCollider.IsTouching(platformCollider))
-			{
-				isFalling = false;
-				platformCollider = null;
-				playerCollider.isTrigger = false;
-			}
-		}
-
-		if (lastDir.x != 0)
-		{
-			_playerInfo.playerBody.transform.localScale = new Vector3(_playerInfo.originalScale * lastDir.x, transform.localScale.y, transform.localScale.z);
-		}
-	}
-
-	private void FixedUpdate()
-	{
-		if (!_playerInfo.isStun && _playerInfo.canMove)
-		_playerInfo.rb2d.velocity = new Vector2(horizontal * speed * Time.fixedDeltaTime, _playerInfo.rb2d.velocity.y);
-	}
-
 	private void ItemAction()
 	{
-		if (_playerInfo.isPreparing)
+		if (isPreparing)
 		{
 			return;
 		}
-		if (Input.GetButtonDown("Fire1_P" + _playerInfo.playerController))
+		if (Input.GetButtonDown("Fire1_P" + playerInfo.playerController))
 		{
-			if (!_playerInfo.isHolding && !cantCarry)
+			if (!isHolding && !cantCarry)
 			{
-				_useItem.PickItem();
+				useItem.PickItem();
 			}
 			else
 			{
-				_useItem.DropItem();
+				useItem.DropItem();
 			}
 		}
 	}
 
 	private void PrepareItem()
 	{
-		if (_playerInfo.isStun || _playerInfo.isHolding || cantCraft)
+		if (isStun || isHolding || cantCraft)
 		{
-			_playerInfo.isPreparing = false;
+			isPreparing = false;
 			return;
 		}
-		if (Input.GetButtonDown("Fire2_P" + _playerInfo.playerController))
+		if (Input.GetButtonDown("Fire2_P" + playerInfo.playerController))
 		{
 			if(grounded)
-				_playerInfo.rb2d.velocity = Vector2.zero;
+				playerInfo.rb2d.velocity = Vector2.zero;
 
-			_playerInfo.canMove = false;
-			_playerInfo.isPreparing = true;
+			canMove = false;
+			isPreparing = true;
 			animator.SetBool("playerCook", true);
 		}
-		if (Input.GetButtonUp("Fire2_P" + _playerInfo.playerController))
+		if (Input.GetButtonUp("Fire2_P" + playerInfo.playerController))
 		{
-			_playerInfo.canMove = true;
-			_playerInfo.isPreparing = false;
+			canMove = true;
+			isPreparing = false;
 			animator.SetBool("playerCook", false);
 		}
-		if (Input.GetButton("Fire2_P" + _playerInfo.playerController))
+		if (Input.GetButton("Fire2_P" + playerInfo.playerController))
 		{
-			_useItem.PrepareItem();
+			useItem.PrepareItem();
 		}
 	}
 
 	private void CastSpell()
 	{
-		if (_playerInfo.isPreparing || isSilenced)
+		if (isPreparing || isSilenced)
 		{
 			return;
 		}
-		if (Input.GetButton("Fire3_P" + _playerInfo.playerController) && Time.time > nextCastShoot)
+		if (Input.GetButton("Fire3_P" + playerInfo.playerController) && Time.time > nextCastShoot)
 		{
 			if (grounded)
-				_playerInfo.rb2d.velocity = Vector2.zero;
+				playerInfo.rb2d.velocity = Vector2.zero;
 
 			Shoot(lastDir);
 		}
-		else if (Input.GetButton("Fire4_P" + _playerInfo.playerController) && Time.time > nextCastProtect)
+		else if (Input.GetButton("Fire4_P" + playerInfo.playerController) && Time.time > nextCastProtect)
 		{
 			if (grounded)
-				_playerInfo.rb2d.velocity = Vector2.zero;
+				playerInfo.rb2d.velocity = Vector2.zero;
 
 			Protect();
 		}
@@ -285,20 +180,20 @@ public class PlayerPotion : MonoBehaviour
 	private void Shoot(Vector3 pDir)
 	{
 		nextCastShoot = Time.time + shootCastRate;
-		_playerInfo.canMove = false;
+		canMove = false;
 		animator.SetTrigger("playerShoot");
 		shootingDir = pDir;
 	}
 
 	public void InstantiateBlast()
 	{
-		_playerInfo.canMove = true;
+		canMove = true;
 
 		GameObject projectile;
-		projectile = Instantiate(_playerInfo.projectilePrefab) as GameObject;
+		projectile = Instantiate(projectilePrefab) as GameObject;
 		projectile.GetComponent<SpellProjectileScript>().direction = shootingDir;
-		projectile.GetComponent<SpellProjectileScript>().playerOwner = _playerInfo.playerTeam;
-		projectile.transform.position = new Vector3(transform.position.x + shootingDir.x, (transform.position.y + _playerInfo.playerHeight/2) + shootingDir.y, transform.position.z + shootingDir.z);
+		projectile.GetComponent<SpellProjectileScript>().playerOwner = playerInfo.playerTeam;
+		projectile.transform.position = new Vector3(transform.position.x + shootingDir.x, (transform.position.y + playerInfo.playerHeight/2) + shootingDir.y, transform.position.z + shootingDir.z);
 		//projectile.transform.position = transform.position + shootingDir;
 	}
 
@@ -307,54 +202,54 @@ public class PlayerPotion : MonoBehaviour
 		nextCastProtect = Time.time + protectCastRate;
 
 		animator.SetTrigger("playerProtect");
-		_playerInfo.canMove = false;
-		_playerInfo.isProtected = true;
-		_playerInfo.State = "protected";
+		canMove = false;
+		isProtected = true;
+		playerInfo.State = "protected";
 		protectCoroutine = PlayerProtected(protectedTime);
 		StartCoroutine(protectCoroutine);
 	}
 
 	public void InstantiateProtection()
 	{
-		_playerInfo.canMove = true;
-		_playerInfo.bubblePrefab.SetActive(true);
-		_playerInfo.bubblePrefab.GetComponentInChildren<Animator>().enabled = true;
+		canMove = true;
+		bubblePrefab.SetActive(true);
+		bubblePrefab.GetComponentInChildren<Animator>().enabled = true;
 	}
 
 	private void DestroyBubble()
 	{
-		_playerInfo.isProtected = false;
-		_playerInfo.bubblePrefab.SetActive(false);
-		_playerInfo.bubblePrefab.GetComponentInChildren<Animator>().enabled = false;
+		isProtected = false;
+		bubblePrefab.SetActive(false);
+		bubblePrefab.GetComponentInChildren<Animator>().enabled = false;
 	}
 
 	public void SpellHit(Vector3 pDir)
 	{
-		if (_playerInfo.isProtected)
+		if (isProtected)
 		{
 			DestroyBubble();
 			return;
 		}
-		if (_playerInfo.isStun)
+		if (isStun)
 		{
 			return;
 		}
-		if (_playerInfo.isHolding)
+		if (isHolding)
 		{
-			_useItem.DropOff();
+			useItem.DropOff();
 		}
 
-		Debug.Log("Player " + _playerInfo.playerController + " is Stun !");
+		Debug.Log("Player " + playerInfo.playerController + " is Stun !");
 		animator.SetTrigger("playerHit");
 		animator.SetBool("playerStun", true);
 		animator.SetBool("playerMove", false);
 		animator.SetBool("playerCook", false);
-		_playerInfo.isStun = true;
-		_playerInfo.State = "stun";
+		isStun = true;
+		playerInfo.State = "stun";
 		stunCoroutine = PlayerStun(stunTime);
 		StartCoroutine(stunCoroutine);
 
-		_playerInfo.rb2d.AddForce(new Vector2(spellForce * pDir.x, _playerInfo.rb2d.velocity.y), ForceMode2D.Force);
+		playerInfo.rb2d.AddForce(new Vector2(spellForce * pDir.x, playerInfo.rb2d.velocity.y), ForceMode2D.Force);
 	}
 
 	public void InvertDirection()
@@ -400,7 +295,7 @@ public class PlayerPotion : MonoBehaviour
 
 	public void HeavyPlayer()
 	{
-		if (isSilenced)
+		if (isHeavy)
 		{
 			return;
 		}
@@ -441,9 +336,9 @@ public class PlayerPotion : MonoBehaviour
 	{
 		yield return new WaitForSeconds(time);
 		animator.SetBool("playerStun", false);
-		_playerInfo.canMove = true;
-		_playerInfo.isStun = false;
-		_playerInfo.State = "idle";
+		canMove = true;
+		isStun = false;
+		playerInfo.State = "idle";
 		Debug.Log("Isn't stun anymore !");
 	}
 
@@ -451,7 +346,7 @@ public class PlayerPotion : MonoBehaviour
 	{
 		yield return new WaitForSeconds(time);
 		DestroyBubble();
-		_playerInfo.State = "idle";
+		playerInfo.State = "idle";
 		Debug.Log("Isn't protected anymore !");
 	}
 
