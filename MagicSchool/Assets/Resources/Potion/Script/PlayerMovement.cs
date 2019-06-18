@@ -54,7 +54,10 @@ public class PlayerMovement : MonoBehaviour
 		if (canMove)
 			Move();
 
-		Jump();
+		if(canJump)
+			Jump();
+
+		Fall();
     }
 
 	public virtual void Move()
@@ -100,10 +103,10 @@ public class PlayerMovement : MonoBehaviour
 			animator.SetBool("playerFall", false);
 		}
 
-		if (vertical > safeSpot && canJump)
+		if (vertical > safeSpot && !isJumping)
 		{
 			isJumping = true;
-			canJump = false;
+			//canJump = false;
 			playerInfo.rb2d.AddForce(new Vector2(0f, jumpTakeOff));
 		}
 		if (vertical < safeSpot)
@@ -111,7 +114,7 @@ public class PlayerMovement : MonoBehaviour
 			if (grounded)
 			{
 				isJumping = false;
-				canJump = true;
+				//canJump = true;
 			}
 			if (isJumping && playerInfo.rb2d.velocity.y > 0)
 			{
@@ -126,17 +129,23 @@ public class PlayerMovement : MonoBehaviour
 					platformCollider = ray.collider;
 					playerCollider.isTrigger = true;
 					isFalling = true;
+					canJump = false;
 				}
 			}
 		}
+	}
 
+	private void Fall()
+	{
 		if (isFalling)
 		{
 			if (!playerCollider.IsTouching(platformCollider))
 			{
+				canJump = true;
 				isFalling = false;
 				platformCollider = null;
 				playerCollider.isTrigger = false;
+				animator.SetBool("playerFall", false);
 			}
 		}
 	}

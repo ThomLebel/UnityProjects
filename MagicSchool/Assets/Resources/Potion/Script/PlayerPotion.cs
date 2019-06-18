@@ -82,9 +82,10 @@ public class PlayerPotion : PlayerMovement
 
 	public override void Update()
 	{
+		base.Update();
+
 		if (!isStun)
 		{
-			base.Update();
 			//Action 1
 			ItemAction();
 			//Action 2
@@ -129,23 +130,25 @@ public class PlayerPotion : PlayerMovement
 
 	private void PrepareItem()
 	{
-		if (isStun || isHolding || cantCraft)
+		if (isStun || isHolding || cantCraft || isJumping || isFalling)
 		{
 			isPreparing = false;
 			return;
 		}
 		if (Input.GetButtonDown("Fire2_P" + playerInfo.playerController))
 		{
-			if(grounded)
-				playerInfo.rb2d.velocity = Vector2.zero;
-
 			canMove = false;
+			canJump = false;
 			isPreparing = true;
 			animator.SetBool("playerCook", true);
+
+			if (grounded)
+				playerInfo.rb2d.velocity = Vector2.zero;
 		}
 		if (Input.GetButtonUp("Fire2_P" + playerInfo.playerController))
 		{
 			canMove = true;
+			canJump = true;
 			isPreparing = false;
 			animator.SetBool("playerCook", false);
 		}
@@ -157,22 +160,16 @@ public class PlayerPotion : PlayerMovement
 
 	private void CastSpell()
 	{
-		if (isPreparing || isSilenced)
+		if (isPreparing || isSilenced )
 		{
 			return;
 		}
 		if (Input.GetButton("Fire3_P" + playerInfo.playerController) && Time.time > nextCastShoot)
 		{
-			if (grounded)
-				playerInfo.rb2d.velocity = Vector2.zero;
-
 			Shoot(lastDir);
 		}
 		else if (Input.GetButton("Fire4_P" + playerInfo.playerController) && Time.time > nextCastProtect)
 		{
-			if (grounded)
-				playerInfo.rb2d.velocity = Vector2.zero;
-
 			Protect();
 		}
 	}
@@ -181,6 +178,8 @@ public class PlayerPotion : PlayerMovement
 	{
 		nextCastShoot = Time.time + shootCastRate;
 		canMove = false;
+		if (grounded)
+			playerInfo.rb2d.velocity = Vector2.zero;
 		animator.SetTrigger("playerShoot");
 		shootingDir = pDir;
 	}
@@ -188,6 +187,7 @@ public class PlayerPotion : PlayerMovement
 	public void InstantiateBlast()
 	{
 		canMove = true;
+		canJump = true;
 
 		GameObject projectile;
 		projectile = Instantiate(projectilePrefab) as GameObject;
@@ -203,6 +203,10 @@ public class PlayerPotion : PlayerMovement
 
 		animator.SetTrigger("playerProtect");
 		canMove = false;
+		canJump = false;
+		if (grounded)
+			playerInfo.rb2d.velocity = Vector2.zero;
+
 		isProtected = true;
 		playerInfo.State = "protected";
 		protectCoroutine = PlayerProtected(protectedTime);
@@ -212,6 +216,7 @@ public class PlayerPotion : PlayerMovement
 	public void InstantiateProtection()
 	{
 		canMove = true;
+		canJump = true;
 		bubblePrefab.SetActive(true);
 		bubblePrefab.GetComponentInChildren<Animator>().enabled = true;
 	}
@@ -240,11 +245,16 @@ public class PlayerPotion : PlayerMovement
 		}
 
 		Debug.Log("Player " + playerInfo.playerController + " is Stun !");
+		isStun = true;
+		canMove = false;
+		canJump = false;
+		playerInfo.rb2d.velocity = new Vector2(playerInfo.rb2d.velocity.x, playerInfo.rb2d.velocity.y * 0.2f);
 		animator.SetTrigger("playerHit");
 		animator.SetBool("playerStun", true);
 		animator.SetBool("playerMove", false);
+		animator.SetBool("playerJump", false);
+		animator.SetBool("playerFall", false);
 		animator.SetBool("playerCook", false);
-		isStun = true;
 		playerInfo.State = "stun";
 		stunCoroutine = PlayerStun(stunTime);
 		StartCoroutine(stunCoroutine);
@@ -337,6 +347,7 @@ public class PlayerPotion : PlayerMovement
 		yield return new WaitForSeconds(time);
 		animator.SetBool("playerStun", false);
 		canMove = true;
+		canJump = true;
 		isStun = false;
 		playerInfo.State = "idle";
 		Debug.Log("Isn't stun anymore !");

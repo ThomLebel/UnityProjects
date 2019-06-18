@@ -38,6 +38,13 @@ public class PotionManager : MonoBehaviour {
 	void Start () {
 		canvas = GameObject.FindGameObjectWithTag("canvas");
 
+		canvasWidth = canvas.GetComponent<RectTransform>().rect.width;
+		canvasHeight = canvas.GetComponent<RectTransform>().rect.height;
+
+		recipeSpace = canvasWidth / maxRecipes;
+		recipeWidth = recipePrefab.GetComponent<RectTransform>().rect.width;
+		recipeHeight = recipePrefab.GetComponent<RectTransform>().rect.height;
+
 		GameObject[] _players =  GameObject.FindGameObjectsWithTag("Player");
 		int i = 0;
 		foreach (GameObject player in _players)
@@ -49,22 +56,18 @@ public class PotionManager : MonoBehaviour {
 
 			Debug.Log("Create a medal for this player");
 			GameObject medal = Instantiate(medalPrefab);
-			medal.transform.Find("playerFace/head").GetComponent<Image>().sprite = player.transform.Find("base_wizard/spineBone/headBone/head/headSprite").GetComponent<SpriteRenderer>().sprite;
-			medal.transform.Find("playerFace/eyes").GetComponent<Image>().sprite = player.transform.Find("base_wizard/spineBone/headBone/base_eyes_open").GetComponent<SpriteRenderer>().sprite;
+			medal.transform.Find("back/playerFace/head").GetComponent<Image>().sprite = player.transform.Find("base_wizard/spineBone/headBone/head/headSprite").GetComponent<SpriteRenderer>().sprite;
+			medal.transform.Find("back/playerFace/eyes").GetComponent<Image>().sprite = player.transform.Find("base_wizard/spineBone/headBone/base_eyes_open").GetComponent<SpriteRenderer>().sprite;
 			medal.transform.SetParent(canvas.transform.Find("BotPanel"));
 			//Position the medal based on team number
 			RectTransform medalTransform = medal.GetComponent<RectTransform>();
-			medalTransform.anchoredPosition = new Vector2(0f,0f);
+			//medalTransform.anchoredPosition = new Vector2(0f,0f);
+			float medalSpace = canvasWidth / _players.Length;
+			float medalX = ((canvasWidth / 2) * -1) + (medalSpace *(info.playerID - 1)) + (medalSpace / 2);
+			medalTransform.anchoredPosition = new Vector2(medalX, 0f);
 
 			i++;
 		}
-
-		canvasWidth = canvas.GetComponent<RectTransform>().rect.width;
-		canvasHeight = canvas.GetComponent<RectTransform>().rect.height;
-
-		recipeSpace = canvas.GetComponent<RectTransform>().rect.width / maxRecipes;
-		recipeWidth = recipePrefab.GetComponent<RectTransform>().rect.width;
-		recipeHeight = recipePrefab.GetComponent<RectTransform>().rect.height;
 
 		//recipeWidth = recipeSprite.rect.width;
 		//recipeHeight = recipeSprite.rect.height;
