@@ -1,11 +1,12 @@
-﻿using System.Collections;
+﻿using Com.OniriqueStudio.MagicSchool;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
 public class PotionManager : MonoBehaviour {
 
-	public List<Text> playersScore;
+	public List<GameObject> playersScore;
 
 	//public float indicationSpace = 10f;
 	public int maxRecipes = 6;
@@ -36,6 +37,8 @@ public class PotionManager : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
+		Instance = this;
+
 		canvas = GameObject.FindGameObjectWithTag("canvas");
 
 		canvasWidth = canvas.GetComponent<RectTransform>().rect.width;
@@ -45,10 +48,13 @@ public class PotionManager : MonoBehaviour {
 		recipeWidth = recipePrefab.GetComponent<RectTransform>().rect.width;
 		recipeHeight = recipePrefab.GetComponent<RectTransform>().rect.height;
 
-		GameObject[] _players =  GameObject.FindGameObjectsWithTag("Player");
-		int i = 0;
-		foreach (GameObject player in _players)
+		//GameObject[] _players =  GameObject.FindGameObjectsWithTag("Player");
+		//int i = 0;
+		List<GameObject> _players = GameManager.Instance.players;
+
+		for (int i = 0; i< _players.Count; i++)
 		{
+			GameObject player = _players[i];
 			PlayerInfo info = player.GetComponent<PlayerInfo>();
 
 			Debug.Log("Init a player : "+player);
@@ -56,17 +62,37 @@ public class PotionManager : MonoBehaviour {
 
 			Debug.Log("Create a medal for this player");
 			GameObject medal = Instantiate(medalPrefab);
+			medal.name = "medal"+i;
 			medal.transform.Find("back/playerFace/head").GetComponent<Image>().sprite = player.transform.Find("base_wizard/spineBone/headBone/head/headSprite").GetComponent<SpriteRenderer>().sprite;
 			medal.transform.Find("back/playerFace/eyes").GetComponent<Image>().sprite = player.transform.Find("base_wizard/spineBone/headBone/base_eyes_open").GetComponent<SpriteRenderer>().sprite;
 			medal.transform.SetParent(canvas.transform.Find("BotPanel"));
 			//Position the medal based on team number
 			RectTransform medalTransform = medal.GetComponent<RectTransform>();
-			//medalTransform.anchoredPosition = new Vector2(0f,0f);
-			float medalSpace = canvasWidth / _players.Length;
-			float medalX = ((canvasWidth / 2) * -1) + (medalSpace *(info.playerID - 1)) + (medalSpace / 2);
+			float medalSpace = canvasWidth / _players.Count;
+			if (_players.Count < 2)
+			{
+				medalSpace = canvasWidth / 2;
+			}
+			float medalX = ((canvasWidth / 2) * -1) + (medalSpace * i) + (medalSpace / 2);
+			//float medalX = ((canvasWidth / 2) * -1) + (medalSpace *(info.playerID - 1)) + (medalSpace / 2);
 			medalTransform.anchoredPosition = new Vector2(medalX, 0f);
 
-			i++;
+			GameObject playerScore = new GameObject();
+			playerScore.name = "score"+i;
+			Text scoreText = playerScore.AddComponent<Text>();
+			scoreText.text = "0";
+			scoreText.font = Resources.GetBuiltinResource<Font>("Arial.ttf");
+			scoreText.fontSize = 48;
+			scoreText.alignment = TextAnchor.MiddleLeft;
+			scoreText.fontStyle = FontStyle.Bold;
+
+			playerScore.transform.SetParent(canvas.transform.Find("BotPanel"));
+			float scoreX = medal.GetComponent<RectTransform>().rect.width/2 + medalX + 10f;
+			playerScore.GetComponent<RectTransform>().pivot = new Vector2(0f, 0.5f);
+			playerScore.GetComponent<RectTransform>().anchoredPosition = new Vector2(scoreX, 0f);
+			playersScore.Add(playerScore);
+
+			//i++;
 		}
 
 		//recipeWidth = recipeSprite.rect.width;
@@ -87,7 +113,7 @@ public class PotionManager : MonoBehaviour {
 
 	public void SetPlayerScore(int id, float score)
 	{
-		playersScore[id].text = score.ToString();
+		playersScore[id].GetComponent<Text>().text = score.ToString();
 	}
 
 	public GameObject GenerateRecipe()

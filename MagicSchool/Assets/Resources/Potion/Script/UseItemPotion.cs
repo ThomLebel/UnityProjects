@@ -53,11 +53,11 @@ public class UseItemPotion : MonoBehaviour
 		string[] tagList;
 
 		if (itemHolded.tag == "item")
-			tagList = new string[] { "chaudron", "craftTable" };
+			tagList = new string[] { "chaudron", "craftTable", "trashcan" };
 		else if (itemHolded.tag == "chaudron")
-			tagList = new string[] { "fiole", "fire", "item" };
+			tagList = new string[] { "fiole", "fire", "item", "trashcan" };
 		else if (itemHolded.tag == "fiole")
-			tagList = new string[] { "pnj", "chaudron" };
+			tagList = new string[] { "pnj", "chaudron", "trashcan" };
 		else
 			tagList = new string[] { "" };
 
@@ -76,6 +76,10 @@ public class UseItemPotion : MonoBehaviour
 					if (target.tag == "craftTable")
 					{
 						DropOnSupport(target.gameObject);
+					}
+					else if (target.tag == "trashcan")
+					{
+						TrashContent();
 					}
 					else
 					{
@@ -99,6 +103,10 @@ public class UseItemPotion : MonoBehaviour
 					{
 						SwitchContent(target.gameObject, itemHolded.gameObject);
 					}
+					else if (target.tag == "trashcan")
+					{
+						TrashContent();
+					}
 					else
 					{
 						if (!target.GetComponent<IngredientScript>().isPrepared)
@@ -116,6 +124,10 @@ public class UseItemPotion : MonoBehaviour
 					if (target.tag == "pnj")
 					{
 						ServePotion(target.gameObject, itemHolded.gameObject);
+					}
+					else if (target.tag == "trashcan")
+					{
+						TrashContent();
 					}
 					else
 					{
@@ -459,6 +471,28 @@ public class UseItemPotion : MonoBehaviour
 					DropOff();
 				}
 			}
+		}
+	}
+
+	public void TrashContent()
+	{
+		if (itemHolded.tag == "chaudron")
+		{
+			RemovePicto(itemHolded);
+			itemHolded.GetComponent<ChaudronScript>().Empty();
+		}
+		else if (itemHolded.tag == "fiole")
+		{
+			RemovePicto(itemHolded);
+			Destroy(itemHolded);
+			playerAction.isHolding = false;
+			itemHolded = null;
+		}
+		else
+		{
+			Destroy(itemHolded);
+			playerAction.isHolding = false;
+			itemHolded = null;
 		}
 	}
 
