@@ -4,19 +4,17 @@ using UnityEngine;
 
 public class AnimationCallback : MonoBehaviour {
 
-	private PlayerPotion _parent;
-
-	private void Start()
-	{
-		_parent = transform.parent.GetComponent<PlayerPotion>();
-	}
-
 	private void shootAnimOver()
 	{
-		_parent.InstantiateBlast();
+		transform.parent.GetComponent<PlayerPotion>().InstantiateBlast();
 	}
 	private void protectAnimOver()
 	{
-		_parent.InstantiateProtection();
+		transform.parent.GetComponent<PlayerPotion>().InstantiateProtection();
+	}
+
+	private void catchItem()
+	{
+		transform.parent.GetComponent<PlayerPotion>().PickDropItem();
 	}
 }

@@ -117,14 +117,19 @@ public class PlayerPotion : PlayerMovement
 		}
 		if (Input.GetButtonDown("Fire1_P" + playerInfo.playerController))
 		{
-			if (!isHolding && !cantCarry)
-			{
-				useItem.PickItem();
-			}
-			else
-			{
-				useItem.DropItem();
-			}
+			animator.SetTrigger("playerGrab");
+		}
+	}
+
+	public void PickDropItem()
+	{
+		if (!isHolding && !cantCarry)
+		{
+			useItem.PickItem();
+		}
+		else
+		{
+			useItem.DropItem();
 		}
 	}
 
@@ -141,6 +146,7 @@ public class PlayerPotion : PlayerMovement
 			canJump = false;
 			isPreparing = true;
 			animator.SetBool("playerCook", true);
+			animator.SetBool("playerMove", false);
 
 			if (grounded)
 				playerInfo.rb2d.velocity = Vector2.zero;
@@ -177,18 +183,12 @@ public class PlayerPotion : PlayerMovement
 	private void Shoot(Vector3 pDir)
 	{
 		nextCastShoot = Time.time + shootCastRate;
-		canMove = false;
-		if (grounded)
-			playerInfo.rb2d.velocity = Vector2.zero;
 		animator.SetTrigger("playerShoot");
 		shootingDir = pDir;
 	}
 
 	public void InstantiateBlast()
 	{
-		canMove = true;
-		canJump = true;
-
 		GameObject projectile;
 		projectile = Instantiate(projectilePrefab) as GameObject;
 		projectile.GetComponent<SpellProjectileScript>().direction = shootingDir;
@@ -202,11 +202,6 @@ public class PlayerPotion : PlayerMovement
 		nextCastProtect = Time.time + protectCastRate;
 
 		animator.SetTrigger("playerProtect");
-		canMove = false;
-		canJump = false;
-		if (grounded)
-			playerInfo.rb2d.velocity = Vector2.zero;
-
 		isProtected = true;
 		playerInfo.State = "protected";
 		protectCoroutine = PlayerProtected(protectedTime);
@@ -215,8 +210,6 @@ public class PlayerPotion : PlayerMovement
 
 	public void InstantiateProtection()
 	{
-		canMove = true;
-		canJump = true;
 		bubblePrefab.SetActive(true);
 		bubblePrefab.GetComponentInChildren<Animator>().enabled = true;
 	}

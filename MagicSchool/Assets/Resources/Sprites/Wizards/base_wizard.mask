@@ -1,0 +1,77 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!319 &31900000
+AvatarMask:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: base_wizard
+  m_Mask: 00000000000000000100000000000000000000000100000001000000010000000100000000000000000000000100000001000000
+  m_Elements:
+  - m_Path: 
+    m_Weight: 1
+  - m_Path: spineBone
+    m_Weight: 1
+  - m_Path: spineBone/body
+    m_Weight: 1
+  - m_Path: spineBone/body/bodySprite
+    m_Weight: 1
+  - m_Path: spineBone/headBone
+    m_Weight: 1
+  - m_Path: spineBone/headBone/base_eyes_open
+    m_Weight: 1
+  - m_Path: spineBone/headBone/base_eyes_closed
+    m_Weight: 1
+  - m_Path: spineBone/headBone/base_eyes_crying
+    m_Weight: 1
+  - m_Path: spineBone/headBone/head
+    m_Weight: 1
+  - m_Path: spineBone/headBone/head/headSprite
+    m_Weight: 1
+  - m_Path: spineBone/leftArmBone
+    m_Weight: 1
+  - m_Path: spineBone/leftArmBone/leftArm
+    m_Weight: 1
+  - m_Path: spineBone/leftArmBone/leftArm/leftArmSprite
+    m_Weight: 1
+  - m_Path: spineBone/leftArmBone/leftHandBone
+    m_Weight: 1
+  - m_Path: spineBone/leftArmBone/leftHandBone/leftHand
+    m_Weight: 1
+  - m_Path: spineBone/leftArmBone/leftHandBone/leftHand/leftHandSprite
+    m_Weight: 1
+  - m_Path: spineBone/leftArmBone/leftHandBone/leftHand/itemSpot
+    m_Weight: 1
+  - m_Path: spineBone/rightArmBone
+    m_Weight: 1
+  - m_Path: spineBone/rightArmBone/rightArm
+    m_Weight: 1
+  - m_Path: spineBone/rightArmBone/rightArm/rightArmSprite
+    m_Weight: 1
+  - m_Path: spineBone/rightArmBone/rightHandBone
+    m_Weight: 1
+  - m_Path: spineBone/rightArmBone/rightHandBone/rightHand
+    m_Weight: 1
+  - m_Path: spineBone/rightArmBone/rightHandBone/rightHand/rightHandSprite
+    m_Weight: 1
+  - m_Path: spineBone/rightArmBone/rightHandBone/wandSprite
+    m_Weight: 1
+  - m_Path: spineBone/leftLegBone
+    m_Weight: 1
+  - m_Path: spineBone/leftLegBone/leftLeg
+    m_Weight: 1
+  - m_Path: spineBone/leftLegBone/leftLeg/leftLegSprite
+    m_Weight: 1
+  - m_Path: spineBone/rightLegBone
+    m_Weight: 1
+  - m_Path: spineBone/rightLegBone/rightLeg
+    m_Weight: 1
+  - m_Path: spineBone/rightLegBone/rightLeg/rightLegSprite
+    m_Weight: 1
+  - m_Path: IK
+    m_Weight: 1
+  - m_Path: IK/left IK Target
+    m_Weight: 1
+  - m_Path: IK/right IK Target
+    m_Weight: 1
