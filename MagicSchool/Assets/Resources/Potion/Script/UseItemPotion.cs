@@ -387,8 +387,8 @@ public class UseItemPotion : MonoBehaviour
 					RemovePicto(itemHolded);
 				}
 
-				float itemHeight = itemHolded.GetComponentInChildren<Renderer>().bounds.size.y;
-				float yPos = transform.position.y + itemHeight;
+				//float itemHeight = itemHolded.GetComponentInChildren<Renderer>().bounds.size.y;
+				float yPos = transform.position.y;
 
 				itemHolded.transform.parent = null;
 				itemHolded.transform.rotation = Quaternion.Euler(0,0,0);
@@ -397,7 +397,8 @@ public class UseItemPotion : MonoBehaviour
 				RaycastHit2D hit = Physics2D.Raycast(transform.position, Vector2.down, Mathf.Infinity, playerAction.groundLayerMask);
 				if (hit.collider != null)
 				{
-					yPos = hit.transform.position.y + hit.transform.GetComponentInChildren<Renderer>().bounds.size.y + itemHeight + 0.3f;
+					yPos = hit.transform.position.y + hit.transform.GetComponentInChildren<Renderer>().bounds.size.y + 0.6f;
+					//yPos = hit.transform.position.y + hit.transform.GetComponentInChildren<Renderer>().bounds.size.y + itemHeight + 0.3f;
 				}
 
 				itemHolded.transform.position = new Vector3(transform.position.x, yPos, transform.position.z);

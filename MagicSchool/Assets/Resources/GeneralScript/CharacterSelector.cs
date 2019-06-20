@@ -196,6 +196,7 @@ namespace Com.OniriqueStudio.MagicSchool
 
 			
 			carrousselList[playerID - 1].enabled = true;
+			carrousselList[playerID - 1].SetNativeSize();
 
 			//playerID++;
 		}

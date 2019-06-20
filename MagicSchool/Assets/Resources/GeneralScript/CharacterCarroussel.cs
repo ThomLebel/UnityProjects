@@ -82,6 +82,7 @@ namespace Com.OniriqueStudio.MagicSchool
 			}
 
 			CharacterSelector.Instance.carrousselList[playerID - 1].sprite = CharacterSelector.Instance.spriteList[currentSprite];
+			CharacterSelector.Instance.carrousselList[playerID - 1].SetNativeSize();
 
 			nextSlide = Time.time + slideRate;
 		}

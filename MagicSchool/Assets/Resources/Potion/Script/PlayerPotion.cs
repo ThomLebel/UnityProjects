@@ -36,6 +36,8 @@ public class PlayerPotion : PlayerMovement
 	private UseItemPotion useItem;
 
 	[SerializeField]
+	private bool isGrabing = false;
+	[SerializeField]
 	private bool isInverted = false;
 	[SerializeField]
 	private bool isSlowed = false;
@@ -111,13 +113,14 @@ public class PlayerPotion : PlayerMovement
 
 	private void ItemAction()
 	{
-		if (isPreparing)
+		if (isPreparing || isGrabing)
 		{
 			return;
 		}
 		if (Input.GetButtonDown("Fire1_P" + playerInfo.playerController))
 		{
 			animator.SetTrigger("playerGrab");
+			isGrabing = true;
 		}
 	}
 
@@ -131,6 +134,8 @@ public class PlayerPotion : PlayerMovement
 		{
 			useItem.DropItem();
 		}
+
+		isGrabing = false;
 	}
 
 	private void PrepareItem()
