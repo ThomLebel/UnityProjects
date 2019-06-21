@@ -11,10 +11,17 @@ namespace Com.OniriqueStudio.MagicSchool
 		static public CharacterSelector Instance;
 
 		public GameObject playerPrefab;
-		public GameObject carrousselPrefab;
+		//NEW
+		public List<GameObject> playerSelectors;
+		public List<GameObject> selectorPrefabList;
+		public List<Sprite> skinList;
+		public List<Sprite> teamSpriteList;
+
+		//OLD
+		/*public GameObject carrousselPrefab;
 		public List<Text> callToActionList;
 		public List<Image> carrousselList;
-		public List<Sprite> spriteList;
+		public List<Sprite> spriteList;*/
 		public Text startText;
 
 		public string activateCharacterPhrase = "Press Action to Join";
@@ -57,7 +64,8 @@ namespace Com.OniriqueStudio.MagicSchool
 			{
 				joinedPlayersID.Add(0);
 				playerPrefabList.Add(null);
-				carrousselPrefabList.Add(null);
+				selectorPrefabList.Add(null);
+				//carrousselPrefabList.Add(null);
 			}
 		}
 
@@ -66,22 +74,24 @@ namespace Com.OniriqueStudio.MagicSchool
 		{
 			CharacterSelection();
 
+			//All players are ready, pop up the launch text
 			if (playersReady == playerID)
 			{
 				gameReady = true;
 				startText.enabled = true;
 			}
+			//Players aren't ready, hide the launch txt
 			else
 			{
 				gameReady = false;
 				startText.enabled = false;
 			}
 
+			//Leave the character selection and go back to main menu
 			if (Input.GetButton("Fire2_P1") && Time.time >= quitTime && isLeaving)
 			{
 				GameManager.Instance.LoadArena("Launcher");
 			}
-
 			if (Input.GetButtonDown("Fire2_P1"))
 			{
 				quitTime = Time.time + quitTimer;
@@ -95,16 +105,21 @@ namespace Com.OniriqueStudio.MagicSchool
 
 		private void CharacterSelection()
 		{
+			//Player 1 is joining the game
 			if (Input.GetButtonUp("Fire1_P1"))
 			{
+				//Check if this player is not already in and if not, allow him to select his name, skin and team
 				if (CheckJoinedPlayers(1))
 				{
 					InstantiateCarroussel(1);
 				}
+				//If this player is already in
 				else
 				{
+					//And if all the other players are ready too
 					if (gameReady)
 					{
+						//Add all players to the players list
 						for (int i=0; i<playerPrefabList.Count; i++)
 						{
 							if (playerPrefabList[i] != null)
@@ -112,13 +127,13 @@ namespace Com.OniriqueStudio.MagicSchool
 								GameManager.Instance.players.Add(playerPrefabList[i]);
 							}
 						}
-
+						//Load the level for this number of player
 						string levelName = "Room for "+playersReady;
 						GameManager.Instance.LoadArena(levelName);
 					}
 				}
 			}
-
+			//Player 2 is joining the game
 			if (Input.GetButtonUp("Fire1_P2"))
 			{
 				if (CheckJoinedPlayers(2))
@@ -126,7 +141,7 @@ namespace Com.OniriqueStudio.MagicSchool
 					InstantiateCarroussel(2);
 				}
 			}
-
+			//Player 3 is joining the game
 			if (Input.GetButtonUp("Fire1_P3"))
 			{
 				if (CheckJoinedPlayers(3))
@@ -134,7 +149,7 @@ namespace Com.OniriqueStudio.MagicSchool
 					InstantiateCarroussel(3);
 				}
 			}
-
+			//Player 4 is joining the game
 			if (Input.GetButtonUp("Fire1_P4"))
 			{
 				if (CheckJoinedPlayers(4))
@@ -149,8 +164,7 @@ namespace Com.OniriqueStudio.MagicSchool
 			bool isAlreadyOn = false;
 
 			int id = pID;
-
-			//for (int i=0; i< joinedPlayersID.Count; i++)
+			
 			for (int i=joinedPlayersID.Count-1; i>-1; i--)
 			{
 				if(joinedPlayersID[i] == id)
@@ -170,13 +184,13 @@ namespace Com.OniriqueStudio.MagicSchool
 			return false;
 		}
 
-		public void ConfigurePlayer(int pID, int pController, int pSpriteID)
+		public void ConfigurePlayer(string pName, int pID, int pController, int pTeam, Sprite pSprite)
 		{
 			GameObject player;
 
 			Debug.Log("on fabrique un joueur offline");
 			player = Instantiate(playerPrefab) as GameObject;
-			player.GetComponent<PlayerInfo>().ConfigurePlayer(pID, pController, pSpriteID);
+			player.GetComponent<PlayerInfo>().ConfigurePlayer(pName, pID, pController, pTeam, pSprite);
 			playerPrefabList[pID - 1] = player;
 
 			playersReady++;
@@ -184,7 +198,11 @@ namespace Com.OniriqueStudio.MagicSchool
 
 		private void InstantiateCarroussel(int pControllerNumber)
 		{
-			callToActionList[playerID - 1].text = confirmCharacterPhrase;
+			PlayerSelector playerSelector = playerSelectors[playerID - 1].GetComponent<PlayerSelector>();
+			playerSelector.ActivateSelector(playerID, pControllerNumber);
+
+			//OLD
+			/*callToActionList[playerID - 1].text = confirmCharacterPhrase;
 
 			GameObject carroussel;
 
@@ -196,9 +214,7 @@ namespace Com.OniriqueStudio.MagicSchool
 
 			
 			carrousselList[playerID - 1].enabled = true;
-			carrousselList[playerID - 1].SetNativeSize();
-
-			//playerID++;
+			carrousselList[playerID - 1].SetNativeSize();*/
 		}
 
 		private void SetJoinedPlayersID(int pID)
@@ -219,12 +235,12 @@ namespace Com.OniriqueStudio.MagicSchool
 		{
 			Debug.Log("On détruit le carroussel du joueur : "+pPlayerID);
 
-			Destroy(carrousselPrefabList[pPlayerID - 1]);
+			//Destroy(carrousselPrefabList[pPlayerID - 1]);
 
-			carrousselPrefabList[pPlayerID - 1] = null;
+			selectorPrefabList[pPlayerID - 1] = null;
 			joinedPlayersID[pPlayerID - 1] = 0;
-			carrousselList[pPlayerID - 1].enabled = false;
-			callToActionList[pPlayerID - 1].text = activateCharacterPhrase;
+			//carrousselList[pPlayerID - 1].enabled = false;
+			//callToActionList[pPlayerID - 1].text = activateCharacterPhrase;
 		}
 
 		public void DestroyPlayerPrefab(int pPlayerID)

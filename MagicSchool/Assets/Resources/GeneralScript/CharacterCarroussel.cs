@@ -30,8 +30,8 @@ namespace Com.OniriqueStudio.MagicSchool
 			if (Input.GetButtonUp("Fire1_P" + playerController) && !validate)
 			{
 				validate = true;
-				Debug.Log("On valide notre choix de skin ! "+ CharacterSelector.Instance.spriteList[currentSprite].name);
-				CharacterSelector.Instance.ConfigurePlayer(playerID, playerController, currentSprite);
+				//Debug.Log("On valide notre choix de skin ! "+ CharacterSelector.Instance.spriteList[currentSprite].name);
+				//CharacterSelector.Instance.ConfigurePlayer(playerID, playerController, currentSprite);
 			}
 			if (!validate)
 			{
@@ -72,17 +72,17 @@ namespace Com.OniriqueStudio.MagicSchool
 		private void Slide(int pDir)
 		{
 			currentSprite += pDir;
-			if (currentSprite >= CharacterSelector.Instance.spriteList.Count)
+			/*if (currentSprite >= CharacterSelector.Instance.spriteList.Count)
 			{
 				currentSprite = 0;
-			}
+			}*/
 			if (currentSprite < 0)
 			{
-				currentSprite = CharacterSelector.Instance.spriteList.Count - 1;
+				//currentSprite = CharacterSelector.Instance.spriteList.Count - 1;
 			}
 
-			CharacterSelector.Instance.carrousselList[playerID - 1].sprite = CharacterSelector.Instance.spriteList[currentSprite];
-			CharacterSelector.Instance.carrousselList[playerID - 1].SetNativeSize();
+			//CharacterSelector.Instance.carrousselList[playerID - 1].sprite = CharacterSelector.Instance.spriteList[currentSprite];
+			//CharacterSelector.Instance.carrousselList[playerID - 1].SetNativeSize();
 
 			nextSlide = Time.time + slideRate;
 		}

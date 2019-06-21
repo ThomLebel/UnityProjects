@@ -20,6 +20,8 @@ public class PlayerInfo : MonoBehaviour
 	public float playerWidth, playerHeight, originalScale;
 	public float itemOffset = 0.4f;
 
+	[Tooltip("Nom du joueur")]
+	public string playerName;
 	[Tooltip("Numero du contrôleur du joueur")]
 	public int playerController;
 	[Tooltip("Numero du joueur")]
@@ -55,13 +57,14 @@ public class PlayerInfo : MonoBehaviour
 		Debug.Log("PLAYERINFO // Original scale = "+originalScale);
 	}
 
-	public void ConfigurePlayer(int pID, int pController, int pSpriteID)
+	public void ConfigurePlayer(string pName, int pID, int pController, int pTeam, Sprite pSprite)
 	{
 		Debug.Log("Configuration du joueur");
-		string playerSpriteName = CharacterSelector.Instance.spriteList[pSpriteID].name;
+		string playerSpriteName = pSprite.name;
+		playerName = pName;
 		playerID = pID;
 		playerController = pController;
-		playerTeam = pID;
+		playerTeam = pTeam;
 
 		string spriteSheetName = playerSpriteName + "_wizard_spritesheet";
 		Sprite[] spriteSheet = Resources.LoadAll<Sprite>("Sprites/Wizards/"+ spriteSheetName);
