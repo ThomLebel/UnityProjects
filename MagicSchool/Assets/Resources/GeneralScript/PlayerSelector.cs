@@ -11,6 +11,7 @@ public class PlayerSelector : MonoBehaviour
 	public GameObject skin;
 	public GameObject team;
 	public GameObject arrows;
+	public GameObject nameArrows;
 	public Text textAction;
 
 	public string activateCharacterPhrase = "Press Action to Join";
@@ -21,23 +22,46 @@ public class PlayerSelector : MonoBehaviour
 	[Tooltip("Numero du joueur")]
 	public int playerID;
 	[Tooltip("speed of the sliders")]
-	public float slideRate = 0.5f;
+	public float slideRate = 0.2f;
 
 	private string playerName = "";
 	private int playerTeam;
 	private float nextSlide;
 	private float nextSlider;
+	private int currentID = 0;
+	private int maxID = 0;
 	private int idSlider = 0;
 	private int currentSprite = 0;
 	private GameObject currentSlider;
 	private List<Sprite> currentSpriteList;
+	private List<char> charList = new List<char>();
+	private int charID;
+	private Text currentLetter;
+	private int currentLetterSlider = 0;
 
+	private bool skinLocked = false;
 	private bool validate = false;
 	private bool active = false;
+	private bool nameSelection = false;
 
 	// Start is called before the first frame update
 	void Start()
     {
+		charList.Add((char)32);
+		for (int i=0; i<2; i++)
+		{
+			for (char letter = 'A'; letter <= 'Z'; letter++)
+			{
+				if (i < 1)
+					charList.Add(letter);
+				else
+					charList.Add(char.ToLower(letter));
+			}
+		}
+		for (int nbr = 48; nbr < 58; nbr++)
+		{
+			charList.Add((char)nbr);
+		}
 	}
 
     // Update is called once per frame
@@ -47,25 +71,57 @@ public class PlayerSelector : MonoBehaviour
 		{
 			return;
 		}
-		if (Input.GetButtonUp("Fire1_P" + playerController) && !validate)
+		if (Input.GetButtonUp("Fire1_P" + playerController))
 		{
-			validate = true;
-			//Debug.Log("On valide notre choix de skin ! " + CharacterSelector.Instance.spriteList[currentSprite].name);
-			for (var i=0; i< playerLetters.Count; i++)
+			if (!skinLocked)
 			{
-				playerName += playerLetters[i].text;
+				skinLocked = true;
+				ActivateNameSlider();
 			}
-			CharacterSelector.Instance.ConfigurePlayer(playerName, playerID, playerController, CharacterSelector.Instance.teamSpriteList.IndexOf(team.GetComponent<Image>().sprite) + 1, skin.GetComponent<Image>().sprite);
+			else if(skinLocked && !validate)
+			{
+				validate = true;
+				arrows.SetActive(false);
+				nameArrows.SetActive(false);
+				Debug.Log("On valide notre personnage ! ");
+
+				playerName = "";
+				for (var i = 0; i < playerLetters.Count; i++)
+				{
+					playerName += playerLetters[i].text;
+				}
+				CharacterSelector.Instance.ConfigurePlayer(playerName, playerID, playerController, CharacterSelector.Instance.teamSpriteList.IndexOf(team.GetComponent<Image>().sprite) + 1, skin.GetComponent<Image>().sprite);
+			}
 		}
 		if (!validate)
 		{
-			CheckSlider();
 			CheckSlide();
+			CheckSlider();
 
 			if (Input.GetButtonUp("Fire2_P" + playerController))
 			{
-				CharacterSelector.Instance.DestroyCarroussel(playerID);
-				DeactivateSelector();
+				if (!skinLocked)
+				{
+					CharacterSelector.Instance.DestroyCarroussel(playerID);
+					DeactivateSelector();
+				}
+				else
+				{
+					skinLocked = false;
+					nameSelection = false;
+
+					arrows.SetActive(true);
+					nameArrows.SetActive(false);
+
+					currentSlider = skin;
+					currentSpriteList = CharacterSelector.Instance.skinList;
+					currentSprite = currentSpriteList.IndexOf(currentSlider.GetComponent<Image>().sprite);
+					currentID = currentSprite;
+					maxID = currentSpriteList.Count;
+
+					arrows.GetComponent<RectTransform>().position = new Vector2(arrows.GetComponent<RectTransform>().position.x, currentSlider.GetComponent<RectTransform>().position.y);
+				}
+				
 			}
 		}
 		else
@@ -74,24 +130,53 @@ public class PlayerSelector : MonoBehaviour
 			{
 				validate = false;
 
+				arrows.SetActive(true);
+				nameArrows.SetActive(true);
+
 				CharacterSelector.Instance.DestroyPlayerPrefab(playerID);
+				ActivateNameSlider();
 			}
 		}
+	}
+
+	private void ActivateNameSlider()
+	{
+		nameSelection = true;
+		nameArrows.SetActive(true);
+		nameArrows.GetComponent<RectTransform>().position = new Vector2(playerLetters[0].GetComponent<RectTransform>().position.x, nameArrows.GetComponent<RectTransform>().position.y);
+		currentLetter = playerLetters[0];
+		charID = charList.IndexOf(char.Parse(currentLetter.GetComponent<Text>().text));
+		currentID = charID;
+		currentSlider = playerNameObj;
+		maxID = charList.Count;
+		arrows.GetComponent<RectTransform>().position = new Vector2(arrows.GetComponent<RectTransform>().position.x, currentSlider.GetComponent<RectTransform>().position.y);
 	}
 
 	private void CheckSlider()
 	{
 		if (Time.time > nextSlider)
 		{
-			if (Input.GetAxisRaw("Vertical_P" + playerController) > 0.2)
+			if (nameSelection)
 			{
-				Debug.Log("Change slider for player " + playerID);
-				ChangeSlider(1);
+				if (Input.GetAxisRaw("Horizontal_P" + playerController) > 0.2)
+				{
+					ChangeLetterSlider(1);
+				}
+				if (Input.GetAxisRaw("Horizontal_P" + playerController) < -0.2)
+				{
+					ChangeLetterSlider(-1);
+				}
 			}
-			if (Input.GetAxisRaw("Vertical_P" + playerController) < -0.2)
+			else
 			{
-				Debug.Log("Change slider for player " + playerID);
-				ChangeSlider(-1);
+				if (Input.GetAxisRaw("Vertical_P" + playerController) > 0.2)
+				{
+					ChangeSlider(-1);
+				}
+				if (Input.GetAxisRaw("Vertical_P" + playerController) < -0.2)
+				{
+					ChangeSlider(1);
+				}
 			}
 		}
 	}
@@ -112,17 +197,43 @@ public class PlayerSelector : MonoBehaviour
 
 		if (idSlider == 0)
 		{
+			//Skin Slider
 			currentSlider = skin;
 			currentSpriteList = CharacterSelector.Instance.skinList;
 		}
 		else
 		{
+			//Team Slider
 			currentSlider = team;
 			currentSpriteList = CharacterSelector.Instance.teamSpriteList;
 		}
 
 		currentSprite = currentSpriteList.IndexOf(currentSlider.GetComponent<Image>().sprite);
+		currentID = currentSprite;
+		maxID = currentSpriteList.Count;
+
 		arrows.GetComponent<RectTransform>().position = new Vector2(arrows.GetComponent<RectTransform>().position.x, currentSlider.GetComponent<RectTransform>().position.y);
+
+		nextSlider = Time.time + slideRate;
+	}
+
+	private void ChangeLetterSlider(int dir)
+	{
+		currentLetterSlider += dir;
+		if (currentLetterSlider < 0)
+		{
+			currentLetterSlider = playerLetters.Count - 1;
+		}
+		if (currentLetterSlider >= playerLetters.Count)
+		{
+			currentLetterSlider = 0;
+		}
+
+		currentLetter = playerLetters[currentLetterSlider];
+		charID = charList.IndexOf(char.Parse(currentLetter.GetComponent<Text>().text));
+		currentID = charID;
+
+		nameArrows.GetComponent<RectTransform>().position = new Vector2(currentLetter.GetComponent<RectTransform>().position.x, nameArrows.GetComponent<RectTransform>().position.y);
 
 		nextSlider = Time.time + slideRate;
 	}
@@ -131,35 +242,51 @@ public class PlayerSelector : MonoBehaviour
 	{
 		if (Time.time > nextSlide)
 		{
-			if (Input.GetAxisRaw("Horizontal_P" + playerController) > 0.2)
+			if (nameSelection)
 			{
-				Debug.Log("Slide right for player " + playerID);
-				Slide(1);
+				if (Input.GetAxisRaw("Vertical_P" + playerController) > 0.2)
+				{
+					currentLetter.text = charList[Slide(1)].ToString();
+				}
+				if (Input.GetAxisRaw("Vertical_P" + playerController) < -0.2)
+				{
+					currentLetter.text = charList[Slide(-1)].ToString();
+				}
 			}
-			if (Input.GetAxisRaw("Horizontal_P" + playerController) < -0.2)
+			else
 			{
-				Debug.Log("Slide left for player " + playerID);
-				Slide(-1);
+				if (Input.GetAxisRaw("Horizontal_P" + playerController) > 0.2)
+				{
+					Debug.Log("Slide right for player " + playerID);
+					currentSlider.GetComponent<Image>().sprite = currentSpriteList[Slide(1)];
+					currentSlider.GetComponent<Image>().SetNativeSize();
+				}
+				if (Input.GetAxisRaw("Horizontal_P" + playerController) < -0.2)
+				{
+					Debug.Log("Slide left for player " + playerID);
+					currentSlider.GetComponent<Image>().sprite = currentSpriteList[Slide(-1)];
+					currentSlider.GetComponent<Image>().SetNativeSize();
+				}
 			}
+			
 		}
 	}
 
-	private void Slide(int dir)
+	private int Slide(int dir)
 	{
-		currentSprite += dir;
-		if (currentSprite >= currentSpriteList.Count)
+		currentID += dir;
+		if (currentID >= maxID)
 		{
-			currentSprite = 0;
+			currentID = 0;
 		}
-		if (currentSprite < 0)
+		if (currentID < 0)
 		{
-			currentSprite = currentSpriteList.Count;
+			currentID = maxID - 1;
 		}
-
-		currentSlider.GetComponent<Image>().sprite = currentSpriteList[currentSprite];
-		currentSlider.GetComponent<Image>().SetNativeSize();
 
 		nextSlide = Time.time + slideRate;
+
+		return currentID;
 	}
 
 	public void ActivateSelector(int id, int controller)
@@ -176,6 +303,8 @@ public class PlayerSelector : MonoBehaviour
 		idSlider = 0;
 		currentSlider = skin;
 		currentSpriteList = CharacterSelector.Instance.skinList;
+		currentID = currentSprite;
+		maxID = currentSpriteList.Count;
 
 		active = true;
 
