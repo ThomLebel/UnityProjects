@@ -65,6 +65,7 @@ public class PotionManager : MonoBehaviour {
 			medal.name = "medal"+i;
 			medal.transform.Find("back/playerFace/head").GetComponent<Image>().sprite = player.transform.Find("base_wizard/spineBone/headBone/head/headSprite").GetComponent<SpriteRenderer>().sprite;
 			medal.transform.Find("back/playerFace/eyes").GetComponent<Image>().sprite = player.transform.Find("base_wizard/spineBone/headBone/base_eyes_open").GetComponent<SpriteRenderer>().sprite;
+			medal.transform.Find("back/teamBG").GetComponent<Image>().sprite = info.teamSprite;
 			medal.transform.SetParent(canvas.transform.Find("BotPanel"));
 			//Position the medal based on team number
 			RectTransform medalTransform = medal.GetComponent<RectTransform>();

@@ -26,6 +26,8 @@ public class PlayerMovement : MonoBehaviour
 	[SerializeField]
 	protected bool isJumping = false;
 	[SerializeField]
+	protected bool hasJump = false;
+	[SerializeField]
 	protected bool isFalling = false;
 
 	protected Collider2D platformCollider;
@@ -70,7 +72,7 @@ public class PlayerMovement : MonoBehaviour
 
 		if (Math.Abs(horizontal) > safeSpot)
 		{
-			if (canJump)
+			if (grounded && !isFalling)
 				animator.SetBool("playerMove", true);
 
 			if (horizontal > safeSpot)
@@ -103,18 +105,23 @@ public class PlayerMovement : MonoBehaviour
 			animator.SetBool("playerFall", false);
 		}
 
-		if (vertical > safeSpot && !isJumping)
+		if (vertical > safeSpot && !isJumping && !hasJump)
 		{
+			hasJump = true;
 			isJumping = true;
 			//canJump = false;
 			playerInfo.rb2d.AddForce(new Vector2(0f, jumpTakeOff));
+		}
+		if (vertical > safeSpot && isJumping && hasJump && grounded)
+		{
+			isJumping = false;
 		}
 		if (vertical < safeSpot)
 		{
 			if (grounded)
 			{
 				isJumping = false;
-				//canJump = true;
+				hasJump = false;
 			}
 			if (isJumping && playerInfo.rb2d.velocity.y > 0)
 			{
@@ -130,6 +137,7 @@ public class PlayerMovement : MonoBehaviour
 					playerCollider.isTrigger = true;
 					isFalling = true;
 					canJump = false;
+					animator.SetBool("playerFall", true);
 				}
 			}
 		}
@@ -147,6 +155,7 @@ public class PlayerMovement : MonoBehaviour
 				playerCollider.isTrigger = false;
 				animator.SetBool("playerFall", false);
 			}
+			//Detect if we are touching a wall
 		}
 	}
 

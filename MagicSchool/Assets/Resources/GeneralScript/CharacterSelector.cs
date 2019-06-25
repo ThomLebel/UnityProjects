@@ -11,21 +11,14 @@ namespace Com.OniriqueStudio.MagicSchool
 		static public CharacterSelector Instance;
 
 		public GameObject playerPrefab;
-		//NEW
 		public List<GameObject> playerSelectors;
 		public List<GameObject> selectorPrefabList;
 		public List<Sprite> skinList;
 		public List<Sprite> teamSpriteList;
-
-		//OLD
-		/*public GameObject carrousselPrefab;
-		public List<Text> callToActionList;
-		public List<Image> carrousselList;
-		public List<Sprite> spriteList;*/
 		public Text startText;
 
-		public string activateCharacterPhrase = "Press Action to Join";
-		public string confirmCharacterPhrase = "Press Action to Validate";
+		public List<Sprite> tempSkinList = new List<Sprite>();
+		public List<Sprite> tempTeamSpriteList = new List<Sprite>();
 
 		public int playerID = 1;
 		public int playersReady = 0;
@@ -41,6 +34,8 @@ namespace Com.OniriqueStudio.MagicSchool
 		private List<GameObject> carrousselPrefabList;
 
 		private int maxPlayer = 4;
+		private int minTeam = 2;
+		private int differentTeam = 0;
 		private bool gameReady = false;
 
 		private bool isLeaving = false;
@@ -60,12 +55,21 @@ namespace Com.OniriqueStudio.MagicSchool
 			playerPrefabList = new List<GameObject>();
 			carrousselPrefabList = new List<GameObject>();
 
-			for (var i=0; i<maxPlayer; i++)
+			for (int s = 0; s < skinList.Count; s++ )
+			{
+				tempSkinList.Add(skinList[s]);
+			}
+			for (int t = 0; t < teamSpriteList.Count; t++)
+			{
+				tempTeamSpriteList.Add(teamSpriteList[t]);
+			}
+
+
+			for (int i=0; i<maxPlayer; i++)
 			{
 				joinedPlayersID.Add(0);
 				playerPrefabList.Add(null);
 				selectorPrefabList.Add(null);
-				//carrousselPrefabList.Add(null);
 			}
 		}
 
@@ -119,17 +123,26 @@ namespace Com.OniriqueStudio.MagicSchool
 					//And if all the other players are ready too
 					if (gameReady)
 					{
-						//Add all players to the players list
-						for (int i=0; i<playerPrefabList.Count; i++)
+						//Check if we have enough team to play the game
+						if (differentTeam >= minTeam || playersReady == 1)
 						{
-							if (playerPrefabList[i] != null)
+							//Add all players to the players list
+							for (int i = 0; i < playerPrefabList.Count; i++)
 							{
-								GameManager.Instance.players.Add(playerPrefabList[i]);
+								if (playerPrefabList[i] != null)
+								{
+									GameManager.Instance.players.Add(playerPrefabList[i]);
+								}
 							}
+							//Load the level for this number of player
+							string levelName = "Room for " + playersReady;
+							GameManager.Instance.LoadArena(levelName);
 						}
-						//Load the level for this number of player
-						string levelName = "Room for "+playersReady;
-						GameManager.Instance.LoadArena(levelName);
+						else
+						{
+							//Display a message on screen
+							Debug.LogError("There isn't enough different team, at least 2 differents team are recquired !");
+						}
 					}
 				}
 			}
@@ -184,37 +197,41 @@ namespace Com.OniriqueStudio.MagicSchool
 			return false;
 		}
 
-		public void ConfigurePlayer(string pName, int pID, int pController, int pTeam, Sprite pSprite)
+		public void ConfigurePlayer(string pName, int pID, int pController, int pTeam, Sprite pSprite, Sprite pTeamSprite)
 		{
 			GameObject player;
 
 			Debug.Log("on fabrique un joueur offline");
 			player = Instantiate(playerPrefab) as GameObject;
-			player.GetComponent<PlayerInfo>().ConfigurePlayer(pName, pID, pController, pTeam, pSprite);
+			player.GetComponent<PlayerInfo>().ConfigurePlayer(pName, pID, pController, pTeam, pSprite, pTeamSprite);
 			playerPrefabList[pID - 1] = player;
 
 			playersReady++;
+
+			bool playerTeamIsDifferent = true;
+
+			for (int i = 0; i < playerPrefabList.Count; i++)
+			{
+				GameObject tempPlayer = playerPrefabList[i];
+				if (tempPlayer != null && tempPlayer != player)
+				{
+					if (tempPlayer.GetComponent<PlayerInfo>().playerTeam == pTeam)
+					{
+						playerTeamIsDifferent = false;
+					}
+				}
+			}
+
+			if (playerTeamIsDifferent)
+			{
+				differentTeam++;
+			}
 		}
 
 		private void InstantiateCarroussel(int pControllerNumber)
 		{
 			PlayerSelector playerSelector = playerSelectors[playerID - 1].GetComponent<PlayerSelector>();
 			playerSelector.ActivateSelector(playerID, pControllerNumber);
-
-			//OLD
-			/*callToActionList[playerID - 1].text = confirmCharacterPhrase;
-
-			GameObject carroussel;
-
-			Debug.Log("Instantiating carroussel id : "+playerID+"; controller : "+pControllerNumber);
-
-			carroussel = Instantiate(carrousselPrefab) as GameObject;
-			carroussel.GetComponent<CharacterCarroussel>().SetIDs(playerID, pControllerNumber);
-			carrousselPrefabList[playerID - 1] = carroussel;
-
-			
-			carrousselList[playerID - 1].enabled = true;
-			carrousselList[playerID - 1].SetNativeSize();*/
 		}
 
 		private void SetJoinedPlayersID(int pID)
@@ -234,13 +251,8 @@ namespace Com.OniriqueStudio.MagicSchool
 		public void DestroyCarroussel(int pPlayerID)
 		{
 			Debug.Log("On détruit le carroussel du joueur : "+pPlayerID);
-
-			//Destroy(carrousselPrefabList[pPlayerID - 1]);
-
-			selectorPrefabList[pPlayerID - 1] = null;
+			
 			joinedPlayersID[pPlayerID - 1] = 0;
-			//carrousselList[pPlayerID - 1].enabled = false;
-			//callToActionList[pPlayerID - 1].text = activateCharacterPhrase;
 		}
 
 		public void DestroyPlayerPrefab(int pPlayerID)
@@ -251,6 +263,39 @@ namespace Com.OniriqueStudio.MagicSchool
 			playerPrefabList[pPlayerID - 1] = null;
 
 			playersReady--;
+			gameReady = false;
+			startText.enabled = false;
 		}
+
+		public void AddSpriteToList(List<Sprite> masterList, List<Sprite> list, Sprite sprite)
+		{
+			int index = masterList.IndexOf(sprite);
+			list.Insert(index, sprite);
+			foreach (GameObject selector in playerSelectors)
+			{
+				PlayerSelector playerSelector = selector.GetComponent<PlayerSelector>();
+				if (playerSelector.active)
+				{
+					playerSelector.AdjustSkinList();
+				}
+			}
+		}
+
+		public void RemoveSpriteFromList(List<Sprite> list, Sprite sprite, GameObject pSelector)
+		{
+			list.Remove(sprite);
+			foreach (GameObject selector in playerSelectors)
+			{
+				if (selector != pSelector)
+				{
+					PlayerSelector playerSelector = selector.GetComponent<PlayerSelector>();
+					if (playerSelector.active)
+					{
+						playerSelector.AdjustSkinList();
+					}
+				}
+			}
+		}
+
 	}
 }

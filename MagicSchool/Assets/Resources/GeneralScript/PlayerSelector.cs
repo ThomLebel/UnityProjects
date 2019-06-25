@@ -6,6 +6,8 @@ using UnityEngine.UI;
 
 public class PlayerSelector : MonoBehaviour
 {
+	public bool active = false;
+
 	public List<Text> playerLetters;
 	public GameObject playerNameObj;
 	public GameObject skin;
@@ -41,7 +43,6 @@ public class PlayerSelector : MonoBehaviour
 
 	private bool skinLocked = false;
 	private bool validate = false;
-	private bool active = false;
 	private bool nameSelection = false;
 
 	// Start is called before the first frame update
@@ -76,6 +77,7 @@ public class PlayerSelector : MonoBehaviour
 			if (!skinLocked)
 			{
 				skinLocked = true;
+				CharacterSelector.Instance.RemoveSpriteFromList(CharacterSelector.Instance.tempSkinList, skin.GetComponent<Image>().sprite, gameObject);
 				ActivateNameSlider();
 			}
 			else if(skinLocked && !validate)
@@ -90,7 +92,7 @@ public class PlayerSelector : MonoBehaviour
 				{
 					playerName += playerLetters[i].text;
 				}
-				CharacterSelector.Instance.ConfigurePlayer(playerName, playerID, playerController, CharacterSelector.Instance.teamSpriteList.IndexOf(team.GetComponent<Image>().sprite) + 1, skin.GetComponent<Image>().sprite);
+				CharacterSelector.Instance.ConfigurePlayer(playerName, playerID, playerController, CharacterSelector.Instance.tempTeamSpriteList.IndexOf(team.GetComponent<Image>().sprite) + 1, skin.GetComponent<Image>().sprite, team.GetComponent<Image>().sprite);
 			}
 		}
 		if (!validate)
@@ -113,8 +115,10 @@ public class PlayerSelector : MonoBehaviour
 					arrows.SetActive(true);
 					nameArrows.SetActive(false);
 
+					CharacterSelector.Instance.AddSpriteToList(CharacterSelector.Instance.skinList, CharacterSelector.Instance.tempSkinList, skin.GetComponent<Image>().sprite);
+
 					currentSlider = skin;
-					currentSpriteList = CharacterSelector.Instance.skinList;
+					currentSpriteList = CharacterSelector.Instance.tempSkinList;
 					currentSprite = currentSpriteList.IndexOf(currentSlider.GetComponent<Image>().sprite);
 					currentID = currentSprite;
 					maxID = currentSpriteList.Count;
@@ -199,13 +203,13 @@ public class PlayerSelector : MonoBehaviour
 		{
 			//Skin Slider
 			currentSlider = skin;
-			currentSpriteList = CharacterSelector.Instance.skinList;
+			currentSpriteList = CharacterSelector.Instance.tempSkinList;
 		}
 		else
 		{
 			//Team Slider
 			currentSlider = team;
-			currentSpriteList = CharacterSelector.Instance.teamSpriteList;
+			currentSpriteList = CharacterSelector.Instance.tempTeamSpriteList;
 		}
 
 		currentSprite = currentSpriteList.IndexOf(currentSlider.GetComponent<Image>().sprite);
@@ -302,9 +306,12 @@ public class PlayerSelector : MonoBehaviour
 
 		idSlider = 0;
 		currentSlider = skin;
-		currentSpriteList = CharacterSelector.Instance.skinList;
+		currentSpriteList = CharacterSelector.Instance.tempSkinList;
+		currentSprite = 0;
 		currentID = currentSprite;
 		maxID = currentSpriteList.Count;
+
+		skin.GetComponent<Image>().sprite = currentSpriteList[0];
 
 		active = true;
 
@@ -323,5 +330,14 @@ public class PlayerSelector : MonoBehaviour
 		currentSpriteList = null;
 
 		active = false;
+	}
+
+	public void AdjustSkinList()
+	{
+		if (currentSlider == skin)
+		{
+			skin.GetComponent<Image>().sprite = currentSpriteList[currentSprite];
+			maxID = currentSpriteList.Count;
+		}
 	}
 }

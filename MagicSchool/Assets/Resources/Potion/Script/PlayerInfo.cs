@@ -30,6 +30,8 @@ public class PlayerInfo : MonoBehaviour
 	public Sprite playerSprite;
 	[Tooltip("Numero de l'équipe du joueur")]
 	public int playerTeam;
+	[Tooltip("Sprite de l'équipe joueur")]
+	public Sprite teamSprite;
 
 	public float score = 0;
 	public float potionScore = 0;
@@ -57,7 +59,7 @@ public class PlayerInfo : MonoBehaviour
 		Debug.Log("PLAYERINFO // Original scale = "+originalScale);
 	}
 
-	public void ConfigurePlayer(string pName, int pID, int pController, int pTeam, Sprite pSprite)
+	public void ConfigurePlayer(string pName, int pID, int pController, int pTeam, Sprite pSprite, Sprite pTeamSprite)
 	{
 		Debug.Log("Configuration du joueur");
 		string playerSpriteName = pSprite.name;
@@ -65,6 +67,7 @@ public class PlayerInfo : MonoBehaviour
 		playerID = pID;
 		playerController = pController;
 		playerTeam = pTeam;
+		teamSprite = pTeamSprite;
 
 		string spriteSheetName = playerSpriteName + "_wizard_spritesheet";
 		Sprite[] spriteSheet = Resources.LoadAll<Sprite>("Sprites/Wizards/"+ spriteSheetName);

@@ -1346,4 +1346,4 @@ MonoBehaviour:
   confirmCharacterPhrase: Press Action to Validate
   playerController: 0
   playerID: 0
-  slideRate: 0.2
+  slideRate: 0.15

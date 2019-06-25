@@ -8,11 +8,14 @@ TextureImporter:
   - first:
       213: -6326635742235673836
     second: medal_1
+  - first:
+      213: -2359295934168042485
+    second: medal_2
   externalObjects: {}
   serializedVersion: 10
   mipmaps:
     mipMapMode: 0
-    enableMipMap: 1
+    enableMipMap: 0
     sRGBTexture: 1
     linearTexture: 0
     fadeOut: 0
@@ -37,8 +40,8 @@ TextureImporter:
   maxTextureSize: 2048
   textureSettings:
     serializedVersion: 2
-    filterMode: 1
-    aniso: 1
+    filterMode: -1
+    aniso: -1
     mipBias: -100
     wrapU: 1
     wrapV: 1
@@ -48,7 +51,7 @@ TextureImporter:
   compressionQuality: 50
   spriteMode: 2
   spriteExtrude: 1
-  spriteMeshType: 0
+  spriteMeshType: 1
   alignment: 0
   spritePivot: {x: 0.5, y: 0.5}
   spritePixelsToUnits: 600
@@ -127,17 +130,17 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 0
-        y: 533
+        y: 1031
         width: 494
         height: 494
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: fd83811635b2d724093c9e337f297f1b
+      spriteID: a7d6f98c2e7519c4bb746f3ed42416cb
       internalID: 3331808002684657063
       vertices: []
       indices: 
@@ -147,19 +150,40 @@ TextureImporter:
       name: medal_1
       rect:
         serializedVersion: 2
-        x: 6
-        y: 0
+        x: 4
+        y: 515
         width: 488
         height: 488
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 1f14865cd3c9f3b419b75312186241a5
+      spriteID: 92c10df344dfc6448b3ab21d48eb1f03
       internalID: -6326635742235673836
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: medal_2
+      rect:
+        serializedVersion: 2
+        x: 4
+        y: 0
+        width: 488
+        height: 488
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 47bed6297dbca90498790dd5c946fcf4
+      internalID: -2359295934168042485
       vertices: []
       indices: 
       edges: []
@@ -167,7 +191,7 @@ TextureImporter:
     outline: []
     physicsShape: []
     bones: []
-    spriteID: 76ff7eca3a943d443b61617907e7943a
+    spriteID: 0566ed9e26abf044083f5bb6e540951e
     internalID: 0
     vertices: []
     indices: 
